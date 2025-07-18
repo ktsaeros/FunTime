@@ -152,7 +152,7 @@ $dataRows = @(
     New-Object PSObject -Property $row
 }
 
-$dataRows | Format-Table -AutoSize
+$dataRows | Format-Table -AutoSize -Property Property, $channels
 
 Write-Host "`n—and now the raw CIM table:`n"
 
