@@ -1,8 +1,7 @@
 <#
 .SYNOPSIS
-  Reports maximum supported RAM, slot usage, module speeds & per-channel totals,
-  and then shows a detailed table of each DIMM.
-
+  Reports max RAM, slot usage, speeds, and per-channel details (with manufacturer, type & serial),
+  then prints a detailed table of each DIMM.
 #>
 
 # 1) Array info
@@ -20,36 +19,38 @@ $installedGB = [math]::Round(($modules | Measure-Object Capacity -Sum).Sum / 1GB
 $usedSlots = $modules.Count
 
 # 5) Speed summary
-$sPEED = $modules |
+$speedSummary = $modules |
   Group-Object ConfiguredClockSpeed |
   Sort-Object Name |
   ForEach-Object { "$($_.Name) MHz ×$($_.Count)" }
 
-# 6) Per-channel totals
-$channelTotals = $modules |
-  ForEach-Object {
-    [PSCustomObject]@{
-      Channel    = ($_.DeviceLocator -split '-')[0]
-      CapacityGB = [math]::Round($_.Capacity / 1GB, 2)
-    }
-  } |
-  Group-Object Channel |
+# 6) Per-channel enriched info
+$channelDetails = $modules |
+  Group-Object { ($_.DeviceLocator -split '-')[0] } |
   Sort-Object Name |
   ForEach-Object {
-    $c = $_.Name
-    $gb = ($_.Group | Measure-Object CapacityGB -Sum).Sum
-    "{0}: {1} GB" -f $c, $gb
+    $channel = $_.Name
+    # For each module in this channel, build "ChannelA: 8 GB, BANK 0, Manufacturer = RAMAXEL, Type = 128, Serial = 12850EA0"
+    $_.Group | ForEach-Object {
+      $gb   = [math]::Round($_.Capacity/1GB,2)
+      $bank = $_.BankLabel
+      $man  = $_.Manufacturer
+      $type = $_.TypeDetail
+      $sn   = $_.SerialNumber
+      "{0}: {1} GB, {2}, Manufacturer = {3}, Type = {4}, Serial = {5}" -f $channel, $gb, $bank, $man, $type, $sn
+    }
   }
 
 # 7) Print the summary
 "Maximum supported RAM:   $maxCapGB GB"
 "Physical slots:           $usedSlots of $totalSlots"
 "Currently installed:      $installedGB GB"
-"Module speeds:            $($sPEED -join ', ')"
-"Per-channel capacities:   $($channelTotals -join ', ')"
+"Module speeds:            $($speedSummary -join ', ')"
+"Per-channel details:      " 
+$channelDetails | ForEach-Object { "  $_" }
 ""
 
-# 8) And now the detailed table
+# 8) And the detailed table again
 $modules |
   Select-Object `
     Manufacturer, `
