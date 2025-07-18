@@ -135,22 +135,19 @@ $dataRows = @(
 "Module speeds summary:    $($speeds -join ', ')"
 ""
 
-# Table: always `Property` plus exactly the channel columns
-# … after you’ve built $dataRows and $channels …
+# ----------------------
+#  Render per-channel table
+# ----------------------
 
-# Always show Property plus each channel name
-$props = @('Property') + $channels
-
-# … after you’ve built $dataRows and $channels …
-
-# 1. Force $channels to always be an array of strings
+# 1) Force $channels to be a non-empty string array
 $channels = @($channels | Where-Object { $_ -and $_.Trim() })
 
-# 2. Build the list of properties to pass to Format-Table
+# 2) Build the list of columns: always "Property" plus each channel name
 $props = @('Property') + $channels
 
-# 3. Render the per-channel table correctly
+# 3) Render with Format-Table, passing the entire $props array as the -Property argument
 $dataRows | Format-Table -AutoSize -Property ( $props )
+
 "`n—and now the raw CIM table:`n"
 
 # -----------------------------------------------------------------------------
