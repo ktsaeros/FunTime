@@ -109,17 +109,24 @@ $report = for ($i=0; $i -lt $modules.Count; $i++) {
 # ----------------------------
 # 4) Build & render per-channel table
 # ----------------------------
-$channels = @($report.Channel | Sort-Object -Unique)
-$dataRows = @(
-  'Manufacturer','BankLabel','DeviceLocator',
-  'CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber'
-) | ForEach-Object {
-  $prop = $_; $row = [ordered]@{ Property = $prop }
-  foreach ($c in $channels) {
-    $row[$c] = ($report | Where-Object Channel -EQ $c | Select-Object -ExpandProperty $prop) -join ', '
-  }
-  [PSCustomObject]$row
+# … after building $dataRows and $channels …
+
+# Decide which columns to pass to Format-Table
+if ($channels.Count -gt 1) {
+    # multiple sticks: one column per channel
+    $propList = @('Property') + $channels
 }
+elseif ($channels.Count -eq 1) {
+    # single stick: Property + that one channel
+    $propList = @('Property', $channels[0])
+}
+else {
+    # (shouldn’t happen) fallback
+    $propList = @('Property')
+}
+
+# Render the table
+$dataRows | Format-Table -AutoSize -Property $propList
 
 # Print summary
 "Maximum supported RAM:   $maxCapGB GB"
