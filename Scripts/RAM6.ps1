@@ -65,12 +65,17 @@ $report = $modules | ForEach-Object {
 "Module speeds summary:    $($speeds -join ', ')"
 ""
 
-# ----------------------------------------------------------------------------
+# ----------------------------
 #  4) Per-channel columnar report
-# ----------------------------------------------------------------------------
+# ----------------------------
+# (after you've built $report)
+
+# 1) Figure out which channels we actually have
 $channels = @($report.Channel | Sort-Object -Unique)
 
-$dataRows = 'Manufacturer','BankLabel','DeviceLocator','CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber' |
+# 2) Build the rows for each property
+$dataRows = 'Manufacturer','BankLabel','DeviceLocator','CapacityGB',
+            'SpeedMTs','MemoryType','TypeDetail','SerialNumber' |
   ForEach-Object {
     $prop = $_
     $row  = [ordered]@{ Property = $prop }
@@ -80,9 +85,16 @@ $dataRows = 'Manufacturer','BankLabel','DeviceLocator','CapacityGB','SpeedMTs','
     [PSCustomObject]$row
   }
 
-# Decide columns: Property + channels (1 or many)
+# 3) Build the exact list of columns: always Property + each channel
 $propList = @('Property') + $channels
-$dataRows | Format-Table -AutoSize -Property $propList
+
+# 4) Splat into Format-Table so binding is unambiguous
+$ftParams = @{
+  AutoSize = $true
+  Property = $propList
+}
+
+$dataRows | Format-Table @ftParams
 
 "`n—and now the raw CIM table:`n"
 # ----------------------------------------------------------------------------
