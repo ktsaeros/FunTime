@@ -74,13 +74,13 @@ Write-Host "`nPer-channel summary:`n"
 
 foreach ($prop in 'Manufacturer','BankLabel','DeviceLocator','CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber') {
     $values = foreach ($c in $channels) {
-        # pull the value for this property & channel
-        $report | Where-Object Channel -eq $c |
-          Select-Object -ExpandProperty $prop |
-          ForEach-Object { "$c=`$($_)" }
+        # grab the value for this property & channel
+        $val = $report | Where-Object Channel -eq $c |
+               Select-Object -ExpandProperty $prop
+        # now just do "$c=$val"
+        "$c=$val"
     }
-    # line like "Manufacturer   : ChannelA=RAMAXEL,ChannelB=RAMAXEL"
-    Write-Host ("{0,-15}: {1}" -f $prop, ($values -join ',' ))
+    Write-Host ("{0,-15}: {1}" -f $prop, ($values -join ', '))
 }
 
 Write-Host "`n—and now the raw CIM table:`n"
