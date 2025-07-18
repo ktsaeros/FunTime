@@ -88,48 +88,4 @@ $modules |
     @{n='CapacityGB';e={[math]::Round($_.Capacity/1GB,2)}},
     @{n='MemoryTypeCode';e={$_.SMBIOSMemoryType}},
     TypeDetail,SerialNumber |
-  Format-Table -AutoSizechannels.Count -gt 1) {
-  # 2+ sticks: columnar table
-  $props = @('Property') + $channels
-  # build $dataRows same as you have it…
-  $dataRows = 'Manufacturer','BankLabel','DeviceLocator','CapacityGB',
-              'SpeedMTs','MemoryType','TypeDetail','SerialNumber' |
-    ForEach-Object {
-      $prop = $_
-      $row  = [ordered]@{ Property = $prop }
-      foreach ($c in $channels) {
-        $row[$c] = ($report | Where-Object Channel -EQ $c |
-                     Select-Object -ExpandProperty $prop) -join ', '
-      }
-      [PSCustomObject]$row
-    }
-
-  Write-Host "`nPer-channel summary:`n"
-  $dataRows | Format-Table -AutoSize -Property $props
-}
-else {
-  # single stick: simple key:value list
-  $c = $channels[0]
-  $obj = $report | Where-Object Channel -EQ $c
-  Write-Host "`nChannel ${c}:`n"
-  foreach ($prop in 
-      'Manufacturer','BankLabel','DeviceLocator',
-      'CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber'
-  ) {
-    Write-Host ("{0,-15}: {1}" -f $prop, $obj.$prop)
-  }
-}
-
-Write-Host "`n—and now the raw CIM table:`n"
-
-# ----------------------------------------------------------------------------
-#  5) Raw detailed CIM table
-# ----------------------------------------------------------------------------
-$modules |
-  Select-Object Manufacturer,BankLabel,
-    @{n='SpeedMHz';e={$_.ConfiguredClockSpeed}},
-    DeviceLocator,
-    @{n='CapacityGB';e={[math]::Round($_.Capacity/1GB,2)}},
-    @{n='MemoryTypeCode';e={$_.SMBIOSMemoryType}},
-    TypeDetail,SerialNumber |
   Format-Table -AutoSize
