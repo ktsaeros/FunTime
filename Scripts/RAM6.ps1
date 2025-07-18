@@ -65,17 +65,30 @@ $report = $modules | ForEach-Object {
 "Module speeds summary:    $($speeds -join ', ')"
 ""
 
-# ----------------------------
-#  4) Per-channel columnar report
-# ----------------------------
-# … after your summary …
+# # … up through your $report array …
 
-# build the merged report in $report as before…
-
-# detect channels
+# 4) Per-channel summary WITHOUT Format-Table
 $channels = @($report.Channel | Sort-Object -Unique)
 
-if ($channels.Count -gt 1) {
+Write-Host "`nPer-channel summary:`n"
+
+# For each property, print "Property: ChannelA=…, ChannelB=…" (or just one channel)
+foreach ($prop in 'Manufacturer','BankLabel','DeviceLocator','CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber') {
+    $values = $channels | ForEach-Object { "$_=$($report | Where{ $_.Channel -eq $_ } | Select-Object -Expand $prop)" }
+    Write-Host ("{0,-15}: {1}" -f $prop, ($values -join ', '))
+}
+
+Write-Host "`n—and now the raw CIM table:`n"
+
+# 5) Raw CIM table for reference
+$modules |
+  Select-Object Manufacturer,BankLabel,
+    @{n='SpeedMHz';e={$_.ConfiguredClockSpeed}},
+    DeviceLocator,
+    @{n='CapacityGB';e={[math]::Round($_.Capacity/1GB,2)}},
+    @{n='MemoryTypeCode';e={$_.SMBIOSMemoryType}},
+    TypeDetail,SerialNumber |
+  Format-Table -AutoSizechannels.Count -gt 1) {
   # 2+ sticks: columnar table
   $props = @('Property') + $channels
   # build $dataRows same as you have it…
