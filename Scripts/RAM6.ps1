@@ -65,17 +65,22 @@ $report = $modules | ForEach-Object {
 "Module speeds summary:    $($speeds -join ', ')"
 ""
 
-# # … up through your $report array …
-
-# 4) Per-channel summary WITHOUT Format-Table
+# ----------------------------
+#  4) Per-channel summary
+# ----------------------------
 $channels = @($report.Channel | Sort-Object -Unique)
 
 Write-Host "`nPer-channel summary:`n"
 
-# For each property, print "Property: ChannelA=…, ChannelB=…" (or just one channel)
 foreach ($prop in 'Manufacturer','BankLabel','DeviceLocator','CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber') {
-    $values = $channels | ForEach-Object { "$_=$($report | Where{ $_.Channel -eq $_ } | Select-Object -Expand $prop)" }
-    Write-Host ("{0,-15}: {1}" -f $prop, ($values -join ', '))
+    $values = foreach ($c in $channels) {
+        # pull the value for this property & channel
+        $report | Where-Object Channel -eq $c |
+          Select-Object -ExpandProperty $prop |
+          ForEach-Object { "$c=`$($_)" }
+    }
+    # line like "Manufacturer   : ChannelA=RAMAXEL,ChannelB=RAMAXEL"
+    Write-Host ("{0,-15}: {1}" -f $prop, ($values -join ',' ))
 }
 
 Write-Host "`n—and now the raw CIM table:`n"
