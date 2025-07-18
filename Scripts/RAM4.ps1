@@ -136,7 +136,15 @@ $dataRows = @(
 ""
 
 # Table: always `Property` plus exactly the channel columns
-$dataRows | Format-Table -AutoSize -Property @('Property') + $channels
+# … after you’ve built $dataRows and $channels …
+
+# Always show Property plus each channel name
+$props = @('Property') + $channels
+
+# Render – note the parentheses
+$dataRows |
+  Format-Table -AutoSize `
+    -Property ( $props )
 
 "`n—and now the raw CIM table:`n"
 
