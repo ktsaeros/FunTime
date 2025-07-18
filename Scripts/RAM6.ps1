@@ -1,18 +1,14 @@
 <#
 .SYNOPSIS
   RAM.ps1 – summary + per-channel columnar report + raw CIM table,
-  handling 1+ channels seamlessly, with DDR type & TypeDetail text.
+  handling 1+ channels seamlessly, with DDR type & TypeDetail text using CIM properties.
 #>
 
-# ----------------------------
-#  SMBIOS lookup tables & decoder
-# ----------------------------
-[string[]]$FORM_FACTORS = @(
-  'Invalid','Other','Unknown','SIMM','SIP','Chip','DIP','ZIP',
-  'Proprietary Card','DIMM','TSOP','Row of chips','RIMM','SODIMM','SRIMM','FB-DIMM','Die'
-)
+# ----------------------------------------------------------------------------
+#  Mapping tables for SMBIOSMemoryType and TypeDetail bits
+# ----------------------------------------------------------------------------
 [string[]]$MEMORY_TYPES = @(
-  'Invalid','Other','Unknown','DRAM','EDRAM','VRAM','SRAM','RAM',
+  'Unknown','Other','Unknown','DRAM','EDRAM','VRAM','SRAM','RAM',
   'ROM','FLASH','EEPROM','FEPROM','EPROM','CDRAM','3DRAM','SDRAM',
   'SGRAM','RDRAM','DDR','DDR2','DDR2 FB-DIMM','Reserved','Reserved','Reserved',
   'DDR3','FBD2','DDR4','LPDDR','LPDDR2','LPDDR3','LPDDR4','Logical non-volatile device',
@@ -23,42 +19,14 @@
   'CMOS','EDO','Window DRAM','Cache DRAM','Non-volatile','Registered','Unbuffered','LRDIMM'
 )
 
-function Decode-SMBiosDevice {
-  param([byte[]]$Raw, [int]$Offset)
-  $len  = $Raw[$Offset+1]
-  $data = $Raw[$Offset..($Offset + $len - 1)]
-
-  # Capacity
-  $sizeVal = [BitConverter]::ToUInt16($data,0x0C)
-  if    ($sizeVal -eq 0xFFFF)             { $size = [BitConverter]::ToUInt32($data,0x1C) }
-  elseif (($sizeVal -shr 15) -eq 0)        { $size = $sizeVal * 1MB }
-  else                                     { $size = ($sizeVal -band 0x7FFF) * 1KB }
-  $CapacityGB = [math]::Round($size/1GB,2)
-
-  # Memory type & detail
-  $MemoryType = $MEMORY_TYPES[$data[0x12]]
-  $td = [BitConverter]::ToUInt16($data,0x13)
-  $DetailFlags = (
-    0..15 | Where-Object { $td -band (1 -shl $_) } |
-    ForEach-Object { $TYPE_DETAILS[$_] }
-  ) -join ' | '
-  $TypeDetail = "0x{0:X2} ({1})" -f $td, $DetailFlags
-
-  # Speed
-  $sp = [BitConverter]::ToUInt16($data,0x15)
-  $SpeedMTs = if ($sp -eq 0xFFFF) { [BitConverter]::ToUInt32($data,0x54) } else { $sp }
-
-  return [PSCustomObject]@{
-    CapacityGB = $CapacityGB
-    MemoryType = $MemoryType
-    TypeDetail = $TypeDetail
-    SpeedMTs   = $SpeedMTs
-  }
+function Decode-TypeDetail { param([int]$flags)
+  $names = 0..15 | Where-Object { $flags -band (1 -shl $_) } | ForEach-Object { $TYPE_DETAILS[$_] }
+  return "0x{0:X2} ({1})" -f $flags, ($names -join ' | ')
 }
 
-# ----------------------------
-# 1) Basic CIM info & summary
-# ----------------------------
+# ----------------------------------------------------------------------------
+#  1) Gather basic CIM data and summary
+# ----------------------------------------------------------------------------
 $array       = Get-CimInstance Win32_PhysicalMemoryArray
 $modules     = Get-CimInstance Win32_PhysicalMemory
 $totalSlots  = $array.MemoryDevices
@@ -71,64 +39,60 @@ $speeds = $modules |
   Sort-Object Name |
   ForEach-Object { "$(($_.Name)) MT/s ×$($_.Count)" }
 
-# ----------------------------
-# 2) Parse SMBIOS (type 17) for each stick
-# ----------------------------
-$raw = (Get-WmiObject -Namespace root\wmi -Class MSSmBios_RawSMBiosTables).SMBiosData
-$idx = 0
-$smbiosList = @()
-while ($true) {
-  $t = $raw[$idx]; if ($t -eq 127) { break }
-  $l = $raw[$idx+1]
-  if ($t -eq 17) {
-    $smbiosList += Decode-SMBiosDevice -Raw $raw -Offset $idx
-  }
-  $idx += $l
-  while ([BitConverter]::ToUInt16($raw,$idx) -ne 0) { $idx++ }
-  $idx += 2
-}
-
-# ----------------------------
-# 3) Merge CIM + SMBIOS
-# ----------------------------
-$report = for ($i=0; $i -lt $modules.Count; $i++) {
-  $m = $modules[$i]; $s = $smbiosList[$i]
+# ----------------------------------------------------------------------------
+#  2) Build combined report from CIM properties
+# ----------------------------------------------------------------------------
+$report = $modules | ForEach-Object {
   [PSCustomObject]@{
-    Channel       = ($m.DeviceLocator -split '-')[0]
-    Manufacturer  = $m.Manufacturer
-    BankLabel     = $m.BankLabel
-    DeviceLocator = $m.DeviceLocator
-    CapacityGB    = $s.CapacityGB
-    SpeedMTs      = $s.SpeedMTs
-    MemoryType    = $s.MemoryType
-    TypeDetail    = $s.TypeDetail
-    SerialNumber  = $m.SerialNumber
+    Channel       = ($_.DeviceLocator -split '-')[0]
+    Manufacturer  = $_.Manufacturer
+    BankLabel     = $_.BankLabel
+    DeviceLocator = $_.DeviceLocator
+    CapacityGB    = [math]::Round($_.Capacity/1GB,2)
+    SpeedMTs      = $_.ConfiguredClockSpeed
+    MemoryType    = if ($_.SMBIOSMemoryType -lt $MEMORY_TYPES.Length) { $MEMORY_TYPES[$_.SMBIOSMemoryType] } else { "Unknown(0x$($_.SMBIOSMemoryType):X)" }
+    TypeDetail    = Decode-TypeDetail -flags $_.TypeDetail
+    SerialNumber  = $_.SerialNumber
   }
 }
 
-# ----------------------------
-#  Render per-channel table
-# ----------------------------
-# (called after you’ve populated $dataRows and $report)
+# ----------------------------------------------------------------------------
+#  3) Summary output
+# ----------------------------------------------------------------------------
+"Maximum supported RAM:   $maxCapGB GB"
+"Physical slots:           $usedSlots of $totalSlots"
+"Currently installed:      $installedGB GB"
+"Module speeds summary:    $($speeds -join ', ')"
+""
 
-# 1) Gather channel names into an array
+# ----------------------------------------------------------------------------
+#  4) Per-channel columnar report
+# ----------------------------------------------------------------------------
 $channels = @($report.Channel | Sort-Object -Unique)
 
-# 2) Build the list of columns we want: always Property + each channel
-if      ($channels.Count -gt 1) { $propList = @('Property') + $channels }
-elseif  ($channels.Count -eq 1) { $propList = @('Property', $channels[0]) }
-else                            { $propList = @('Property') }
+$dataRows = 'Manufacturer','BankLabel','DeviceLocator','CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber' |
+  ForEach-Object {
+    $prop = $_
+    $row  = [ordered]@{ Property = $prop }
+    foreach ($c in $channels) {
+      $row[$c] = ($report | Where-Object Channel -EQ $c | Select-Object -ExpandProperty $prop) -join ', '
+    }
+    [PSCustomObject]$row
+  }
 
-# 3) Render
-$dataRows |
-  Format-Table -AutoSize -Property $propList
+# Decide columns: Property + channels (1 or many)
+$propList = @('Property') + $channels
+$dataRows | Format-Table -AutoSize -Property $propList
 
 "`n—and now the raw CIM table:`n"
-# Raw CIM table
+# ----------------------------------------------------------------------------
+#  5) Raw detailed CIM table
+# ----------------------------------------------------------------------------
 $modules |
   Select-Object Manufacturer,BankLabel,
     @{n='SpeedMHz';e={$_.ConfiguredClockSpeed}},
     DeviceLocator,
     @{n='CapacityGB';e={[math]::Round($_.Capacity/1GB,2)}},
+    @{n='MemoryTypeCode';e={$_.SMBIOSMemoryType}},
     TypeDetail,SerialNumber |
   Format-Table -AutoSize
