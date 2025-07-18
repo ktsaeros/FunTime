@@ -68,33 +68,46 @@ $report = $modules | ForEach-Object {
 # ----------------------------
 #  4) Per-channel columnar report
 # ----------------------------
-# (after you've built $report)
+# … after your summary …
 
-# 1) Figure out which channels we actually have
+# build the merged report in $report as before…
+
+# detect channels
 $channels = @($report.Channel | Sort-Object -Unique)
 
-# 2) Build the rows for each property
-$dataRows = 'Manufacturer','BankLabel','DeviceLocator','CapacityGB',
-            'SpeedMTs','MemoryType','TypeDetail','SerialNumber' |
-  ForEach-Object {
-    $prop = $_
-    $row  = [ordered]@{ Property = $prop }
-    foreach ($c in $channels) {
-      $row[$c] = ($report | Where-Object Channel -EQ $c | Select-Object -ExpandProperty $prop) -join ', '
+if ($channels.Count -gt 1) {
+  # 2+ sticks: columnar table
+  $props = @('Property') + $channels
+  # build $dataRows same as you have it…
+  $dataRows = 'Manufacturer','BankLabel','DeviceLocator','CapacityGB',
+              'SpeedMTs','MemoryType','TypeDetail','SerialNumber' |
+    ForEach-Object {
+      $prop = $_
+      $row  = [ordered]@{ Property = $prop }
+      foreach ($c in $channels) {
+        $row[$c] = ($report | Where-Object Channel -EQ $c |
+                     Select-Object -ExpandProperty $prop) -join ', '
+      }
+      [PSCustomObject]$row
     }
-    [PSCustomObject]$row
+
+  Write-Host "`nPer-channel summary:`n"
+  $dataRows | Format-Table -AutoSize -Property $props
+}
+else {
+  # single stick: simple key:value list
+  $c = $channels[0]
+  $obj = $report | Where-Object Channel -EQ $c
+  Write-Host "`nChannel $c:`n"
+  foreach ($prop in 
+      'Manufacturer','BankLabel','DeviceLocator',
+      'CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber'
+  ) {
+    Write-Host ("{0,-15}: {1}" -f $prop, $obj.$prop)
   }
-
-# 3) Build the exact list of columns: always Property + each channel
-$propList = @('Property') + $channels
-
-# 4) Splat into Format-Table so binding is unambiguous
-$ftParams = @{
-  AutoSize = $true
-  Property = $propList
 }
 
-$dataRows | Format-Table @ftParams
+Write-Host "`n—and now the raw CIM table:`n"
 
 "`n—and now the raw CIM table:`n"
 # ----------------------------------------------------------------------------
