@@ -98,7 +98,7 @@ else {
   # single stick: simple key:value list
   $c = $channels[0]
   $obj = $report | Where-Object Channel -EQ $c
-  Write-Host "`nChannel $c:`n"
+  Write-Host "`nChannel ${c}:`n"
   foreach ($prop in 
       'Manufacturer','BankLabel','DeviceLocator',
       'CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber'
@@ -108,6 +108,7 @@ else {
 }
 
 Write-Host "`n—and now the raw CIM table:`n"
+
 # ----------------------------------------------------------------------------
 #  5) Raw detailed CIM table
 # ----------------------------------------------------------------------------
