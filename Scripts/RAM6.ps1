@@ -107,37 +107,21 @@ $report = for ($i=0; $i -lt $modules.Count; $i++) {
 }
 
 # ----------------------------
-# 4) Build & render per-channel table
+#  Render per-channel table
 # ----------------------------
-# … after building $dataRows and $channels …
+# (called after you’ve populated $dataRows and $report)
 
-# Decide which columns to pass to Format-Table
-if ($channels.Count -gt 1) {
-    # multiple sticks: one column per channel
-    $propList = @('Property') + $channels
-}
-elseif ($channels.Count -eq 1) {
-    # single stick: Property + that one channel
-    $propList = @('Property', $channels[0])
-}
-else {
-    # (shouldn’t happen) fallback
-    $propList = @('Property')
-}
+# 1) Gather channel names into an array
+$channels = @($report.Channel | Sort-Object -Unique)
 
-# Render the table
-$dataRows | Format-Table -AutoSize -Property $propList
+# 2) Build the list of columns we want: always Property + each channel
+if      ($channels.Count -gt 1) { $propList = @('Property') + $channels }
+elseif  ($channels.Count -eq 1) { $propList = @('Property', $channels[0]) }
+else                            { $propList = @('Property') }
 
-# Print summary
-"Maximum supported RAM:   $maxCapGB GB"
-"Physical slots:           $usedSlots of $totalSlots"
-"Currently installed:      $installedGB GB"
-"Module speeds summary:    $($speeds -join ', ')"
-""
-
-# Render columnar table via splatting
-$splat = @{ AutoSize = $true; Property = @('Property') + $channels }
-$dataRows | Format-Table @splat
+# 3) Render
+$dataRows |
+  Format-Table -AutoSize -Property $propList
 
 "`n—and now the raw CIM table:`n"
 # Raw CIM table
