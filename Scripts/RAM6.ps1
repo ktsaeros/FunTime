@@ -66,21 +66,20 @@ $report = $modules | ForEach-Object {
 ""
 
 # ----------------------------
-#  4) Per-channel summary
+#  4) Per-channel summary (host-safe)
 # ----------------------------
 $channels = @($report.Channel | Sort-Object -Unique)
 
 Write-Host "`nPer-channel summary:`n"
 
 foreach ($prop in 'Manufacturer','BankLabel','DeviceLocator','CapacityGB','SpeedMTs','MemoryType','TypeDetail','SerialNumber') {
-    $values = foreach ($c in $channels) {
-        # grab the value for this property & channel
-        $val = $report | Where-Object Channel -eq $c |
-               Select-Object -ExpandProperty $prop
-        # now just do "$c=$val"
-        "$c=$val"
+    # Build a string of Channel=Value pairs without any $() metacharacters
+    $pairs = $channels | ForEach-Object {
+        $val = ($report | Where-Object Channel -eq $_ | Select-Object -ExpandProperty $prop)
+        "$_=$val"
     }
-    Write-Host ("{0,-15}: {1}" -f $prop, ($values -join ', '))
+    # e.g. "Manufacturer   : ChannelA=RAMAXEL,ChannelB=RAMAXEL"
+    Write-Host ("{0,-15}: {1}" -f $prop, ($pairs -join ','))
 }
 
 Write-Host "`n—and now the raw CIM table:`n"
