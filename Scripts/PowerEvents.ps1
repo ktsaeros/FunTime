@@ -1,0 +1,1 @@
+Get-WinEvent -FilterHashtable @{LogName='System';Id=@(1,42,107,6005,6006,6008);StartTime=(Get-Date).AddDays(-14)} | Select-Object TimeCreated,@{Name='EventType';Expression={switch ($_.Id){6005{'Startup'}6006{'Shutdown'}6008{'Unexpected Shutdown'}1{'Wake'}42{'Sleep'}107{'Resume'}default{"ID $_"}}}},Message
