@@ -1,5 +1,5 @@
 # Run elevated (SYSTEM/Admin)
-$profile = 'Diane'
+$profile = 'brittanni'
 # 1) Lookup her SID from ProfileList
 $pl = 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList'
 $sid = Get-ChildItem $pl |
