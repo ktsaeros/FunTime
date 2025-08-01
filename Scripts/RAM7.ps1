@@ -82,7 +82,7 @@ $report = $modules | ForEach-Object {
 #  3) Top summary output (Max / Slots / Installed / Speeds / FormFactor)
 # ----------------------------------------------------------------------------
 "Maximum supported RAM:   $maxCapGB GB"
-"Physical slots:           $usedSlots of $totalSlots"
+"Physical slots:           $totalSlots slots, $usedSlots used"
 "Currently installed:      $installedGB GB"
 "Module speeds summary:    $($speeds -join ', ')"
 "Form factors summary:     $($formFactors -join ', ')"
