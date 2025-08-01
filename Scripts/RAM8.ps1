@@ -80,12 +80,12 @@ $report = $modules | ForEach-Object {
 # ----------------------------------------------------------------------------
 #  3) Top summary output (Max / Slots / Installed / Speeds / FormFactor)
 # ----------------------------------------------------------------------------
-"Maximum supported RAM:   $($maxCapGB) GB"
-"Physical slots:           $($totalSlots) slots, $($usedSlots) used"
-"Currently installed:      $($installedGB) GB"
-"Module speeds summary:    $($speeds -join ', ')"
-"Form factors summary:     $($formFactors -join ', ')"
-""
+Write-Host "Maximum supported RAM:   $maxCapGB GB"
+Write-Host ("Physical slots:           {0} slots, {1} used" -f $totalSlots, $usedSlots)
+Write-Host "Currently installed:      $installedGB GB"
+Write-Host ("Module speeds summary:    {0}" -f ($speeds -join ', '))
+Write-Host ("Form factors summary:     {0}" -f ($formFactors -join ', '))
+Write-Host ""
 
 # ----------------------------------------------------------------------------
 #  4) Per-channel summary
@@ -102,7 +102,7 @@ foreach ($prop in 'Manufacturer','BankLabel','DeviceLocator','FormFactor','Capac
 }
 
 # ----------------------------------------------------------------------------
-# 5) Raw CIM table
+#  5) Raw CIM table
 # ----------------------------------------------------------------------------
 $modules |
   Select-Object Manufacturer,BankLabel,
