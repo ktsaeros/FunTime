@@ -1,5 +1,5 @@
 <# ============================
-   Power Stability Quick Report (resilient)
+   Power Stability Quick Report (PS5-safe)
    ============================ #>
 
 $lookbackDays = 14
@@ -25,7 +25,8 @@ try {
     } catch { }
   }
 }
-Write-Output ("Last Boot Time: {0}" -f ($lastBoot ? $lastBoot : '(unavailable)'))
+$lbText = if ($lastBoot) { $lastBoot } else { '(unavailable)' }
+Write-Output ("Last Boot Time: {0}" -f $lbText)
 Write-Output ""
 
 # ---------- Helpers ----------
@@ -47,12 +48,12 @@ function Get-ByIds {
 $events = @()
 
 # Primary (provider-filtered)
-$events += Get-ByProvider -Provider 'EventLog'                              -Ids @(6005,6006,6008) -Start $since
-$events += Get-ByProvider -Provider 'Microsoft-Windows-Eventlog'            -Ids @(6005,6006,6008) -Start $since
-$events += Get-ByProvider -Provider 'Microsoft-Windows-Kernel-Power'        -Ids @(41,42,107)      -Start $since
-$events += Get-ByProvider -Provider 'Microsoft-Windows-Power-Troubleshooter'-Ids @(1)              -Start $since
+$events += Get-ByProvider -Provider 'EventLog'                               -Ids @(6005,6006,6008) -Start $since
+$events += Get-ByProvider -Provider 'Microsoft-Windows-Eventlog'             -Ids @(6005,6006,6008) -Start $since
+$events += Get-ByProvider -Provider 'Microsoft-Windows-Kernel-Power'         -Ids @(41,42,107)      -Start $since
+$events += Get-ByProvider -Provider 'Microsoft-Windows-Power-Troubleshooter' -Ids @(1)              -Start $since
 
-# Fallback if nothing came back (ID-only, then filter out FilterManager "CldFlt" noise)
+# Fallback (ID-only), filter out FilterManager/CldFlt noise
 if (-not $events -or $events.Count -eq 0) {
   $all = Get-ByIds -Ids @(6005,6006,6008,41,42,107,1) -Start $since
   $events = $all | Where-Object {
@@ -67,7 +68,7 @@ if (-not $events -or $events.Count -eq 0) {
   return
 }
 
-# Normalize
+# ---------- Normalize ----------
 $normalized = $events |
   Sort-Object TimeCreated |
   ForEach-Object {
@@ -91,7 +92,7 @@ $normalized = $events |
       if (-not $wakeSource) { $wakeSource = 'Wake Source: (not reported)' }
     }
 
-    [PSCustomObject]@{
+    New-Object PSObject -Property @{
       TimeCreated = $_.TimeCreated
       Provider    = $_.ProviderName
       Id          = $_.Id
@@ -105,16 +106,16 @@ $normalized | Select-Object TimeCreated, EventType, Detail | Format-Table -AutoS
 Write-Output ""
 
 # ---------- Boot → Shutdown cycles with uptime ----------
-$boots   = $normalized | Where-Object { $_.EventType -eq 'Startup' }
+$boots    = $normalized | Where-Object { $_.EventType -eq 'Startup' }
 $endTypes = @('Shutdown','Unexpected Shutdown','Kernel-Power 41 (power loss)')
 $cycles = foreach ($b in $boots) {
   $end = $normalized | Where-Object {
     $_.TimeCreated -gt $b.TimeCreated -and $_.EventType -in $endTypes
   } | Select-Object -First 1
-  [PSCustomObject]@{
+  New-Object PSObject -Property @{
     BootTime      = $b.TimeCreated
-    EndTime       = $end.TimeCreated
-    EndType       = $end.EventType
+    EndTime       = if ($end) { $end.TimeCreated } else { $null }
+    EndType       = if ($end) { $end.EventType }  else { $null }
     UptimeSeconds = if ($end) { [int]([timespan]($end.TimeCreated - $b.TimeCreated)).TotalSeconds } else { $null }
   }
 }
