@@ -1,12 +1,26 @@
+#Requires -Version 5.1
 <# ============================
-   Power Stability Quick Report (PS5-safe)
+   Power Stability Quick Report (PS5-safe, remote-friendly)
+   - Works with: irm '.../Power2.ps1' | iex
+   - Filters CldFlt/FilterManager noise
+   - Shows boot→shutdown cycles with uptime seconds
+   - Adds WHEA / Kernel-Processor-Power / Kernel-Thermal hints
+   - Reports sleep/hibernate timeouts (minutes) + supported sleep states
    ============================ #>
 
+# ---- Settings ----
 $lookbackDays = 14
 $since        = (Get-Date).AddDays(-$lookbackDays)
 $sinceHints   = (Get-Date).AddDays(-3)
 
 Write-Output ("=== Power Stability Report (last {0} days) ===" -f $lookbackDays)
+# Elevation hint (not required, but helpful)
+try {
+  $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()
+             ).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
+  if (-not $isAdmin) { Write-Output "Note: Running non-elevated; some System log entries may be hidden." }
+} catch { }
+
 Write-Output ""
 
 # ---------- Last Boot (multi-source fallback) ----------
@@ -36,7 +50,6 @@ function Get-ByProvider {
     Get-WinEvent -FilterHashtable @{LogName='System'; ProviderName=$Provider; Id=$Ids; StartTime=$Start} -ErrorAction Stop
   } catch { @() }
 }
-
 function Get-ByIds {
   param([int[]]$Ids,[datetime]$Start)
   try {
@@ -63,7 +76,8 @@ if (-not $events -or $events.Count -eq 0) {
 }
 
 if (-not $events -or $events.Count -eq 0) {
-  Write-Output "No matching power/boot events found in the last $lookbackDays days (try running PowerShell as Administrator)."
+  Write-Output "No matching power/boot events found in the last $lookbackDays days."
+  Write-Output "Try: Run PowerShell as Administrator or increase lookbackDays."
   Write-Output "=== End of report ==="
   return
 }
@@ -73,15 +87,15 @@ $normalized = $events |
   Sort-Object TimeCreated |
   ForEach-Object {
     $etype = switch -Regex ("$($_.ProviderName)|$($_.Id)") {
-      'EventLog\|6005' { 'Startup' }
-      'EventLog\|6006' { 'Shutdown' }
-      'EventLog\|6008' { 'Unexpected Shutdown' }
-      'Microsoft-Windows-Eventlog\|6005' { 'Startup' }
-      'Microsoft-Windows-Eventlog\|6006' { 'Shutdown' }
-      'Microsoft-Windows-Eventlog\|6008' { 'Unexpected Shutdown' }
-      'Microsoft-Windows-Kernel-Power\|41'  { 'Kernel-Power 41 (power loss)' }
-      'Microsoft-Windows-Kernel-Power\|42'  { 'Sleep' }
-      'Microsoft-Windows-Kernel-Power\|107' { 'Resume' }
+      'EventLog\|6005'                     { 'Startup' }
+      'EventLog\|6006'                     { 'Shutdown' }
+      'EventLog\|6008'                     { 'Unexpected Shutdown' }
+      'Microsoft-Windows-Eventlog\|6005'   { 'Startup' }
+      'Microsoft-Windows-Eventlog\|6006'   { 'Shutdown' }
+      'Microsoft-Windows-Eventlog\|6008'   { 'Unexpected Shutdown' }
+      'Microsoft-Windows-Kernel-Power\|41' { 'Kernel-Power 41 (power loss)' }
+      'Microsoft-Windows-Kernel-Power\|42' { 'Sleep' }
+      'Microsoft-Windows-Kernel-Power\|107'{ 'Resume' }
       'Microsoft-Windows-Power-Troubleshooter\|1' { 'Wake' }
       default { "Other ($($_.ProviderName) ID $($_.Id))" }
     }
@@ -187,7 +201,6 @@ $whea = Get-WinEvent -FilterHashtable @{
   LogName='System'; ProviderName='Microsoft-Windows-WHEA-Logger'; StartTime=$sinceHints
 } -ErrorAction SilentlyContinue |
   Select-Object TimeCreated, Id, LevelDisplayName, Message
-
 if ($whea) {
   Write-Output "--- WHEA-Logger ---"
   $whea | Select-Object TimeCreated, Id, LevelDisplayName | Format-Table -AutoSize
@@ -198,7 +211,6 @@ $kpp = Get-WinEvent -FilterHashtable @{
   LogName='System'; ProviderName='Microsoft-Windows-Kernel-Processor-Power'; StartTime=$sinceHints
 } -ErrorAction SilentlyContinue |
   Select-Object TimeCreated, Id, Message
-
 if ($kpp) {
   Write-Output "--- Kernel-Processor-Power ---"
   $kpp | Select-Object TimeCreated, Id, Message | Format-Table -Wrap
@@ -209,7 +221,6 @@ $kth = Get-WinEvent -FilterHashtable @{
   LogName='System'; ProviderName='Microsoft-Windows-Kernel-Thermal'; StartTime=$sinceHints
 } -ErrorAction SilentlyContinue |
   Select-Object TimeCreated, Id, Message
-
 if ($kth) {
   Write-Output "--- Kernel-Thermal ---"
   $kth | Select-Object TimeCreated, Id, Message | Format-Table -Wrap
