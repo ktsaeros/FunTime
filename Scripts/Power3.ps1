@@ -101,10 +101,10 @@ $evShut  = $evAll  | Where-Object { ($_.Id -eq 6006) -and ($_.ProviderName -in @
 $evStart = $evAll  | Where-Object { ($_.Id -eq 6005) -and ($_.ProviderName -in @('EventLog','Microsoft-Windows-Eventlog')) }
 $evSleep = $evAll  | Where-Object { $_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 42  }
 $evResum = $evAll  | Where-Object { $_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 107 }
-$evWake  = $evAll  | Where-Object {
- $_.Id -eq 1 -and (
-    $_.ProviderName -eq 'Microsoft-Windows-Power-Troubleshooter' -or
-    $_.Message -match 'Wake Source'
+$evWake = $evAll | Where-Object {
+  $_.Id -eq 1 -and (
+    ($_.ProviderName -like '*Power-Troubleshooter*') -or
+    ($_.Message -match '(?i)\bWake Source\b|\bWake Reason\b')
   )
 }
 $evUnexp = $evAll  | Where-Object {
@@ -171,6 +171,21 @@ foreach ($e in $evResum) {
 foreach ($e in $evWake) {
   $ws  = $null   # e.g., "Device -USB Keyboard" or "Timer - Windows Update"
   $wst = $null   # optional "Wake Source Text: ..." line on some systems
+
+# Fallback: derive wake from Resume when no Power-Troubleshooter event was found
+if ( ($rows | Where-Object { $_.'Event type' -like 'Wake*' }).Count -eq 0 -and $evResum.Count -gt 0 ) {
+  foreach ($e in $evResum) {
+    $rows.Add([pscustomobject]@{
+      Timestamp      = $e.TimeCreated
+      'Event type'   = 'Wake (derived from Resume)'
+      'Initiated by' = ''
+      Reason         = 'Resume logged; no Power-Troubleshooter wake source'
+      Type           = ''
+      'Completed at' = ''
+      Message        = ($e.Message -split "`r?`n")[0]
+    })
+  }
+}
 
   # Parse the event message lines
   ($e.Message -split "`r?`n") | ForEach-Object {
