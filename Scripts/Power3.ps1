@@ -448,7 +448,6 @@ try {
     OSName          = $ci.OsName
     Edition         = $cv.EditionID
     DisplayVersion  = $displayVersion    # e.g., "24H2"
-    ProductName     = $cv.ProductName    # e.g., "Windows 11 Pro"
     Build           = $build             # e.g., "26100.1234"
     BuildLab        = $cv.BuildLabEx
   } | Format-List
