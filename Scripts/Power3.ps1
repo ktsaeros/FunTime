@@ -201,20 +201,58 @@ foreach ($e in $evUnexp) {
   })
 }
 
-# === Print unified timeline ===
-Write-Output "=== Unified power timeline (requests merged with completions) ==="
-$rows |
-  Sort-Object Timestamp |
-  Format-Table -Wrap `
-    @{ Label = 'Timestamp';    Expression = { $_.Timestamp } },
-    @{ Label = 'Event type';   Expression = { $_.'Event type' } },
-    @{ Label = 'Initiated by'; Expression = { $_.'Initiated by' } },
-    @{ Label = 'Reason';       Expression = { $_.Reason } },
-    @{ Label = 'Type';         Expression = { $_.Type } },
-    @{ Label = 'Completed';    Expression = { $_.'Completed at' } },  # shorter header to avoid vertical wrapping
-    @{ Label = 'Message';      Expression = { $_.Message } }
+# === Print unified timeline (auto-adjust to console width) ===
+function Show-Timeline {
+  param([Parameter(Mandatory=$true)]$Rows)
 
-Write-Output ""
+  # Safely detect console width (fallback to 120 if not available)
+  $width = 120
+  try {
+    if ($Host -and $Host.UI -and $Host.UI.RawUI) {
+      $width = [int]$Host.UI.RawUI.BufferSize.Width
+      if ($width -lt 20) { $width = 120 }
+    }
+  } catch { $width = 120 }
+
+  Write-Output "=== Unified power timeline (requests merged with completions) ==="
+
+  if ($width -ge 180) {
+    # WIDE: full table
+    ($Rows | Sort-Object Timestamp |
+      Format-Table -Wrap `
+        @{ Label = 'Timestamp';    Expression = { $_.Timestamp } },
+        @{ Label = 'Event type';   Expression = { $_.'Event type' } },
+        @{ Label = 'Initiated by'; Expression = { $_.'Initiated by' } },
+        @{ Label = 'Reason';       Expression = { $_.Reason } },
+        @{ Label = 'Type';         Expression = { $_.Type } },
+        @{ Label = 'Completed';    Expression = { $_.'Completed at' } },
+        @{ Label = 'Message';      Expression = { $_.Message } } |
+      Out-String -Width $width) | Write-Output
+
+  } elseif ($width -ge 130) {
+    # MEDIUM: drop Message to keep table tidy
+    ($Rows | Sort-Object Timestamp |
+      Format-Table -Wrap `
+        @{ Label = 'Timestamp';    Expression = { $_.Timestamp } },
+        @{ Label = 'Event type';   Expression = { $_.'Event type' } },
+        @{ Label = 'Initiated by'; Expression = { $_.'Initiated by' } },
+        @{ Label = 'Reason';       Expression = { $_.Reason } },
+        @{ Label = 'Type';         Expression = { $_.Type } },
+        @{ Label = 'Completed';    Expression = { $_.'Completed at' } } |
+      Out-String -Width $width) | Write-Output
+
+  } else {
+    # NARROW: list view (everything readable, no horizontal squeezing)
+    ($Rows | Sort-Object Timestamp |
+      Select-Object Timestamp,'Event type','Initiated by',Reason,Type,'Completed at',Message |
+      Format-List |
+      Out-String -Width $width) | Write-Output
+  }
+
+  Write-Output ""
+}
+
+Show-Timeline -Rows $rows
 
 
 # ---------- Boot → Shutdown cycles with uptime ----------
