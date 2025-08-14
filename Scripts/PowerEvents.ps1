@@ -61,9 +61,18 @@ Write-Output ("  On Battery: {0} minutes" -f $hdcMin)
 Write-Output ''  # spacer
 
 # ============================================
-# Section 3: Auto-Disable Sleep if Needed
+# Section 3: Recommend Updated Power Settings
 # ============================================
-if ( ($acMin -gt 0) -or ($dcMin -gt 0) -or ($hacMin -gt 0) -or ($hdcMin -gt 0) ) {
-    Write-Output 'One or more power‐timeout settings is non-zero. To disable all sleep/hibernate, run:'
-    Write-Output '  powercfg /change standby-timeout-ac 0; powercfg /change standby-timeout-dc 0; powercfg /hibernate off'
+
+# Get current settings
+$acMin   = (powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE AC).Split()[-1]
+$dcMin   = (powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE DC).Split()[-1]
+$hibern  = (powercfg /query SCHEME_CURRENT SUB_SLEEP HIBERNATEIDLE AC).Split()[-1] # not the hibernate state itself
+$hibStat = (powercfg /availablesleepstates | Select-String -Pattern "Hibernate has been disabled") -eq $null
+
+# If hibernate is ON or AC sleep timeout > 0, recommend fixing
+if ( $hibStat -or ($acMin -gt 0) ) {
+    Write-Output "Hibernate is currently ON or AC sleep timeout is greater than 0."
+    Write-Output "To apply recommended settings, run:"
+    Write-Output "  powercfg /change standby-timeout-ac 0; powercfg /change standby-timeout-dc 15; powercfg /change monitor-timeout-ac 20; powercfg /change monitor-timeout-dc 5; powercfg /hibernate off"
 }
