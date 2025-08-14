@@ -115,7 +115,7 @@ $hibEnabled = Get-HibernateEnabled
 
 # --- Debug print (no assumptions if values are $null)
 Write-Output "Current power settings:"
-Write-Output ("  Sleep after (AC/DC): {0} / {1} minutes" -f ($acMin ?? 'unknown'), ($dcMin ?? 'unknown'))
+Write-Output ("  Sleep after (AC/DC): {0} / {1} minutes" -f ($acMin -ne $null ? $acMin : 'unknown', $dcMin -ne $null ? $dcMin : 'unknown'))
 Write-Output "  Hibernate enabled: $hibEnabled"
 
 # --- Trigger if Hibernate is ON or AC sleep > 0
