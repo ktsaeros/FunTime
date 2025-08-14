@@ -45,8 +45,8 @@ $acHex = ($sleepSettings | Select-String 'Current AC Power Setting Index').Line.
 $dcHex = ($sleepSettings | Select-String 'Current DC Power Setting Index').Line.Split(':')[-1].Trim()
 $acMin = [convert]::ToInt32($acHex,16) / 60
 $dcMin = [convert]::ToInt32($dcHex,16) / 60
-Write-Output ("  Plugged In: {0} minutes" -f $acMin)
-Write-Output ("  On Battery: {0} minutes" -f $dcMin)
+Write-Output ("  Plugged In/AC: {0} minutes" -f $acMin)
+Write-Output ("  On Battery/DC: {0} minutes" -f $dcMin)
 Write-Output ''  # spacer
 
 # 2d. Parse & display Hibernate settings
