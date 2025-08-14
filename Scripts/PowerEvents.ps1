@@ -64,15 +64,62 @@ Write-Output ''  # spacer
 # Section 3: Recommend Updated Power Settings
 # ============================================
 
-# Get current settings
-$acMin   = (powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE AC).Split()[-1]
-$dcMin   = (powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE DC).Split()[-1]
-$hibern  = (powercfg /query SCHEME_CURRENT SUB_SLEEP HIBERNATEIDLE AC).Split()[-1] # not the hibernate state itself
-$hibStat = (powercfg /availablesleepstates | Select-String -Pattern "Hibernate has been disabled") -eq $null
+function Get-StandbyTimeoutMinutes {
+    # Returns a hashtable: @{ AC = <int>; DC = <int> }
+    $result = @{ AC = $null; DC = $null }
+    $out = powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE 2>$null
 
-# If hibernate is ON or AC sleep timeout > 0, recommend fixing
-if ( $hibStat -or ($acMin -gt 0) ) {
-    Write-Output "Hibernate is currently ON or AC sleep timeout is greater than 0."
-    Write-Output "To apply recommended settings, run:"
+    if (-not $out) { return $result }
+
+    # Newer Windows format:
+    #   Plugged In: 0 minutes
+    #   On Battery: 15 minutes
+    $acMin = ($out | Select-String -Pattern 'Plugged In:\s+(\d+)\s+minutes').Matches |
+             ForEach-Object { [int]$_.Groups[1].Value } | Select-Object -First 1
+    $dcMin = ($out | Select-String -Pattern 'On Battery:\s+(\d+)\s+minutes').Matches |
+             ForEach-Object { [int]$_.Groups[1].Value } | Select-Object -First 1
+
+    # Older Windows fallback:
+    #   Current AC Power Setting Index: 0x0000000F  (minutes)
+    #   Current DC Power Setting Index: 0x0000000A
+    if ($null -eq $acMin) {
+        $acHex = ($out | Select-String -Pattern 'Current AC Power Setting Index:\s+0x([0-9A-Fa-f]+)').Matches |
+                 ForEach-Object { $_.Groups[1].Value } | Select-Object -First 1
+        if ($acHex) { $acMin = [int]("0x$acHex") }
+    }
+    if ($null -eq $dcMin) {
+        $dcHex = ($out | Select-String -Pattern 'Current DC Power Setting Index:\s+0x([0-9A-Fa-f]+)').Matches |
+                 ForEach-Object { $_.Groups[1].Value } | Select-Object -First 1
+        if ($dcHex) { $dcMin = [int]("0x$dcHex") }
+    }
+
+    $result.AC = $acMin
+    $result.DC = $dcMin
+    return $result
+}
+
+function Get-HibernateEnabled {
+    # Returns $true if Hibernate is enabled, $false if disabled
+    $a = powercfg /a 2>$null
+    if (-not $a) { return $false }  # be conservative
+    # When hibernate is OFF, Windows prints: "Hibernate has been disabled."
+    return -not ($a | Select-String -SimpleMatch 'Hibernate has been disabled')
+}
+
+# --- Fetch current values
+$timeouts = Get-StandbyTimeoutMinutes
+$acMin = $timeouts.AC
+$dcMin = $timeouts.DC
+$hibEnabled = Get-HibernateEnabled
+
+# --- Debug print (optional)
+Write-Output "Current power settings:"
+Write-Output "  Sleep after (AC/DC): $acMin / $dcMin minutes"
+Write-Output "  Hibernate enabled: $hibEnabled"
+
+# --- Trigger if Hibernate is ON or AC sleep > 0
+if ($hibEnabled -or ($acMin -gt 0)) {
+    Write-Output "Hibernate is ON or AC sleep timeout is > 0."
+    Write-Output "To apply recommended settings (hibernate OFF, AC no-sleep; DC sleeps after 15 min; display timeouts):"
     Write-Output "  powercfg /change standby-timeout-ac 0; powercfg /change standby-timeout-dc 15; powercfg /change monitor-timeout-ac 20; powercfg /change monitor-timeout-dc 5; powercfg /hibernate off"
 }
