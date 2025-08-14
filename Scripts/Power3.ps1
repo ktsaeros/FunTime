@@ -81,35 +81,21 @@ if (-not $events -or $events.Count -eq 0) {
 }
 
 
-# ---------- Unified power timeline (merges 1074 requests with shutdown completions) ----------
+# ---------- Unified power timeline (columnar, merges 1074 with shutdown) ----------
 
 function Get-InitiatorAndReason {
   param($ev)  # expects a USER32 1074 event
-  $who = 'System/Service'
-  $isUser = $false
-
-  if ($ev.Message -match 'process .*TrustedInstaller') {
-    $who = 'TrustedInstaller (Windows Update)'
-  } elseif ($ev.Message -match 'by user\s+([^\r\n]+)') {
-    $who = "User: $($Matches[1])"
-    $isUser = $true
-  } elseif ($ev.Message -match 'on behalf of user\s+([^\r\n]+?)\s+for the following reason:') {
-    $who = "On behalf of: $($Matches[1])"
-  } elseif ($ev.Message -match 'on behalf of user\s+([^\r\n]+)') {
-    $who = "On behalf of: $($Matches[1])"
-  }
-
-  $reason = $null
-  if ($ev.Message -match 'for the following reason:\s*([^\r\n]+)') { $reason = $Matches[1] }
-  $stype  = $null
-  if ($ev.Message -match 'Shutdown Type:\s*([^\r\n]+)')          { $stype  = $Matches[1] }
-
+  $who = 'System/Service'; $isUser = $false
+  if ($ev.Message -match 'process .*TrustedInstaller') { $who = 'TrustedInstaller (Windows Update)' }
+  elseif ($ev.Message -match 'by user\s+([^\r\n]+)')   { $who = "User: $($Matches[1])"; $isUser = $true }
+  elseif ($ev.Message -match 'on behalf of user\s+([^\r\n]+?)\s+for the following reason:') { $who = "On behalf: $($Matches[1])" }
+  elseif ($ev.Message -match 'on behalf of user\s+([^\r\n]+)') { $who = "On behalf: $($Matches[1])" }
+  $reason = $null; if ($ev.Message -match 'for the following reason:\s*([^\r\n]+)') { $reason = $Matches[1] }
+  $stype  = $null; if ($ev.Message -match 'Shutdown Type:\s*([^\r\n]+)')          { $stype  = $Matches[1] }
   [pscustomobject]@{ Who = $who; IsUser = $isUser; Reason = $reason; SType = $stype }
 }
 
 $evAll   = $events | Sort-Object TimeCreated
-
-# Slice by Provider+Id (prevents mislabeling)
 $ev1074  = $evAll  | Where-Object { $_.ProviderName -eq 'USER32' -and $_.Id -eq 1074 }
 $evShut  = $evAll  | Where-Object { ($_.Id -eq 6006) -and ($_.ProviderName -in @('EventLog','Microsoft-Windows-Eventlog')) }
 $evStart = $evAll  | Where-Object { ($_.Id -eq 6005) -and ($_.ProviderName -in @('EventLog','Microsoft-Windows-Eventlog')) }
@@ -121,123 +107,89 @@ $evUnexp = $evAll  | Where-Object {
   ($_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 41)
 }
 
-# Index shutdowns so we can pair each 1074 with the next Shutdown within a window
+# Pair 1074 → next shutdown within 2 hours
 $pendingShut = [System.Collections.Generic.List[object]]::new()
 $evShut | ForEach-Object { [void]$pendingShut.Add($_) }
-
 $rows = New-Object System.Collections.Generic.List[object]
 
-# (1) Pair each USER32 1074 with the next Shutdown within 2 hours
 foreach ($t in $ev1074) {
   $meta = Get-InitiatorAndReason $t
-  $match = $null
+  $completedAt = ''
   foreach ($s in $pendingShut) {
     if ($s.TimeCreated -gt $t.TimeCreated) {
       $delta = New-TimeSpan -Start $t.TimeCreated -End $s.TimeCreated
-      if ($delta.TotalHours -le 2) { $match = $s; break }
+      if ($delta.TotalHours -le 2) { $completedAt = $s.TimeCreated; [void]$pendingShut.Remove($s); break }
     }
   }
-
-  if ($match -ne $null) {
-    [void]$pendingShut.Remove($match)
-    $detail = "Requested at $($t.TimeCreated); Reason: $($meta.Reason); Type: $($meta.SType); Completed at $($match.TimeCreated)"
-  } else {
-    $detail = "Requested at $($t.TimeCreated); Reason: $($meta.Reason); Type: $($meta.SType); Completion not observed within 2h"
-  }
-
-  $msgShort = ($t.Message -split "`r?`n")[0]
-
   $rows.Add([pscustomobject]@{
     Timestamp      = $t.TimeCreated
     'Event type'   = 'Shutdown/Restart requested (USER32 1074)'
     'Initiated by' = $meta.Who
-    Detail         = $detail
-    Message        = $msgShort
+    Reason         = $meta.Reason
+    Type           = $meta.SType
+    'Completed at' = $completedAt
+    Message        = ($t.Message -split "`r?`n")[0]
   })
 }
 
-# (2) Shutdowns with no prior request
+# Shutdowns with no prior request
 foreach ($s in $pendingShut) {
   $rows.Add([pscustomobject]@{
     Timestamp      = $s.TimeCreated
     'Event type'   = 'Shutdown (no prior request)'
     'Initiated by' = 'Unknown'
-    Detail         = ''
-    Message        = (($s.Message -split "`r?`n")[0])
+    Reason         = ''
+    Type           = ''
+    'Completed at' = ''
+    Message        = ($s.Message -split "`r?`n")[0]
   })
 }
 
-# (3) Other events with useful detail
+# Startup/Sleep/Resume/Wake/Unexpected
 foreach ($e in $evStart) {
   $rows.Add([pscustomobject]@{
-    Timestamp      = $e.TimeCreated
-    'Event type'   = 'Startup'
-    'Initiated by' = ''
-    Detail         = ''
-    Message        = (($e.Message -split "`r?`n")[0])
+    Timestamp      = $e.TimeCreated; 'Event type'='Startup'; 'Initiated by'=''; Reason=''; Type=''; 'Completed at'=''; Message=($e.Message -split "`r?`n")[0]
   })
 }
 foreach ($e in $evSleep) {
-  # Kernel-Power 42 often includes "Sleep Reason: Application API" etc.
-  $detail = ''
-  if ($e.Message -match 'Sleep Reason:\s*([^\r\n]+)') { $detail = "Sleep Reason: $($Matches[1])" }
+  $sr = ''; if ($e.Message -match 'Sleep Reason:\s*([^\r\n]+)') { $sr = $Matches[1] }
   $rows.Add([pscustomobject]@{
-    Timestamp      = $e.TimeCreated
-    'Event type'   = 'Sleep'
-    'Initiated by' = ''
-    Detail         = $detail
-    Message        = (($e.Message -split "`r?`n")[0])
+    Timestamp      = $e.TimeCreated; 'Event type'='Sleep'; 'Initiated by'=''; Reason=$sr; Type=''; 'Completed at'=''; Message=($e.Message -split "`r?`n")[0]
   })
 }
 foreach ($e in $evResum) {
   $rows.Add([pscustomobject]@{
-    Timestamp      = $e.TimeCreated
-    'Event type'   = 'Resume'
-    'Initiated by' = ''
-    Detail         = ''
-    Message        = (($e.Message -split "`r?`n")[0])
+    Timestamp      = $e.TimeCreated; 'Event type'='Resume'; 'Initiated by'=''; Reason=''; Type=''; 'Completed at'=''; Message=($e.Message -split "`r?`n")[0]
   })
 }
 foreach ($e in $evWake) {
-  # Power-Troubleshooter 1: extract "Wake Source …" and optional text line
-  $ws = $null
-  $wstext = $null
-  $lines = $e.Message -split "`r?`n"
-  foreach ($ln in $lines) {
-    if (-not $ws -and $ln -match 'Wake Source(?: \(.*\))?:\s*(.+)') { $ws = "Wake Source: $($Matches[1].Trim())" }
-    if (-not $wstext -and $ln -match 'Wake Source Text:\s*(.+)')  { $wstext = "Wake Text: $($Matches[1].Trim())" }
+  $ws = $null; $wst = $null
+  ($e.Message -split "`r?`n") | ForEach-Object {
+    if (-not $ws  -and $_ -match 'Wake Source(?: \(.*\))?:\s*(.+)') { $ws = $Matches[1].Trim() }
+    if (-not $wst -and $_ -match 'Wake Source Text:\s*(.+)')       { $wst = $Matches[1].Trim() }
   }
-  $detail = ($ws, $wstext) -join '; ' -replace '^;\s*',''
-  if (-not $detail) { $detail = 'Wake source not reported' }
-
+  $reason = $ws; if ($wst) { $reason = ($reason ? "$reason; $wst" : $wst) }
+  if (-not $reason) { $reason = 'Wake source not reported' }
   $rows.Add([pscustomobject]@{
-    Timestamp      = $e.TimeCreated
-    'Event type'   = 'Wake'
-    'Initiated by' = ''
-    Detail         = $detail
-    Message        = (($e.Message -split "`r?`n")[0])
+    Timestamp      = $e.TimeCreated; 'Event type'='Wake'; 'Initiated by'=''; Reason=$reason; Type=''; 'Completed at'=''; Message=($e.Message -split "`r?`n")[0]
   })
 }
 foreach ($e in $evUnexp) {
   $etype = if ($e.Id -eq 41) { 'Kernel-Power 41 (unexpected power loss)' } else { 'Unexpected Shutdown (6008)' }
   $rows.Add([pscustomobject]@{
-    Timestamp      = $e.TimeCreated
-    'Event type'   = $etype
-    'Initiated by' = 'N/A'
-    Detail         = ''
-    Message        = (($e.Message -split "`r?`n")[0])
+    Timestamp      = $e.TimeCreated; 'Event type'=$etype; 'Initiated by'='N/A'; Reason=''; Type=''; 'Completed at'=''; Message=($e.Message -split "`r?`n")[0]
   })
 }
 
-# (4) Print unified table with your headings, wrapped for long KB titles/messages
 Write-Output "=== Unified power timeline (requests merged with completions) ==="
 $rows | Sort-Object Timestamp | Format-Table `
   @{Label='Timestamp';   Expression={$_.Timestamp} },
   @{Label='Event type';  Expression={$_.'Event type'} },
   @{Label='Initiated by';Expression={$_.'Initiated by'} },
-  @{Label='Detail';      Expression={$_.Detail} },
-  @{Label='Message';     Expression={$_.Message} } -Wrap
-
+  @{Label='Reason';      Expression={$_.Reason} },
+  @{Label='Type';        Expression={$_.Type} },
+  @{Label='Completed at';Expression={$_.'Completed at'} },
+  @{Label='Message';     Expression={$_.Message} } -AutoSize
 Write-Output ""
 
 
