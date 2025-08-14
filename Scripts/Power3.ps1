@@ -201,15 +201,19 @@ foreach ($e in $evUnexp) {
   })
 }
 
+# === Print unified timeline ===
 Write-Output "=== Unified power timeline (requests merged with completions) ==="
-$rows | Sort-Object Timestamp | Format-Table -Wrap `
-  @{Label='Timestamp';   Expression = {$_.Timestamp} },
-  @{Label='Event type';  Expression = {$_. 'Event type'} },
-  @{Label='Initiated by';Expression = {$_. 'Initiated by'} },
-  @{Label='Reason';      Expression = {$_.Reason} },
-  @{Label='Type';        Expression = {$_.Type} },
-  @{Label='Completed';   Expression = {$_. 'Completed at'} },
-  @{Label='Message';     Expression = {$_.Message} }
+$rows |
+  Sort-Object Timestamp |
+  Format-Table -Wrap `
+    @{ Label = 'Timestamp';    Expression = { $_.Timestamp } },
+    @{ Label = 'Event type';   Expression = { $_.'Event type' } },
+    @{ Label = 'Initiated by'; Expression = { $_.'Initiated by' } },
+    @{ Label = 'Reason';       Expression = { $_.Reason } },
+    @{ Label = 'Type';         Expression = { $_.Type } },
+    @{ Label = 'Completed';    Expression = { $_.'Completed at' } },  # shorter header to avoid vertical wrapping
+    @{ Label = 'Message';      Expression = { $_.Message } }
+
 Write-Output ""
 
 
