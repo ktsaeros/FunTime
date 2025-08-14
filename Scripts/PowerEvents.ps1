@@ -159,3 +159,4 @@ if (
     Write-Output ""
     Write-Output "To apply recommended settings (hibernate OFF, AC no-sleep, DC sleep 30 min, monitor timeouts), run (as Admin):"
     Write-Output "  powercfg /change standby-timeout-ac 0; powercfg /change standby-timeout-dc 30; powercfg /change monitor-timeout-ac 20; powercfg /change monitor-timeout-dc 5; powercfg /hibernate off"
+}
