@@ -56,8 +56,8 @@ $hacHex = ($hibernateSettings | Select-String 'Current AC Power Setting Index').
 $hdcHex = ($hibernateSettings | Select-String 'Current DC Power Setting Index').Line.Split(':')[-1].Trim()
 $hacMin = [convert]::ToInt32($hacHex,16) / 60
 $hdcMin = [convert]::ToInt32($hdcHex,16) / 60
-Write-Output ("  Plugged In: {0} minutes" -f $hacMin)
-Write-Output ("  On Battery: {0} minutes" -f $hdcMin)
+Write-Output ("  Plugged In/AC: {0} minutes" -f $hacMin)
+Write-Output ("  On Battery/DC: {0} minutes" -f $hdcMin)
 Write-Output ''  # spacer
 
 # ============================================
@@ -138,8 +138,9 @@ $hibEnabled = Get-HibernateEnabled
 Write-Output "Current power settings:"
 $acText = if ($acMin -ne $null) { $acMin } else { 'unknown' }
 $dcText = if ($dcMin -ne $null) { $dcMin } else { 'unknown' }
-Write-Output ("  Sleep after (AC [plugged in] / DC [on battery]): {0} / {1} minutes" -f $acText, $dcText)
+Write-Output ("  Sleep after (AC/DC): {0} / {1} minutes" -f $acText, $dcText)
 Write-Output "  Hibernate enabled: $hibEnabled"
+
 
 # --- Recommend fix if Hibernate is ON or AC sleep > 0
 if ($hibEnabled -or ($acMin -ne $null -and $acMin -gt 0)) {
