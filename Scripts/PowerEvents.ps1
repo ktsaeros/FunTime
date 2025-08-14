@@ -82,11 +82,20 @@ function Get-StandbyTimeoutMinutes {
 
     if ($acHexMatch.Count -gt 0) {
         $acVal = [int]("0x" + $acHexMatch[0].Groups[1].Value)
-        $result.AC = if ($units -ieq 'Seconds') { [int][math]::Round($acVal / 60.0) } else { $acVal }
+        if ($units -ieq 'Seconds') {
+            $result.AC = [int][math]::Round($acVal / 60.0)
+        } else {
+            $result.AC = $acVal
+        }
     }
+
     if ($dcHexMatch.Count -gt 0) {
         $dcVal = [int]("0x" + $dcHexMatch[0].Groups[1].Value)
-        $result.DC = if ($units -ieq 'Seconds') { [int][math]::Round($dcVal / 60.0) } else { $dcVal }
+        if ($units -ieq 'Seconds') {
+            $result.DC = [int][math]::Round($dcVal / 60.0)
+        } else {
+            $result.DC = $dcVal
+        }
     }
 
     # Fallback for localized "Plugged In / On Battery"
@@ -125,7 +134,7 @@ $acMin      = $timeouts.AC
 $dcMin      = $timeouts.DC
 $hibEnabled = Get-HibernateEnabled
 
-# --- Debug print (PS 5.1-safe: precompute strings, then format)
+# --- Debug print (PS 5.1-safe)
 Write-Output "Current power settings:"
 $acText = if ($acMin -ne $null) { $acMin } else { 'unknown' }
 $dcText = if ($dcMin -ne $null) { $dcMin } else { 'unknown' }
