@@ -65,6 +65,7 @@ $events += Get-ByProvider -Provider 'EventLog'                               -Id
 $events += Get-ByProvider -Provider 'Microsoft-Windows-Eventlog'             -Ids @(6005,6006,6008) -Start $since
 $events += Get-ByProvider -Provider 'Microsoft-Windows-Kernel-Power'         -Ids @(41,42,107)      -Start $since
 $events += Get-ByProvider -Provider 'Microsoft-Windows-Power-Troubleshooter' -Ids @(1)              -Start $since
+$events += Get-ByProvider -Provider 'USER32'                               -Ids @(1074)          -Start $since
 
 if (-not $events -or $events.Count -eq 0) {
   $all = Get-ByIds -Ids @(6005,6006,6008,41,42,107,1) -Start $since
@@ -89,23 +90,45 @@ $normalized = $events | Sort-Object TimeCreated | ForEach-Object {
     'Microsoft-Windows-Eventlog\|6006' { 'Shutdown' }
     'Microsoft-Windows-Eventlog\|6008' { 'Unexpected Shutdown' }
     'Microsoft-Windows-Kernel-Power\|41'  { 'Kernel-Power 41 (power loss)' }
+    'USER32\|1074' { 'Restart/Shutdown (USER32 1074)' }
     'Microsoft-Windows-Kernel-Power\|42'  { 'Sleep' }
     'Microsoft-Windows-Kernel-Power\|107' { 'Resume' }
     'Microsoft-Windows-Power-Troubleshooter\|1' { 'Wake' }
     default { "Other ($($_.ProviderName) ID $($_.Id))" }
   }
-  $wakeSource = $null
-  if ($_.ProviderName -eq 'Microsoft-Windows-Power-Troubleshooter' -and $_.Id -eq 1) {
-    $wakeSource = ($_.Message -split "`r?`n" | Where-Object { $_ -match 'Wake Source' } | ForEach-Object { $_.Trim() }) -join '; '
-    if (-not $wakeSource) { $wakeSource = 'Wake Source: (not reported)' }
+$wakeSource = $null
+$detail     = $null
+
+# Wake source (Troubleshooter ID 1)
+if ($_.ProviderName -eq 'Microsoft-Windows-Power-Troubleshooter' -and $_.Id -eq 1) {
+  $wakeSource = ($_.Message -split "`r?`n" | Where-Object { $_ -match 'Wake Source' } | ForEach-Object { $_.Trim() }) -join '; '
+  if (-not $wakeSource) { $wakeSource = 'Wake Source: (not reported)' }
+  $detail = $wakeSource
+}
+
+# USER32 1074 initiator (user / TrustedInstaller / service)
+elseif ($_.ProviderName -eq 'USER32' -and $_.Id -eq 1074) {
+  if ($_.Message -match 'process .*TrustedInstaller') {
+    $detail = 'Initiated by TrustedInstaller (Windows Update)'
+  } elseif ($_.Message -match 'by user\s+([^\r\n]+)') {
+    $detail = "Initiated by user $($Matches[1])"
+  } else {
+    $detail = 'Initiated by System/Service'
   }
-  New-Object PSObject -Property @{
-    TimeCreated = $_.TimeCreated
-    Provider    = $_.ProviderName
-    Id          = $_.Id
-    EventType   = $etype
-    Detail      = if ($wakeSource) { $wakeSource } else { $null }
-  }
+}
+
+# Kernel-Power sleep/resume reason (pull first line to keep it compact)
+elseif ($_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and ($_.Id -in 42,107)) {
+  $detail = ($_.Message -split "`r?`n")[0]
+}
+
+New-Object PSObject -Property @{
+  TimeCreated = $_.TimeCreated
+  Provider    = $_.ProviderName
+  Id          = $_.Id
+  EventType   = $etype
+  Detail      = $detail
+}
 }
 
 Write-Output "=== Timeline (noise filtered) ==="
@@ -135,7 +158,7 @@ if ($short) {
 
 }
 # --- Quick interpretation near short uptimes ---
-if ($short) {
+if ($short -and $short.Count -gt 1) {
   $min = ($short | Measure-Object -Property UptimeSeconds -Minimum).Minimum
   Write-Output '=== Quick interpretation ==='
   Write-Output ("Multiple very short uptimes detected. Shortest was {0} seconds." -f $min)
@@ -143,7 +166,24 @@ if ($short) {
   Write-Output 'Use: wall-outlet bypass, swap power cable/UPS/brick, BIOS idle test watching CPU temps.'
   Write-Output ''
 }
-
+# Hint if shorts correlate with Windows Update restarts in the last 24h
+try {
+  $ti = Get-WinEvent -FilterHashtable @{ LogName='System'; Id=1074; StartTime=(Get-Date).AddDays(-14) } -ErrorAction Stop |
+        Where-Object { $_.Message -match 'process .*TrustedInstaller' }
+  if ($short -and $short.Count -gt 0 -and $ti) {
+    $likelyWU = $false
+    foreach ($s in $short) {
+      foreach ($e in $ti) {
+        if ([math]::Abs((New-TimeSpan -Start $s.EndTime -End $e.TimeCreated).TotalHours) -le 24) { $likelyWU = $true; break }
+      }
+      if ($likelyWU) { break }
+    }
+    if ($likelyWU) {
+      Write-Output "Note: Short uptimes appear within ~24h of TrustedInstaller-initiated restarts; likely Windows Update activity."
+      Write-Output ""
+    }
+  }
+} catch { }
 
 # ---------- Current power settings (minutes) ----------
 Write-Output "=== Current power settings ==="
@@ -257,12 +297,30 @@ if ($wu) {
       Status      = $status
       Title       = ($_.Message -split "`r?`n")[0]
     }
-  } | Format-Table -AutoSize
+  } | Format-Table TimeCreated, Id, Status, Title -Wrap
 } else {
   Write-Output "No Windows Update client events found in the lookback window."
 }
 Write-Output ""
-
+Write-Output "=== OS / Build info ==="
+try {
+  $ci = Get-ComputerInfo
+  $cv = Get-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion'
+  $displayVersion = $cv.DisplayVersion    # e.g., 24H2 (preferred on Win 11/late Win10)
+  if (-not $displayVersion) { $displayVersion = $cv.ReleaseId }  # older Win10 fallback
+  $build = "{0}.{1}" -f $cv.CurrentBuild, $cv.UBR
+  [pscustomobject]@{
+    OSName          = $ci.OsName
+    Edition         = $cv.EditionID
+    DisplayVersion  = $displayVersion    # e.g., "24H2"
+    ProductName     = $cv.ProductName    # e.g., "Windows 11 Pro"
+    Build           = $build             # e.g., "26100.1234"
+    BuildLab        = $cv.BuildLabEx
+  } | Format-List
+} catch {
+  Write-Output "Could not read OS/build information."
+}
+Write-Output ""
 Write-Output "Recent hotfixes (Get-HotFix):"
 Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10 Source, Description, HotFixID, InstalledOn | Format-Table -AutoSize
 Write-Output ""
