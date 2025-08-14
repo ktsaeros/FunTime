@@ -65,20 +65,34 @@ Write-Output ''  # spacer
 # ============================================
 
 function Get-StandbyTimeoutMinutes {
-    # Return @{ AC = <int or $null>; DC = <int or $null> } using reliable hex indices.
+    # Returns @{ AC = <int or $null>; DC = <int or $null> } in MINUTES.
     $result = @{ AC = $null; DC = $null }
 
     $out = powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE 2>$null
     if (-not $out) { return $result }
 
-    # Prefer hex "Current AC/DC Power Setting Index" (present on all versions)
+    # Get units (Seconds or Minutes) from the query output
+    $units = 'Seconds'
+    $unitsMatch = ($out | Select-String -Pattern 'Possible Settings units:\s+(\w+)' -AllMatches).Matches
+    if ($unitsMatch.Count -gt 0) {
+        $units = $unitsMatch[0].Groups[1].Value
+    }
+
+    # Parse the current setting indices (hex)
     $acHexMatch = ($out | Select-String -Pattern 'Current AC Power Setting Index:\s+0x([0-9A-Fa-f]+)' -AllMatches).Matches
-    if ($acHexMatch.Count -gt 0) { $result.AC = [int]("0x" + $acHexMatch[0].Groups[1].Value) }
-
     $dcHexMatch = ($out | Select-String -Pattern 'Current DC Power Setting Index:\s+0x([0-9A-Fa-f]+)' -AllMatches).Matches
-    if ($dcHexMatch.Count -gt 0) { $result.DC = [int]("0x" + $dcHexMatch[0].Groups[1].Value) }
 
-    # Secondary fallback (localized builds may show "Plugged In: X minutes" / "On Battery: X minutes")
+    if ($acHexMatch.Count -gt 0) {
+        $acSeconds = [int]("0x" + $acHexMatch[0].Groups[1].Value)
+        $result.AC = ($units -ieq 'Seconds') ? [int][math]::Round($acSeconds / 60.0) : $acSeconds
+    }
+
+    if ($dcHexMatch.Count -gt 0) {
+        $dcSeconds = [int]("0x" + $dcHexMatch[0].Groups[1].Value)
+        $result.DC = ($units -ieq 'Seconds') ? [int][math]::Round($dcSeconds / 60.0) : $dcSeconds
+    }
+
+    # Fallback for localized "Plugged In / On Battery: X minutes" format
     if ($null -eq $result.AC) {
         $m = [regex]::Match(($out -join "`n"), 'Plugged In:\s+(\d+)\s+minutes')
         if ($m.Success) { $result.AC = [int]$m.Groups[1].Value }
@@ -92,22 +106,23 @@ function Get-StandbyTimeoutMinutes {
 }
 
 function Get-HibernateEnabled {
-    # True if Hibernate is enabled; false if disabled/not available.
+    # True if Hibernate is enabled; False if disabled/not available.
     $text = (powercfg /a 2>$null) -join "`n"
     if (-not $text) { return $false }  # conservative default
 
-    # Explicit disabled/not available messages
-    if ($text -match 'Hibernate has been disabled' -or
-        $text -match 'Hibernate is not available' -or
-        $text -match 'The hibernate file has not been initialized') {
+    # Treat any of these messages as DISABLED
+    if ($text -match 'Hibernate has been disabled' `
+        -or $text -match 'Hibernate is not available' `
+        -or $text -match 'The hibernate file has not been initialized' `
+        -or $text -match 'Hibernation has not been enabled') {
         return $false
     }
 
-    # If "Hibernate" appears under available states, treat as enabled.
+    # If a line literally lists "Hibernate" among available states, treat as enabled
     return ($text -match '(^|\n)\s*Hibernate(\r|\n|$)')
 }
 
-# --- Fetch current values
+# --- Fetch current values (in MINUTES)
 $timeouts   = Get-StandbyTimeoutMinutes
 $acMin      = $timeouts.AC
 $dcMin      = $timeouts.DC
@@ -115,11 +130,11 @@ $hibEnabled = Get-HibernateEnabled
 
 # --- Debug print (no assumptions if values are $null)
 Write-Output "Current power settings:"
-Write-Output ("  Sleep after (AC/DC): {0} / {1} minutes" -f ($acMin -ne $null ? $acMin : 'unknown', $dcMin -ne $null ? $dcMin : 'unknown'))
+Write-Output ("  Sleep after (AC/DC): {0} / {1} minutes" -f ($acMin -ne $null ? $acMin : 'unknown'), ($dcMin -ne $null ? $dcMin : 'unknown'))
 Write-Output "  Hibernate enabled: $hibEnabled"
 
-# --- Trigger if Hibernate is ON or AC sleep > 0
-if ($hibEnabled -or (($acMin -as [int]) -gt 0)) {
+# --- Recommend fix if Hibernate is ON or AC sleep > 0
+if ($hibEnabled -or ($acMin -ne $null -and $acMin -gt 0)) {
     Write-Output "Hibernate is ON or AC sleep timeout is > 0."
     Write-Output "To apply recommended settings (hibernate OFF, AC no-sleep; DC sleep 15 min; display timeouts), run (as Admin):"
     Write-Output "  powercfg /change standby-timeout-ac 0; powercfg /change standby-timeout-dc 15; powercfg /change monitor-timeout-ac 20; powercfg /change monitor-timeout-dc 5; powercfg /hibernate off"
