@@ -80,60 +80,153 @@ if (-not $events -or $events.Count -eq 0) {
   Write-Output "=== End of report ==="; return
 }
 
-# ---------- Normalize ----------
-$normalized = $events | Sort-Object TimeCreated | ForEach-Object {
-  $etype = switch -Regex ("$($_.ProviderName)|$($_.Id)") {
-    'EventLog\|6005' { 'Startup' }
-    'EventLog\|6006' { 'Shutdown' }
-    'EventLog\|6008' { 'Unexpected Shutdown' }
-    'Microsoft-Windows-Eventlog\|6005' { 'Startup' }
-    'Microsoft-Windows-Eventlog\|6006' { 'Shutdown' }
-    'Microsoft-Windows-Eventlog\|6008' { 'Unexpected Shutdown' }
-    'Microsoft-Windows-Kernel-Power\|41'  { 'Kernel-Power 41 (power loss)' }
-    'USER32\|1074' { 'Restart/Shutdown (USER32 1074)' }
-    'Microsoft-Windows-Kernel-Power\|42'  { 'Sleep' }
-    'Microsoft-Windows-Kernel-Power\|107' { 'Resume' }
-    'Microsoft-Windows-Power-Troubleshooter\|1' { 'Wake' }
-    default { "Other ($($_.ProviderName) ID $($_.Id))" }
-  }
-$wakeSource = $null
-$detail     = $null
 
-# Wake source (Troubleshooter ID 1)
-if ($_.ProviderName -eq 'Microsoft-Windows-Power-Troubleshooter' -and $_.Id -eq 1) {
-  $wakeSource = ($_.Message -split "`r?`n" | Where-Object { $_ -match 'Wake Source' } | ForEach-Object { $_.Trim() }) -join '; '
-  if (-not $wakeSource) { $wakeSource = 'Wake Source: (not reported)' }
-  $detail = $wakeSource
+# ---------- Merge/normalize for unified timeline (with 1074→shutdown pairing) ----------
+
+function Get-Initiator {
+  param($ev)  # expects a USER32 1074 event object
+  $who = 'System/Service'
+  $isUser = $false
+  if ($ev.Message -match 'process .*TrustedInstaller') {
+    $who = 'TrustedInstaller (Windows Update)'
+  } elseif ($ev.Message -match 'by user\s+([^\r\n]+)') {
+    $who = "User: $($Matches[1])"
+    $isUser = $true
+  } elseif ($ev.Message -match 'on behalf of user\s+([^\r\n]+)') {
+    $who = "On behalf of: $($Matches[1])"
+  }
+  [pscustomobject]@{ Who = $who; IsUser = $isUser }
 }
 
-# USER32 1074 initiator (user / TrustedInstaller / service)
-elseif ($_.ProviderName -eq 'USER32' -and $_.Id -eq 1074) {
-  if ($_.Message -match 'process .*TrustedInstaller') {
-    $detail = 'Initiated by TrustedInstaller (Windows Update)'
-  } elseif ($_.Message -match 'by user\s+([^\r\n]+)') {
-    $detail = "Initiated by user $($Matches[1])"
+# Split out key groups we’ll need
+$evAll   = $events | Sort-Object TimeCreated
+$ev1074  = $evAll  | Where-Object { $_.ProviderName -eq 'USER32' -and $_.Id -eq 1074 }
+$evShut  = $evAll  | Where-Object {
+  ($_.Id -eq 6006 -and ($_.ProviderName -eq 'EventLog' -or $_.ProviderName -eq 'Microsoft-Windows-Eventlog'))
+}
+$evStart = $evAll  | Where-Object {
+  ($_.Id -eq 6005 -and ($_.ProviderName -eq 'EventLog' -or $_.ProviderName -eq 'Microsoft-Windows-Eventlog'))
+}
+$evSleep = $evAll  | Where-Object { $_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 42  }
+$evResum = $evAll  | Where-Object { $_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 107 }
+$evWake  = $evAll  | Where-Object { $_.ProviderName -eq 'Microsoft-Windows-Power-Troubleshooter' -and $_.Id -eq 1 }
+$evUnexp = $evAll  | Where-Object {
+  ($_.Id -eq 6008 -and ($_.ProviderName -eq 'EventLog' -or $_.ProviderName -eq 'Microsoft-Windows-Eventlog')) `
+  -or ($_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 41)
+}
+
+# Index shutdowns (unpaired) so we can match each 1074 to the next shutdown within a window
+$pendingShut = [System.Collections.Generic.List[object]]::new()
+$evShut | ForEach-Object { [void]$pendingShut.Add($_) }
+
+$rows = New-Object System.Collections.Generic.List[object]
+
+# 1) Pair each USER32 1074 with the next Shutdown within 2 hours
+foreach ($t in $ev1074) {
+  $initiator = Get-Initiator $t
+  $match = $null
+  foreach ($s in $pendingShut) {
+    if ($s.TimeCreated -gt $t.TimeCreated) {
+      $delta = New-TimeSpan -Start $t.TimeCreated -End $s.TimeCreated
+      if ($delta.TotalHours -le 2) { $match = $s; break }
+    }
+  }
+  if ($match -ne $null) {
+    [void]$pendingShut.Remove($match)
+    $detail = ("Requested at {0}; completed at {1}" -f $t.TimeCreated, $match.TimeCreated)
   } else {
-    $detail = 'Initiated by System/Service'
+    $detail = ("Requested at {0}; completion not observed within 2h" -f $t.TimeCreated)
   }
+
+  $msg = $t.Message
+  $msgShort = ($msg -split "`r?`n")[0]
+
+  $rows.Add([pscustomobject]@{
+    Timestamp    = $t.TimeCreated
+    EventType    = 'Shutdown/Restart requested (USER32 1074)'
+    'Initiated by' = $initiator.Who
+    Detail       = $detail
+    Message      = $msgShort
+  })
 }
 
-# Kernel-Power sleep/resume reason (pull first line to keep it compact)
-elseif ($_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and ($_.Id -in 42,107)) {
-  $detail = ($_.Message -split "`r?`n")[0]
+# 2) Any Shutdowns left over (no 1074 trigger) → show as “Shutdown (no prior request)”
+foreach ($s in $pendingShut) {
+  $rows.Add([pscustomobject]@{
+    Timestamp     = $s.TimeCreated
+    EventType     = 'Shutdown (no prior request)'
+    'Initiated by' = 'Unknown'
+    Detail        = ''
+    Message       = (($s.Message -split "`r?`n")[0])
+  })
 }
 
-New-Object PSObject -Property @{
-  TimeCreated = $_.TimeCreated
-  Provider    = $_.ProviderName
-  Id          = $_.Id
-  EventType   = $etype
-  Detail      = $detail
+# 3) Add other important events (Startup, Sleep, Resume, Wake, Unexpected)
+foreach ($e in $evStart) {
+  $rows.Add([pscustomobject]@{
+    Timestamp     = $e.TimeCreated
+    EventType     = 'Startup'
+    'Initiated by' = ''
+    Detail        = ''
+    Message       = (($e.Message -split "`r?`n")[0])
+  })
 }
+foreach ($e in $evSleep) {
+  $rows.Add([pscustomobject]@{
+    Timestamp     = $e.TimeCreated
+    EventType     = 'Sleep'
+    'Initiated by' = ''
+    Detail        = (($e.Message -split "`r?`n")[0])
+    Message       = (($e.Message -split "`r?`n")[0])
+  })
+}
+foreach ($e in $evResum) {
+  $rows.Add([pscustomobject]@{
+    Timestamp     = $e.TimeCreated
+    EventType     = 'Resume'
+    'Initiated by' = ''
+    Detail        = (($e.Message -split "`r?`n")[0])
+    Message       = (($e.Message -split "`r?`n")[0])
+  })
+}
+foreach ($e in $evWake) {
+  # Try to extract a “Wake Source …” line for detail
+  $ws = $null
+  $lines = $e.Message -split "`r?`n"
+  foreach ($ln in $lines) {
+    if ($ln -match 'Wake Source') { $ws = $ln.Trim(); break }
+  }
+  if (-not $ws) { $ws = 'Wake source not reported' }
+  $rows.Add([pscustomobject]@{
+    Timestamp     = $e.TimeCreated
+    EventType     = 'Wake'
+    'Initiated by' = ''
+    Detail        = $ws
+    Message       = (($e.Message -split "`r?`n")[0])
+  })
+}
+foreach ($e in $evUnexp) {
+  $etype = if ($e.Id -eq 41) { 'Kernel-Power 41 (unexpected power loss)' } else { 'Unexpected Shutdown (6008)' }
+  $rows.Add([pscustomobject]@{
+    Timestamp     = $e.TimeCreated
+    EventType     = $etype
+    'Initiated by' = 'N/A'
+    Detail        = ''
+    Message       = (($e.Message -split "`r?`n")[0])
+  })
 }
 
-Write-Output "=== Timeline (noise filtered) ==="
-$normalized | Select-Object TimeCreated, EventType, Detail | Format-Table -AutoSize
+# 4) Print unified table with your requested columns
+Write-Output "=== Unified power timeline (requests merged with completions) ==="
+$rows | Sort-Object Timestamp | Format-Table `
+  @{Label='Timestamp';  Expression={$_.Timestamp} },
+  @{Label='Event type'; Expression={$_.EventType} },
+  @{Label='Initiated by'; Expression={$_.'Initiated by'} },
+  @{Label='Detail';     Expression={$_.Detail} },
+  @{Label='Message';    Expression={$_.Message} } -Wrap
+
 Write-Output ""
+
 
 # ---------- Boot → Shutdown cycles with uptime ----------
 $boots    = $normalized | Where-Object { $_.EventType -eq 'Startup' }
