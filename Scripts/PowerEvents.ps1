@@ -71,28 +71,25 @@ function Get-StandbyTimeoutMinutes {
     $out = powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE 2>$null
     if (-not $out) { return $result }
 
-    # Get units (Seconds or Minutes) from the query output
+    # Determine units (Seconds or Minutes)
     $units = 'Seconds'
     $unitsMatch = ($out | Select-String -Pattern 'Possible Settings units:\s+(\w+)' -AllMatches).Matches
-    if ($unitsMatch.Count -gt 0) {
-        $units = $unitsMatch[0].Groups[1].Value
-    }
+    if ($unitsMatch.Count -gt 0) { $units = $unitsMatch[0].Groups[1].Value }
 
-    # Parse the current setting indices (hex)
+    # Parse hex indices
     $acHexMatch = ($out | Select-String -Pattern 'Current AC Power Setting Index:\s+0x([0-9A-Fa-f]+)' -AllMatches).Matches
     $dcHexMatch = ($out | Select-String -Pattern 'Current DC Power Setting Index:\s+0x([0-9A-Fa-f]+)' -AllMatches).Matches
 
     if ($acHexMatch.Count -gt 0) {
-        $acSeconds = [int]("0x" + $acHexMatch[0].Groups[1].Value)
-        $result.AC = ($units -ieq 'Seconds') ? [int][math]::Round($acSeconds / 60.0) : $acSeconds
+        $acVal = [int]("0x" + $acHexMatch[0].Groups[1].Value)
+        $result.AC = if ($units -ieq 'Seconds') { [int][math]::Round($acVal / 60.0) } else { $acVal }
     }
-
     if ($dcHexMatch.Count -gt 0) {
-        $dcSeconds = [int]("0x" + $dcHexMatch[0].Groups[1].Value)
-        $result.DC = ($units -ieq 'Seconds') ? [int][math]::Round($dcSeconds / 60.0) : $dcSeconds
+        $dcVal = [int]("0x" + $dcHexMatch[0].Groups[1].Value)
+        $result.DC = if ($units -ieq 'Seconds') { [int][math]::Round($dcVal / 60.0) } else { $dcVal }
     }
 
-    # Fallback for localized "Plugged In / On Battery: X minutes" format
+    # Fallback for localized "Plugged In / On Battery"
     if ($null -eq $result.AC) {
         $m = [regex]::Match(($out -join "`n"), 'Plugged In:\s+(\d+)\s+minutes')
         if ($m.Success) { $result.AC = [int]$m.Groups[1].Value }
@@ -110,7 +107,7 @@ function Get-HibernateEnabled {
     $text = (powercfg /a 2>$null) -join "`n"
     if (-not $text) { return $false }  # conservative default
 
-    # Treat any of these messages as DISABLED
+    # Treat any of these as DISABLED
     if ($text -match 'Hibernate has been disabled' `
         -or $text -match 'Hibernate is not available' `
         -or $text -match 'The hibernate file has not been initialized' `
@@ -128,9 +125,11 @@ $acMin      = $timeouts.AC
 $dcMin      = $timeouts.DC
 $hibEnabled = Get-HibernateEnabled
 
-# --- Debug print (no assumptions if values are $null)
+# --- Debug print (PS 5.1-safe: precompute strings, then format)
 Write-Output "Current power settings:"
-Write-Output ("  Sleep after (AC/DC): {0} / {1} minutes" -f ($acMin -ne $null ? $acMin : 'unknown'), ($dcMin -ne $null ? $dcMin : 'unknown'))
+$acText = if ($acMin -ne $null) { $acMin } else { 'unknown' }
+$dcText = if ($dcMin -ne $null) { $dcMin } else { 'unknown' }
+Write-Output ("  Sleep after (AC/DC): {0} / {1} minutes" -f $acText, $dcText)
 Write-Output "  Hibernate enabled: $hibEnabled"
 
 # --- Recommend fix if Hibernate is ON or AC sleep > 0
