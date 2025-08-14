@@ -101,7 +101,12 @@ $evShut  = $evAll  | Where-Object { ($_.Id -eq 6006) -and ($_.ProviderName -in @
 $evStart = $evAll  | Where-Object { ($_.Id -eq 6005) -and ($_.ProviderName -in @('EventLog','Microsoft-Windows-Eventlog')) }
 $evSleep = $evAll  | Where-Object { $_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 42  }
 $evResum = $evAll  | Where-Object { $_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 107 }
-$evWake  = $evAll  | Where-Object { $_.ProviderName -eq 'Microsoft-Windows-Power-Troubleshooter' -and $_.Id -eq 1 }
+$evWake  = $evAll  | Where-Object {
+ $_.Id -eq 1 -and (
+    $_.ProviderName -eq 'Microsoft-Windows-Power-Troubleshooter' -or
+    $_.Message -match 'Wake Source'
+  )
+}
 $evUnexp = $evAll  | Where-Object {
   ($_.Id -eq 6008 -and $_.ProviderName -in @('EventLog','Microsoft-Windows-Eventlog')) -or
   ($_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 41)
