@@ -132,6 +132,8 @@ if ($short) {
   Write-Output "⚠ Detected very short uptimes (< 3 minutes) after boot:"
   $short | Select-Object BootTime, EndTime, EndType, UptimeSeconds | Format-Table -AutoSize
   Write-Output ""
+
+}
 # --- Quick interpretation near short uptimes ---
 if ($short) {
   $min = ($short | Measure-Object -Property UptimeSeconds -Minimum).Minimum
@@ -141,7 +143,7 @@ if ($short) {
   Write-Output 'Use: wall-outlet bypass, swap power cable/UPS/brick, BIOS idle test watching CPU temps.'
   Write-Output ''
 }
-}
+
 
 # ---------- Current power settings (minutes) ----------
 Write-Output "=== Current power settings ==="
@@ -225,7 +227,9 @@ if (Provider-Exists 'APC Data Service') {
   try {
     $apc = Get-WinEvent -FilterHashtable @{ LogName='Application'; ProviderName='APC Data Service'; StartTime=$since } -ErrorAction Stop |
       Select-Object TimeCreated, Id, LevelDisplayName, Message
-  } catch { $apc = @() }
+  } catch {
+    $apc = @()
+  }
 }
 if ($apc) {
   Write-Output '--- APC UPS (Application log) ---'
@@ -243,13 +247,14 @@ try {
 try {
   $wu += Get-WinEvent -FilterHashtable @{ LogName='System'; ProviderName='Microsoft-Windows-WindowsUpdateClient'; Id = @(19,20); StartTime=$since } -ErrorAction Stop
 } catch { }
+
 if ($wu) {
   $wu | Sort-Object TimeCreated | ForEach-Object {
     $status = if ($_.Id -eq 19) { 'Installed OK' } elseif ($_.Id -eq 20) { 'Install FAILED' } else { 'Other' }
     [pscustomobject]@{
-      TimeCreated = $_.TimeCreated;
-      Id          = $_.Id;
-      Status      = $status;
+      TimeCreated = $_.TimeCreated
+      Id          = $_.Id
+      Status      = $status
       Title       = ($_.Message -split "`r?`n")[0]
     }
   } | Format-Table -AutoSize
@@ -266,17 +271,19 @@ Write-Output "=== Restart reasons (last 14 days, Event ID 1074) ==="
 try {
   Get-WinEvent -FilterHashtable @{ LogName='System'; Id=1074; StartTime=$since } -ErrorAction Stop |
     Select-Object @(
-      @{Name='TimeCreated';Expression={$_.TimeCreated}},
-      @{Name='InitiatedBy';Expression={
-          if ($_.Message -match 'process .*TrustedInstaller') { 'TrustedInstaller (Windows Update)' }
-          elseif ($_.Message -match 'by user\s+([^\r\n]+)') { $Matches[1] }
-          else { 'System/Service' }
+      @{Name='TimeCreated'; Expression = { $_.TimeCreated }},
+      @{Name='InitiatedBy'; Expression = {
+          if ($_.Message -match 'process .*TrustedInstaller') {
+            'TrustedInstaller (Windows Update)'
+          } elseif ($_.Message -match 'by user\s+([^\r\n]+)') {
+            $Matches[1]
+          } else {
+            'System/Service'
+          }
       }},
-      @{Name='Message';Expression={$_.Message}}
+      @{Name='Message'; Expression = { $_.Message }}
     ) | Format-Table -Wrap
-  Write-Output ("Multiple very short uptimes detected. Shortest was {0} seconds." -f $min)
-  Write-Output "This pattern usually indicates power delivery or thermal protection tripping."
-  Write-Output "Use: wall-outlet bypass, swap power cable/UPS/brick, BIOS idle test watching CPU temps."
-  Write-Output ""
+} catch {
+  Write-Output "No 1074 (planned restart/shutdown) events found."
 }
-Write-Output "=== End of report ==="
+Write-Output ""
