@@ -141,10 +141,21 @@ $dcText = if ($dcMin -ne $null) { $dcMin } else { 'unknown' }
 Write-Output ("  Sleep after (AC/DC): {0} / {1} minutes" -f $acText, $dcText)
 Write-Output "  Hibernate enabled: $hibEnabled"
 
+# --- Recommend fix if:
+# 1. Hibernate is ON
+# 2. AC sleep > 0 (don’t want it sleeping while plugged in)
+# 3. DC sleep is 0 or less than 15 minutes
+if (
+    $hibEnabled -or
+    ($acMin -ne $null -and $acMin -gt 0) -or
+    ($dcMin -ne $null -and ($dcMin -eq 0 -or $dcMin -lt 15))
+) {
+    Write-Output "⚠ Recommended power setting adjustments detected:"
+    if ($hibEnabled) { Write-Output " - Hibernate is enabled (recommended OFF)" }
+    if ($acMin -gt 0) { Write-Output " - AC sleep timeout is > 0 (recommended 0)" }
+    if ($dcMin -eq 0) { Write-Output " - DC sleep timeout is 0 (recommended 30 min)" }
+    elseif ($dcMin -lt 15) { Write-Output " - DC sleep timeout is less than 15 min (recommended 30 min)" }
 
-# --- Recommend fix if Hibernate is ON or AC sleep > 0
-if ($hibEnabled -or ($acMin -ne $null -and $acMin -gt 0)) {
-    Write-Output "Hibernate is ON or AC sleep timeout is > 0."
-    Write-Output "To apply recommended settings (hibernate OFF, AC no-sleep; DC sleep 15 min; display timeouts), run (as Admin):"
-    Write-Output "  powercfg /change standby-timeout-ac 0; powercfg /change standby-timeout-dc 15; powercfg /change monitor-timeout-ac 20; powercfg /change monitor-timeout-dc 5; powercfg /hibernate off"
-}
+    Write-Output ""
+    Write-Output "To apply recommended settings (hibernate OFF, AC no-sleep, DC sleep 30 min, monitor timeouts), run (as Admin):"
+    Write-Output "  powercfg /change standby-timeout-ac 0; powercfg /change standby-timeout-dc 30; powercfg /change monitor-timeout-ac 20; powercfg /change monitor-timeout-dc 5; powercfg /hibernate off"

@@ -417,24 +417,3 @@ Write-Output ""
 Write-Output "Recent hotfixes (Get-HotFix):"
 Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 10 Source, Description, HotFixID, InstalledOn | Format-Table -AutoSize
 Write-Output ""
-
-Write-Output "=== Restart reasons (last 14 days, Event ID 1074) ==="
-try {
-  Get-WinEvent -FilterHashtable @{ LogName='System'; Id=1074; StartTime=$since } -ErrorAction Stop |
-    Select-Object @(
-      @{Name='TimeCreated'; Expression = { $_.TimeCreated }},
-      @{Name='InitiatedBy'; Expression = {
-          if ($_.Message -match 'process .*TrustedInstaller') {
-            'TrustedInstaller (Windows Update)'
-          } elseif ($_.Message -match 'by user\s+([^\r\n]+)') {
-            $Matches[1]
-          } else {
-            'System/Service'
-          }
-      }},
-      @{Name='Message'; Expression = { $_.Message }}
-    ) | Format-Table -Wrap
-} catch {
-  Write-Output "No 1074 (planned restart/shutdown) events found."
-}
-Write-Output ""
