@@ -162,18 +162,25 @@ foreach ($e in $evResum) {
     Timestamp      = $e.TimeCreated; 'Event type'='Resume'; 'Initiated by'=''; Reason=''; Type=''; 'Completed at'=''; Message=($e.Message -split "`r?`n")[0]
   })
 }
-foreach ($e in $evWake) {
-  $ws = $null; $wst = $null
-  ($e.Message -split "`r?`n") | ForEach-Object {
-    if (-not $ws  -and $_ -match 'Wake Source(?: \(.*\))?:\s*(.+)') { $ws = $Matches[1].Trim() }
-    if (-not $wst -and $_ -match 'Wake Source Text:\s*(.+)')       { $wst = $Matches[1].Trim() }
-  }
-  $reason = $ws; if ($wst) { $reason = ($reason ? "$reason; $wst" : $wst) }
-  if (-not $reason) { $reason = 'Wake source not reported' }
-  $rows.Add([pscustomobject]@{
-    Timestamp      = $e.TimeCreated; 'Event type'='Wake'; 'Initiated by'=''; Reason=$reason; Type=''; 'Completed at'=''; Message=($e.Message -split "`r?`n")[0]
-  })
+# Power-Troubleshooter 1: extract "Wake Source …" and optional text line
+$ws = $null; $wstext = $null
+($e.Message -split "`r?`n") | ForEach-Object {
+  if (-not $ws     -and $_ -match 'Wake Source(?: \(.*\))?:\s*(.+)') { $ws     = "Wake Source: $($Matches[1].Trim())" }
+  if (-not $wstext -and $_ -match 'Wake Source Text:\s*(.+)')        { $wstext = "Wake Text: $($Matches[1].Trim())"  }
 }
+
+$parts = @()
+if ($ws)     { $parts += $ws }
+if ($wstext) { $parts += $wstext }
+$detail = if ($parts.Count -gt 0) { $parts -join '; ' } else { 'Wake source not reported' }
+
+$rows.Add([pscustomobject]@{
+  Timestamp      = $e.TimeCreated
+  'Event type'   = 'Wake'
+  'Initiated by' = ''
+  Detail         = $detail
+  Message        = (($e.Message -split "`r?`n")[0])
+})
 foreach ($e in $evUnexp) {
   $etype = if ($e.Id -eq 41) { 'Kernel-Power 41 (unexpected power loss)' } else { 'Unexpected Shutdown (6008)' }
   $rows.Add([pscustomobject]@{
