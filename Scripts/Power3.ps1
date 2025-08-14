@@ -162,25 +162,33 @@ foreach ($e in $evResum) {
     Timestamp      = $e.TimeCreated; 'Event type'='Resume'; 'Initiated by'=''; Reason=''; Type=''; 'Completed at'=''; Message=($e.Message -split "`r?`n")[0]
   })
 }
-# Power-Troubleshooter 1: extract "Wake Source …" and optional text line
-$ws = $null; $wstext = $null
-($e.Message -split "`r?`n") | ForEach-Object {
-  if (-not $ws     -and $_ -match 'Wake Source(?: \(.*\))?:\s*(.+)') { $ws     = "Wake Source: $($Matches[1].Trim())" }
-  if (-not $wstext -and $_ -match 'Wake Source Text:\s*(.+)')        { $wstext = "Wake Text: $($Matches[1].Trim())"  }
+# --- Wake (Power-Troubleshooter / ID 1): extract Wake Source (+ optional text) into Reason ---
+foreach ($e in $evWake) {
+  $ws  = $null   # e.g., "Device -USB Keyboard" or "Timer - Windows Update"
+  $wst = $null   # optional "Wake Source Text: ..." line on some systems
+
+  # Parse the event message lines
+  ($e.Message -split "`r?`n") | ForEach-Object {
+    if (-not $ws  -and $_ -match 'Wake Source(?: \(.*\))?:\s*(.+)') { $ws  = $Matches[1].Trim() }
+    if (-not $wst -and $_ -match 'Wake Source Text:\s*(.+)')       { $wst = $Matches[1].Trim() }
+  }
+
+  # Build one Reason string (no ternary)
+  $parts = @()
+  if ($ws)  { $parts += $ws }      # e.g., "Device -USB Keyboard"
+  if ($wst) { $parts += $wst }     # e.g., "Power Button"
+  $reason = if ($parts.Count -gt 0) { $parts -join '; ' } else { 'Wake source not reported' }
+
+  $rows.Add([pscustomobject]@{
+    Timestamp      = $e.TimeCreated
+    'Event type'   = 'Wake'
+    'Initiated by' = ''
+    Reason         = $reason       # <-- fills the Reason column in your table
+    Type           = ''
+    'Completed at' = ''
+    Message        = ($e.Message -split "`r?`n")[0]
+  })
 }
-
-$parts = @()
-if ($ws)     { $parts += $ws }
-if ($wstext) { $parts += $wstext }
-$detail = if ($parts.Count -gt 0) { $parts -join '; ' } else { 'Wake source not reported' }
-
-$rows.Add([pscustomobject]@{
-  Timestamp      = $e.TimeCreated
-  'Event type'   = 'Wake'
-  'Initiated by' = ''
-  Detail         = $detail
-  Message        = (($e.Message -split "`r?`n")[0])
-})
 foreach ($e in $evUnexp) {
   $etype = if ($e.Id -eq 41) { 'Kernel-Power 41 (unexpected power loss)' } else { 'Unexpected Shutdown (6008)' }
   $rows.Add([pscustomobject]@{
