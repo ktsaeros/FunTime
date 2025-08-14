@@ -202,14 +202,14 @@ foreach ($e in $evUnexp) {
 }
 
 Write-Output "=== Unified power timeline (requests merged with completions) ==="
-$rows | Sort-Object Timestamp | Format-Table `
-  @{Label='Timestamp';   Expression={$_.Timestamp} },
-  @{Label='Event type';  Expression={$_.'Event type'} },
-  @{Label='Initiated by';Expression={$_.'Initiated by'} -Wrap },
-  @{Label='Reason';      Expression={$_.Reason} -Wrap },
-  @{Label='Type';        Expression={$_.Type} },
-  @{Label='Completed';   Expression={$_.'Completed at'} },
-  @{Label='Message';     Expression={$_.Message} -Wrap }
+$rows | Sort-Object Timestamp | Format-Table -Wrap `
+  @{Label='Timestamp';   Expression = {$_.Timestamp} },
+  @{Label='Event type';  Expression = {$_. 'Event type'} },
+  @{Label='Initiated by';Expression = {$_. 'Initiated by'} },
+  @{Label='Reason';      Expression = {$_.Reason} },
+  @{Label='Type';        Expression = {$_.Type} },
+  @{Label='Completed';   Expression = {$_. 'Completed at'} },
+  @{Label='Message';     Expression = {$_.Message} }
 Write-Output ""
 
 
