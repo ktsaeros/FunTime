@@ -250,7 +250,7 @@ if ($wu) {
       TimeCreated = $_.TimeCreated;
       Id          = $_.Id;
       Status      = $status;
-      Title       = ($_..Message -split "`r?`n")[0]
+      Title       = ($_.Message -split "`r?`n")[0]
     }
   } | Format-Table -AutoSize
 } else {
