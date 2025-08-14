@@ -65,23 +65,18 @@ Write-Output ''  # spacer
 # ============================================
 
 function Get-StandbyTimeoutMinutes {
-    # Returns a hashtable: @{ AC = <int>; DC = <int> }
+    # Returns a hashtable: @{ AC = <int>; DC = <int> } or $nulls if unknown
     $result = @{ AC = $null; DC = $null }
     $out = powercfg /query SCHEME_CURRENT SUB_SLEEP STANDBYIDLE 2>$null
-
     if (-not $out) { return $result }
 
-    # Newer Windows format:
-    #   Plugged In: 0 minutes
-    #   On Battery: 15 minutes
+    # Newer Windows format (preferred)
     $acMin = ($out | Select-String -Pattern 'Plugged In:\s+(\d+)\s+minutes').Matches |
              ForEach-Object { [int]$_.Groups[1].Value } | Select-Object -First 1
     $dcMin = ($out | Select-String -Pattern 'On Battery:\s+(\d+)\s+minutes').Matches |
              ForEach-Object { [int]$_.Groups[1].Value } | Select-Object -First 1
 
-    # Older Windows fallback:
-    #   Current AC Power Setting Index: 0x0000000F  (minutes)
-    #   Current DC Power Setting Index: 0x0000000A
+    # Legacy fallback (hex indices)
     if ($null -eq $acMin) {
         $acHex = ($out | Select-String -Pattern 'Current AC Power Setting Index:\s+0x([0-9A-Fa-f]+)').Matches |
                  ForEach-Object { $_.Groups[1].Value } | Select-Object -First 1
@@ -99,18 +94,17 @@ function Get-StandbyTimeoutMinutes {
 }
 
 function Get-HibernateEnabled {
-    # Returns $true if Hibernate is enabled, $false if disabled
+    # True if Hibernate is enabled; false if disabled
     $a = powercfg /a 2>$null
-    if (-not $a) { return $false }  # be conservative
-    # When hibernate is OFF, Windows prints: "Hibernate has been disabled."
+    if (-not $a) { return $false }  # conservative
     return -not ($a | Select-String -SimpleMatch 'Hibernate has been disabled')
 }
 
 # --- Fetch current values
-$timeouts = Get-StandbyTimeoutMinutes
-$acMin = $timeouts.AC
-$dcMin = $timeouts.DC
-$hibEnabled = Get-HibernateEnabled
+$timeouts    = Get-StandbyTimeoutMinutes
+$acMin       = $timeouts.AC
+$dcMin       = $timeouts.DC
+$hibEnabled  = Get-HibernateEnabled
 
 # --- Debug print (optional)
 Write-Output "Current power settings:"
@@ -120,6 +114,6 @@ Write-Output "  Hibernate enabled: $hibEnabled"
 # --- Trigger if Hibernate is ON or AC sleep > 0
 if ($hibEnabled -or ($acMin -gt 0)) {
     Write-Output "Hibernate is ON or AC sleep timeout is > 0."
-    Write-Output "To apply recommended settings (hibernate OFF, AC no-sleep; DC sleeps after 15 min; display timeouts):"
+    Write-Output "To apply recommended settings (hibernate OFF, AC no-sleep; DC sleeps after 15 min; display timeouts), run:"
     Write-Output "  powercfg /change standby-timeout-ac 0; powercfg /change standby-timeout-dc 15; powercfg /change monitor-timeout-ac 20; powercfg /change monitor-timeout-dc 5; powercfg /hibernate off"
 }
