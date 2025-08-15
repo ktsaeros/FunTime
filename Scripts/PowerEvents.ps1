@@ -160,3 +160,111 @@ if (
     Write-Output "To apply recommended settings (hibernate OFF, AC no-sleep, DC sleep 30 min, monitor timeouts), run (as Admin):"
     Write-Output "  powercfg /change standby-timeout-ac 0; powercfg /change standby-timeout-dc 30; powercfg /change monitor-timeout-ac 20; powercfg /change monitor-timeout-dc 5; powercfg /hibernate off"
 }
+
+
+# ============================================
+# Section 3b: WoL Settings
+# ============================================
+function Get-SleepStateSummary {
+    $txt = (powercfg /a 2>$null) -join "`n"
+    [pscustomobject]@{
+        RawText  = $txt
+        HasS3    = $txt -match '(^|\n)\s*Standby $begin:math:text$S3$end:math:text$'
+        HasS0Low = $txt -match '(^|\n)\s*Standby $begin:math:text$S0 Low Power Idle$end:math:text$'
+        HasS4    = $txt -match '(^|\n)\s*Hibernate'
+        Notes    = ($txt -split "`r?`n" | Where-Object { $_ -match 'available on this system' })
+    }
+}
+
+function Get-FastStartupEnabled {
+    # Fast Startup is controlled by HiberbootEnabled (requires hiberfile)
+    $reg = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power'
+    try {
+        $val = (Get-ItemProperty -Path $reg -Name HiberbootEnabled -ErrorAction Stop).HiberbootEnabled
+        return ($val -eq 1)
+    } catch {
+        return $false
+    }
+}
+
+function Get-NicWolReadiness {
+    $out = @()
+    $adapters = Get-NetAdapter -Physical | Where-Object { $_.Status -ne 'Disabled' }
+    foreach ($nic in $adapters) {
+        $pm  = try { Get-NetAdapterPowerManagement -Name $nic.Name -ErrorAction Stop } catch { $null }
+        $adv = try { Get-NetAdapterAdvancedProperty -Name $nic.Name -ErrorAction Stop } catch { @() }
+
+        $magicAdv = $adv | Where-Object {
+            $_.DisplayName -like '*Magic*' -or $_.RegistryKeyword -like '*Magic*'
+        } | Select-Object -First 1
+
+        $out += [pscustomobject]@{
+            Name                 = $nic.Name
+            IfDesc               = $nic.InterfaceDescription
+            PM_WakeOnMagicPacket = $pm?.WakeOnMagicPacket
+            PM_AllowWakeFromAny  = $pm?.AllowWakeFromAny
+            Adv_Magic_Name       = $magicAdv?.DisplayName
+            Adv_Magic_Value      = $magicAdv?.DisplayValue
+            WakeArmed            = (powercfg -devicequery wake_armed) -contains $nic.InterfaceDescription
+        }
+    }
+    $out
+}
+
+# --- Gather more context
+$states      = Get-SleepStateSummary
+$fastStartup = Get-FastStartupEnabled
+$nicInfo     = Get-NicWolReadiness
+
+Write-Output ""
+Write-Output "Sleep state summary:  S3=$($states.HasS3)  S0_LowPowerIdle=$($states.HasS0Low)  HibernateListed=$($states.HasS4)"
+Write-Output "Fast Startup (registry): $fastStartup"
+Write-Output "Notes from 'powercfg -a' that indicate availability:"
+$states.Notes | ForEach-Object { Write-Output "  $_" }
+
+# --- WOL-focused recommendations (print-only)
+$recommendations = @()
+
+# 1) Prefer S3 over S0 for predictable WOL (if the platform supports it)
+if ($states.HasS0Low -and -not $states.HasS3) {
+    $recommendations += "Platform uses Modern Standby (S0 Low Power Idle) without S3. WOL may be OEM-limited; check BIOS/UEFI for options related to S3 or 'Wake on LAN from Modern Standby'. (No OS command to change this.)"
+}
+
+# 2) Fast Startup off (by turning off hibernate) improves WOL-from-shutdown
+if ($hibEnabled -or $fastStartup) {
+    $recommendations += "Disable Hibernate (also disables Fast Startup) for reliable WOL from shutdown:"
+    $recommendations += "  powercfg /hibernate off"
+}
+
+# 3) NIC wake readiness & commands
+foreach ($n in $nicInfo) {
+    if ($n.Adv_Magic_Name -and ($n.Adv_Magic_Value -notin @('Enabled','On','1'))) {
+        $recommendations += "Enable driver WOL on '$($n.Name)':"
+        $recommendations += "  Set-NetAdapterAdvancedProperty -Name '$($n.Name)' -DisplayName '$($n.Adv_Magic_Name)' -DisplayValue 'Enabled'"
+    } else {
+        $recommendations += "Driver WOL appears enabled for '$($n.Name)' (advanced property '$($n.Adv_Magic_Name)' = '$($n.Adv_Magic_Value)')."
+    }
+
+    if (-not $n.WakeArmed) {
+        $recommendations += "Arm OS wake for '$($n.Name)':"
+        $recommendations += "  powercfg -deviceenablewake `"$($n.IfDesc)`""
+    }
+
+    # Optional: PM policy guidance (print both options, you choose per device type)
+    $recommendations += "Optional NIC power policy for '$($n.Name)':"
+    $recommendations += "  # Desktop: reduce surprises"
+    $recommendations += "  Set-NetAdapterPowerManagement -Name '$($n.Name)' -AllowComputerToTurnOffDevice Disabled"
+    $recommendations += "  # Laptop: maximize battery"
+    $recommendations += "  Set-NetAdapterPowerManagement -Name '$($n.Name)' -AllowComputerToTurnOffDevice Enabled"
+}
+
+# 4) Wake timers (optional)
+$recommendations += "Allow wake timers on AC if you plan to schedule wakes:"
+$recommendations += "  powercfg /SETACVALUEINDEX SCHEME_CURRENT SUB_SLEEP RTCWAKE 1 ; powercfg /SETACTIVE SCHEME_CURRENT"
+
+# 5) BIOS/UEFI reminder for S5 (cannot be automated from Windows)
+$recommendations += "To wake from S5 (soft off), confirm BIOS/UEFI options like 'Power On By PCI-E' / 'Wake on LAN from S5' are enabled. (No Windows command for this.)"
+
+Write-Output ""
+Write-Output "=== WOL Readiness Recommendations (print-only) ==="
+$recommendations | ForEach-Object { Write-Output $_ }
