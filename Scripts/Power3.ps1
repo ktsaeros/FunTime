@@ -387,6 +387,7 @@ if ($bat) {
   $bat | Select-Object Name, Status, BatteryStatus, EstimatedChargeRemaining, DesignVoltage | Format-Table -AutoSize
 } else {
   Write-Output "No Battery/UPS reported via Win32_Battery."
+  Write-Output ""
 }
 # AC/DC power source change events (helpful for UPS switching to battery)
 $kpPowerSrc = Get-WinEvent -FilterHashtable @{ LogName='System'; ProviderName='Microsoft-Windows-Kernel-Power'; Id=105; StartTime=$since } -ErrorAction SilentlyContinue |
