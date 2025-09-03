@@ -58,6 +58,23 @@ function Provider-Exists {
   param([string]$Name)
   try { $null -ne (Get-WinEvent -ListProvider $Name -ErrorAction Stop) } catch { $false }
 }
+function Decode-User32Reason {
+  param([uint32]$Code)
+  $planned = [bool]($Code -band 0x80000000)
+  $major   = ($Code -band 0x000F0000) -shr 16
+  $minor   = ($Code -band 0x0000FFFF)
+  $majorMap = @{
+    0x0='None'; 0x1='Hardware'; 0x2='Operating System'; 0x3='Application';
+    0x4='System Failure'; 0x5='System'; 0x6='Power Failure'; 0x7='Other'
+  }
+  [pscustomobject]@{
+    RawHex   = ('0x{0:x}' -f $Code)
+    Planned  = $planned
+    Major    = $majorMap[$major] ?? ("Unknown(0x{0:x})" -f $major)
+    MinorHex = ('0x{0:x}' -f $minor)
+  }
+}
+
 
 # ---------- Gather events (noise filtered, with fallback) ----------
 $events = @()
@@ -84,15 +101,34 @@ if (-not $events -or $events.Count -eq 0) {
 # ---------- Unified power timeline (columnar, merges 1074 with shutdown) ----------
 
 function Get-InitiatorAndReason {
-  param($ev)  # expects a USER32 1074 event
+  param($ev)  # expects USER32 1074
+  $proc   = $ev.Properties[0].Value
+  $caller = $ev.Properties[1].Value
+  $rcode  = [uint32]$ev.Properties[3].Value
+  $dec    = Decode-User32Reason $rcode
+
   $who = 'System/Service'; $isUser = $false
-  if ($ev.Message -match 'process .*TrustedInstaller') { $who = 'TrustedInstaller (Windows Update)' }
-  elseif ($ev.Message -match 'by user\s+([^\r\n]+)')   { $who = "User: $($Matches[1])"; $isUser = $true }
+  if     ($ev.Message -match 'TrustedInstaller') { $who = 'TrustedInstaller (Windows Update)' }
+  elseif ($ev.Message -match 'by user\s+([^\r\n]+)') { $who = "User: $($Matches[1])"; $isUser = $true }
   elseif ($ev.Message -match 'on behalf of user\s+([^\r\n]+?)\s+for the following reason:') { $who = "On behalf: $($Matches[1])" }
   elseif ($ev.Message -match 'on behalf of user\s+([^\r\n]+)') { $who = "On behalf: $($Matches[1])" }
+
   $reason = $null; if ($ev.Message -match 'for the following reason:\s*([^\r\n]+)') { $reason = $Matches[1] }
   $stype  = $null; if ($ev.Message -match 'Shutdown Type:\s*([^\r\n]+)')          { $stype  = $Matches[1] }
-  [pscustomobject]@{ Who = $who; IsUser = $isUser; Reason = $reason; SType = $stype }
+
+  [pscustomobject]@{
+    When        = $ev.TimeCreated
+    Process     = $proc
+    Caller      = $caller
+    Who         = $who
+    IsUser      = $isUser
+    ReasonText  = $reason
+    Shutdown    = $stype
+    ReasonHex   = $dec.RawHex
+    Planned     = $dec.Planned
+    ReasonMajor = $dec.Major
+    ReasonMinor = $dec.MinorHex
+  }
 }
 
 $evAll   = $events | Sort-Object TimeCreated
