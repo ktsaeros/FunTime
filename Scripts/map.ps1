@@ -1,14 +1,15 @@
-<# 
+<#
 .SYNOPSIS
-  List mapped network drives for local profiles.
+  List mapped network drives for local profiles, including users currently logged on.
 
 .NOTES
-  Run as Administrator (loads NTUSER.DAT hives).
+  Run as Administrator (reads NTUSER.DAT hives). 
 #>
 
 param(
-  [switch]$LocalOnly,   # only show COMPUTERNAME\user accounts
-  [switch]$AsObject     # output PSCustomObjects instead of strings
+  [switch]$LocalOnly,    # only show COMPUTERNAME\user accounts
+  [switch]$AsObject,     # output PSCustomObjects instead of strings
+  [switch]$IncludeLive   # also include current-session (non-persistent) mappings
 )
 
 $ErrorActionPreference = 'Continue'
@@ -49,16 +50,29 @@ if ($LocalOnly) {
 }
 
 $results = foreach ($p in $profiles) {
-  $nt = Join-Path $p.ProfilePath 'NTUSER.DAT'
-  if (-not (Test-Path $nt)) { continue }
+  $loadedRoot = "Registry::HKEY_USERS\$($p.SID)\Network"
+  $tempHive   = "TempHive_$($p.SID)"
+  $tempRoot   = "HKLM:\$tempHive\Network"
+  $ntuser     = Join-Path $p.ProfilePath 'NTUSER.DAT'
 
-  $hive = "TempHive_$($p.SID)"
-
-  # Load hive (suppress stdout/stderr)
-  & reg.exe load "HKLM\$hive" $nt *> $null
+  $usingHKU = $false
+  if (Test-Path $loadedRoot) {
+    $usingHKU = $true
+  }
+  elseif (Test-Path $ntuser) {
+    # Try to load the hive if not already mounted
+    & reg.exe load "HKLM\$tempHive" $ntuser *> $null
+    if (-not (Test-Path "HKLM:\$tempHive")) {
+      Write-Warning "Could not load hive for $($p.Account) ($($p.SID)). It may already be in use."
+      continue
+    }
+  }
+  else {
+    continue
+  }
 
   try {
-    $key = "HKLM:\$hive\Network"
+    $key = if ($usingHKU) { $loadedRoot } else { $tempRoot }
     if (Test-Path $key) {
       Get-ChildItem $key | ForEach-Object {
         $drv = $_.PSChildName
@@ -71,15 +85,34 @@ $results = foreach ($p in $profiles) {
             SID     = $p.SID
             Drive   = $drv
             Path    = $rp
+            Source  = if ($usingHKU) { 'HKU' } else { 'NTUSER.DAT' }
           }
         }
       }
     }
   }
   finally {
-    # Always try to unload (suppress noise)
-    & reg.exe unload "HKLM\$hive" *> $null
+    if (-not $usingHKU) {
+      & reg.exe unload "HKLM\$tempHive" *> $null
+    }
   }
+}
+
+# Optional: include *live* session mappings (covers non-persistent net use)
+if ($IncludeLive) {
+  try {
+    Get-CimInstance -ClassName Win32_MappedLogicalDisk -EA Stop | ForEach-Object {
+      [PSCustomObject]@{
+        Account = "$env:COMPUTERNAME\$env:USERNAME"
+        User    = $env:USERNAME
+        Scope   = 'CurrentSession'
+        SID     = $null
+        Drive   = $_.DeviceID.TrimEnd(':')
+        Path    = $_.ProviderName
+        Source  = 'LiveSession'
+      }
+    } | ForEach-Object { $results += $_ }
+  } catch { }
 }
 
 # De-duplicate and output
@@ -91,7 +124,9 @@ if ($AsObject) {
 else {
   if ($results) {
     $results | Sort-Object Account,Drive |
-      ForEach-Object { "{0} : {1} => {2}" -f $_.Account, $_.Drive, $_.Path }
+      ForEach-Object {
+        "{0} : {1} => {2}" -f $_.Account, $_.Drive, $_.Path
+      }
   }
   else {
     "No mapped drives found for any user."
