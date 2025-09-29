@@ -1,4 +1,4 @@
-# List screensaver settings for all loaded user hives (HKU\S-1-5-21-...)
+﻿# List screensaver settings for all loaded user hives (HKU\S-1-5-21-...)
 if (-not (Get-PSDrive HKU -ea 0)) { New-PSDrive HKU Registry HKEY_USERS | Out-Null }
 
 Get-ChildItem HKU:\ -ea 0 |
