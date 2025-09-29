@@ -1,4 +1,4 @@
-﻿# List screensaver settings for all loaded user hives (HKU\S-1-5-21-...)
+﻿# getscreen.ps1 — list screensaver settings for all loaded user hives (HKU\S-1-5-21-*)
 if (-not (Get-PSDrive HKU -ea 0)) { New-PSDrive HKU Registry HKEY_USERS | Out-Null }
 
 Get-ChildItem HKU:\ -ea 0 |
@@ -9,9 +9,9 @@ Get-ChildItem HKU:\ -ea 0 |
     $user = $( if ($prof -and $prof.ProfileImagePath) { Split-Path $prof.ProfileImagePath -Leaf } else { $sid } )
 
     $p = Get-ItemProperty "Registry::$($_.Name)\Control Panel\Desktop" -ea 0
-    $active = if ($p) { "$($p.ScreenSaveActive)" } else { $null }
-    $to     = if ($p) { [int]($p.ScreenSaveTimeOut | ForEach-Object { $_ }) } else { $null }
-    $exe    = if ($p) { $p.'SCRNSAVE.EXE' } else { $null }
+    $active = $( if ($p) { "$($p.ScreenSaveActive)" } else { $null } )
+    $to     = $( if ($p) { [int]($p.ScreenSaveTimeOut | ForEach-Object { $_ }) } else { $null } )
+    $exe    = $( if ($p) { $p.'SCRNSAVE.EXE' } else { $null } )
 
     $timeout = if (-not $p) {
       'N/A'
