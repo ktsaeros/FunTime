@@ -45,7 +45,11 @@ $ids  = Get-CimInstance -Namespace root\wmi -ClassName WmiMonitorID -ErrorAction
 
 $cons | ForEach-Object {
   $inst = $_.InstanceName
-  $tech = $vtMap[[int]$_.VideoOutputTechnology] ?? $_.VideoOutputTechnology
+  $if ($vtMap.ContainsKey([int]$_.VideoOutputTechnology)) {
+    $tech = $vtMap[[int]$_.VideoOutputTechnology]
+} else {
+    $tech = $_.VideoOutputTechnology
+}
   $match = $ids | Where-Object { $_.InstanceName -eq $inst }
   $mfg = ($match.ManufacturerName | ForEach-Object {[char]$_}) -join ''
   $prod= ($match.UserFriendlyName | ForEach-Object {[char]$_}) -join ''
