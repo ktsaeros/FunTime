@@ -1,4 +1,4 @@
-﻿# --- Basic GPU driver version (you already saw 32.0.101.6790, this confirms) ---
+﻿# --- Basic GPU driver version ---
 "== GPU Driver ==";
 Get-PnpDevice -Class Display |
   Select-Object -ExpandProperty InstanceId |
@@ -29,7 +29,6 @@ Get-PnpDevice -Class Net |
   Select-Object Status, Class, FriendlyName, InstanceId |
   Sort-Object FriendlyName |
   Format-Table -Auto
-# (Tip: a 'Realtek USB GbE Family Controller' with USB\VID_* is from the dock.)
 
 # --- Monitors: EDID + connection technology (HDMI/DP/eDP/etc.) ---
 "`n== Monitors & Connections ==";
@@ -45,11 +44,12 @@ $ids  = Get-CimInstance -Namespace root\wmi -ClassName WmiMonitorID -ErrorAction
 
 $cons | ForEach-Object {
   $inst = $_.InstanceName
-  $if ($vtMap.ContainsKey([int]$_.VideoOutputTechnology)) {
-    $tech = $vtMap[[int]$_.VideoOutputTechnology]
-} else {
-    $tech = $_.VideoOutputTechnology
-}
+  # THIS IS THE CORRECTED BLOCK FOR POWERSHELL 5.1
+  if ($vtMap.ContainsKey([int]$_.VideoOutputTechnology)) {
+      $tech = $vtMap[[int]$_.VideoOutputTechnology]
+  } else {
+      $tech = $_.VideoOutputTechnology
+  }
   $match = $ids | Where-Object { $_.InstanceName -eq $inst }
   $mfg = ($match.ManufacturerName | ForEach-Object {[char]$_}) -join ''
   $prod= ($match.UserFriendlyName | ForEach-Object {[char]$_}) -join ''
@@ -65,4 +65,4 @@ $cons | ForEach-Object {
 "`n== Current Display Modes ==";
 Get-CimInstance -Namespace root\wmi -ClassName WmiMonitorBasicDisplayParams -ErrorAction SilentlyContinue |
   Select-Object InstanceName, MaxHorizontalImageSize, MaxVerticalImageSize
-(Get-DisplayResolution) 2>$null | Out-Null # no-op on most systems; optional
+(Get-DisplayResolution) 2>$null | Out-Null
