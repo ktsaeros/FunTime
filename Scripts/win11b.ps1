@@ -2,7 +2,7 @@
 # Works with irm/iex.  No params needed.
 
 # --- Hard-coded values ---
-$Url     = "https://drive.google.com/file/d/1UoLlZYiKSUlwGwTtAc0QWCo30DM-dUIP/view?usp=sharing"
+$Url     = "https://drive.google.com/file/d/1UoLlZYiKSUlwGwTtAc0QWCo30DM-dUIP"
 $OutFile = "C:\Aeros\AerosWin11.iso"
 # -------------------------
 
