@@ -1,0 +1,1530 @@
+﻿"Date","EventId","Provider","Hint","Summary","Message"
+"9/25/2025 12:17:24 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 12:17:24 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 520 to 521.","The system session has transitioned from 520 to 521.
+
+Reason 16777224 
+
+BootId: 22"
+"9/25/2025 12:17:24 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 12:25:02 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 521 to 522.","The system session has transitioned from 521 to 522.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 12:25:02 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 12:25:02 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 522 to 523.","The system session has transitioned from 522 to 523.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 12:25:02 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 1:28:17 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 523 to 524.","The system session has transitioned from 523 to 524.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 2:28:49 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 2:28:49 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 524 to 525.","The system session has transitioned from 524 to 525.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 2:28:49 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 3:17:29 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 525 to 526.","The system session has transitioned from 525 to 526.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 3:37:09 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 3:37:09 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 526 to 527.","The system session has transitioned from 526 to 527.
+
+Reason 16777224 
+
+BootId: 22"
+"9/25/2025 3:37:09 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 3:52:43 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 527 to 528.","The system session has transitioned from 527 to 528.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 3:52:43 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 3:52:43 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 528 to 529.","The system session has transitioned from 528 to 529.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 3:52:43 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 3:55:15 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 529 to 530.","The system session has transitioned from 529 to 530.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 3:55:15 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 3:55:15 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 530 to 531.","The system session has transitioned from 530 to 531.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 3:55:15 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 4:25:23 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 531 to 532.","The system session has transitioned from 531 to 532.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 4:25:23 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 4:25:24 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 532 to 533.","The system session has transitioned from 532 to 533.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 4:25:24 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 4:27:02 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 533 to 534.","The system session has transitioned from 533 to 534.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 4:27:02 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 4:27:02 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 534 to 535.","The system session has transitioned from 534 to 535.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 4:27:02 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 4:57:07 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 535 to 536.","The system session has transitioned from 535 to 536.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 4:57:08 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 4:57:08 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 536 to 537.","The system session has transitioned from 536 to 537.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 4:57:08 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 4:58:22 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 537 to 538.","The system session has transitioned from 537 to 538.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 4:58:22 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 4:58:22 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 538 to 539.","The system session has transitioned from 538 to 539.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 4:58:22 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 5:28:28 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 539 to 540.","The system session has transitioned from 539 to 540.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 5:28:28 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 5:28:28 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 540 to 541.","The system session has transitioned from 540 to 541.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 5:28:28 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 5:30:01 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 541 to 542.","The system session has transitioned from 541 to 542.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 5:37:03 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 5:37:03 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 542 to 543.","The system session has transitioned from 542 to 543.
+
+Reason 16777224 
+
+BootId: 22"
+"9/25/2025 5:37:03 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 5:55:14 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 543 to 544.","The system session has transitioned from 543 to 544.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 6:29:33 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 6:29:33 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 544 to 545.","The system session has transitioned from 544 to 545.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 6:29:33 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 7:34:37 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 545 to 546.","The system session has transitioned from 545 to 546.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 7:37:25 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 7:37:25 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: AC/DC Display Burst Suppressed."
+"9/25/2025 7:37:25 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 546 to 547.","The system session has transitioned from 546 to 547.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 7:37:25 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: AC/DC Display Burst Suppressed."
+"9/25/2025 7:37:35 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 547 to 548.","The system session has transitioned from 547 to 548.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/25/2025 7:37:41 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby"
+"9/25/2025 7:38:59 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 7:39:01 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby"
+"9/25/2025 7:39:01 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 7:39:05 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby"
+"9/25/2025 7:41:18 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 7:41:18 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/25/2025 7:41:18 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 548 to 549.","The system session has transitioned from 548 to 549.
+
+Reason 55 
+
+BootId: 22"
+"9/25/2025 7:41:18 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/25/2025 7:41:28 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 549 to 550.","The system session has transitioned from 549 to 550.
+
+Reason 55 
+
+BootId: 22"
+"9/25/2025 7:41:35 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Policy Setting","Connectivity state in standby: Disconnected, Reason: Policy Setting"
+"9/25/2025 8:10:13 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 8:10:13 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:10:13 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 550 to 551.","The system session has transitioned from 550 to 551.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:10:43 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 551 to 552.","The system session has transitioned from 551 to 552.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 8:10:43 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"9/25/2025 8:12:46 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:12:46 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 552 to 554.","The system session has transitioned from 552 to 554.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:12:46 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:14:26 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 554 to 555.","The system session has transitioned from 554 to 555.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:14:26 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 8:14:26 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎25T12:14:26.298820300Z from ‎2025‎-‎09‎-‎25T12:14:26.283235600Z.","The system time has changed to ‎2025‎-‎09‎-‎25T12:14:26.298820300Z from ‎2025‎-‎09‎-‎25T12:14:26.283235600Z.
+Time Delta: 15 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T08:14:26.298820300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 8:14:32 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby"
+"9/25/2025 8:14:48 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 8:14:48 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/25/2025 8:14:48 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 555 to 556.","The system session has transitioned from 555 to 556.
+
+Reason 55 
+
+BootId: 22"
+"9/25/2025 8:14:48 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/25/2025 8:14:59 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 556 to 557.","The system session has transitioned from 556 to 557.
+
+Reason 55 
+
+BootId: 22"
+"9/25/2025 8:15:10 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Policy Setting","Connectivity state in standby: Disconnected, Reason: Policy Setting"
+"9/25/2025 8:29:29 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 8:29:30 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:29:30 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 557 to 558.","The system session has transitioned from 557 to 558.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:29:40 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 8:32:09 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 558 to 559.","The system session has transitioned from 558 to 559.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:32:09 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:32:16 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 559 to 560.","The system session has transitioned from 559 to 560.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:32:16 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 8:32:16 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎25T12:32:16.605928900Z from ‎2025‎-‎09‎-‎25T12:32:16.605435200Z.","The system time has changed to ‎2025‎-‎09‎-‎25T12:32:16.605928900Z from ‎2025‎-‎09‎-‎25T12:32:16.605435200Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T08:32:16.605928900Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 8:32:16 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 8:32:16 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 560 to 561.","The system session has transitioned from 560 to 561.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 8:32:16 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 8:32:26 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:32:26 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 561 to 563.","The system session has transitioned from 561 to 563.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:34:39 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 563 to 564.","The system session has transitioned from 563 to 564.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:34:39 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:34:44 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:34:44 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 564 to 566.","The system session has transitioned from 564 to 566.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:41:50 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 566 to 567.","The system session has transitioned from 566 to 567.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:41:50 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:41:59 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:41:59 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 567 to 569.","The system session has transitioned from 567 to 569.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:59:05 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 8:59:43 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 569 to 570.","The system session has transitioned from 569 to 570.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 8:59:43 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:59:47 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 8:59:47 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 570 to 572.","The system session has transitioned from 570 to 572.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:02:02 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 572 to 573.","The system session has transitioned from 572 to 573.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:02:02 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 9:02:05 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 573 to 574.","The system session has transitioned from 573 to 574.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:02:05 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 9:02:05 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎25T13:02:05.816810800Z from ‎2025‎-‎09‎-‎25T13:02:05.816480500Z.","The system time has changed to ‎2025‎-‎09‎-‎25T13:02:05.816810800Z from ‎2025‎-‎09‎-‎25T13:02:05.816480500Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T09:02:05.816810800Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 9:02:13 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby"
+"9/25/2025 9:07:09 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 9:07:09 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/25/2025 9:07:09 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 574 to 575.","The system session has transitioned from 574 to 575.
+
+Reason 55 
+
+BootId: 22"
+"9/25/2025 9:07:09 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/25/2025 9:07:19 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 575 to 576.","The system session has transitioned from 575 to 576.
+
+Reason 55 
+
+BootId: 22"
+"9/25/2025 9:07:26 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Policy Setting","Connectivity state in standby: Disconnected, Reason: Policy Setting"
+"9/25/2025 9:27:35 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 9:27:36 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 9:27:36 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 9:27:36 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 576 to 577.","The system session has transitioned from 576 to 577.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:28:17 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 9:28:24 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 577 to 578.","The system session has transitioned from 577 to 578.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:28:24 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 9:28:27 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 578 to 579.","The system session has transitioned from 578 to 579.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:28:27 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 9:28:27 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎25T13:28:27.604234400Z from ‎2025‎-‎09‎-‎25T13:28:27.599695700Z.","The system time has changed to ‎2025‎-‎09‎-‎25T13:28:27.604234400Z from ‎2025‎-‎09‎-‎25T13:28:27.599695700Z.
+Time Delta: 4 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T09:28:27.604234400Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 9:28:30 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 9:28:30 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 579 to 580.","The system session has transitioned from 579 to 580.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:39:24 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Microsoft\Windows\UsrClass.dat was cleared updating 11 keys and creating 2 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Microsoft\Windows\UsrClass.dat was cleared updating 11 keys and creating 2 modified pages."
+"9/25/2025 9:40:40 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\SystemAppData\Helium\User.dat was cleared updating 1 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\SystemAppData\Helium\User.dat was cleared updating 1 keys and creating 1 modified pages."
+"9/25/2025 9:40:40 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\SystemAppData\Helium\UserClasses.dat was cleared updating 1 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\SystemAppData\Helium\UserClasses.dat was cleared updating 1 keys and creating 1 modified pages."
+"9/25/2025 9:40:40 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\ProgramData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\S-1-5-21-1234757352-3320457402-2554121513-500\SystemAppData\Helium\Cache\e59fd33af7a9be35_COM15.dat was cleared updating 1 keys and creating 1 modified pages.","The access history in hive \??\C:\ProgramData\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\S-1-5-21-1234757352-3320457402-2554121513-500\SystemAppData\Helium\Cache\e59fd33af7a9be35_COM15.dat was cleared updating 1 keys and creating 1 modified pages."
+"9/25/2025 9:40:43 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.AAD.BrokerPlugin_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.AAD.BrokerPlugin_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"9/25/2025 9:40:45 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\MicrosoftWindows.Client.CBS_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"9/25/2025 9:40:46 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"9/25/2025 9:41:13 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Windows.ContentDeliveryManager_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"9/25/2025 9:41:44 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 2 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 2 keys and creating 1 modified pages."
+"9/25/2025 9:41:45 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\SystemAppData\Helium\User.dat was cleared updating 43 keys and creating 7 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\SystemAppData\Helium\User.dat was cleared updating 43 keys and creating 7 modified pages."
+"9/25/2025 9:45:28 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"9/25/2025 9:52:42 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 580 to 581.","The system session has transitioned from 580 to 581.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:52:42 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 9:52:45 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 581 to 582.","The system session has transitioned from 581 to 582.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:52:45 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 9:52:45 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎25T13:52:45.914859300Z from ‎2025‎-‎09‎-‎25T13:52:45.918787000Z.","The system time has changed to ‎2025‎-‎09‎-‎25T13:52:45.914859300Z from ‎2025‎-‎09‎-‎25T13:52:45.918787000Z.
+Time Delta: -3 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T09:52:45.914859300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 9:52:53 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby"
+"9/25/2025 9:57:23 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 9:57:23 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/25/2025 9:57:23 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 582 to 583.","The system session has transitioned from 582 to 583.
+
+Reason 55 
+
+BootId: 22"
+"9/25/2025 9:57:23 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/25/2025 9:57:30 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 583 to 584.","The system session has transitioned from 583 to 584.
+
+Reason 55 
+
+BootId: 22"
+"9/25/2025 9:57:37 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Policy Setting","Connectivity state in standby: Disconnected, Reason: Policy Setting"
+"9/25/2025 10:10:29 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 10:10:29 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 10:10:29 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 584 to 585.","The system session has transitioned from 584 to 585.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 10:10:43 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 585 to 586.","The system session has transitioned from 585 to 586.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 10:10:43 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 10:10:47 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 586 to 587.","The system session has transitioned from 586 to 587.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 10:10:52 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby"
+"9/25/2025 10:11:36 AM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/25/2025 10:11:36 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 10:11:36 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 587 to 588.","The system session has transitioned from 587 to 588.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 10:12:41 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 588 to 589.","The system session has transitioned from 588 to 589.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 10:12:41 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"9/25/2025 10:13:10 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 10:13:11 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: AC/DC Display Burst."
+"9/25/2025 10:13:11 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 589 to 591.","The system session has transitioned from 589 to 591.
+
+Reason AcDcBurst 
+
+BootId: 22"
+"9/25/2025 10:16:24 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 10:19:21 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 591 to 592.","The system session has transitioned from 591 to 592.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 10:19:21 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 10:19:24 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 592 to 593.","The system session has transitioned from 592 to 593.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 10:19:24 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 10:19:24 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎25T14:19:24.949572300Z from ‎2025‎-‎09‎-‎25T14:19:24.949189500Z.","The system time has changed to ‎2025‎-‎09‎-‎25T14:19:24.949572300Z from ‎2025‎-‎09‎-‎25T14:19:24.949189500Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T10:19:24.949572300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 10:19:41 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/25/2025 10:19:41 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 593 to 594.","The system session has transitioned from 593 to 594.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 10:20:15 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 594 to 595.","The system session has transitioned from 594 to 595.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 10:20:15 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"9/25/2025 10:20:26 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Keyboard."
+"9/25/2025 10:20:26 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 595 to 597.","The system session has transitioned from 595 to 597.
+
+Reason InputAccelerometer 
+
+BootId: 22"
+"9/25/2025 10:20:31 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Copilot_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.Copilot_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"9/25/2025 10:21:20 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\Administrator\AppData\Local\Packages\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"9/25/2025 10:28:08 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\Settings\settings.dat was cleared updating 8 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\Settings\settings.dat was cleared updating 8 keys and creating 1 modified pages."
+"9/25/2025 10:48:14 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 11:04:09 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.AV1VideoExtension_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.AV1VideoExtension_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"9/25/2025 12:00:01 PM","6013","EventLog","","The system uptime is 876930 seconds.","The system uptime is 876930 seconds."
+"9/25/2025 2:31:34 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 597 to 598.","The system session has transitioned from 597 to 598.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 2:31:34 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"9/25/2025 2:31:37 PM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.LockApp_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.LockApp_cw5n1h2txyewy\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"9/25/2025 2:31:43 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 598 to 599.","The system session has transitioned from 598 to 599.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 2:31:43 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 2:31:43 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎25T18:31:43.203154700Z from ‎2025‎-‎09‎-‎25T18:31:43.203254800Z.","The system time has changed to ‎2025‎-‎09‎-‎25T18:31:43.203154700Z from ‎2025‎-‎09‎-‎25T18:31:43.203254800Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T14:31:43.203154700Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 2:57:50 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 2:57:50 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 599 to 600.","The system session has transitioned from 599 to 600.
+
+Reason 16777224 
+
+BootId: 22"
+"9/25/2025 2:57:50 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 2:57:50 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 2:57:50 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎25T18:57:50.216367200Z from ‎2025‎-‎09‎-‎25T18:57:50.214494800Z.","The system time has changed to ‎2025‎-‎09‎-‎25T18:57:50.216367200Z from ‎2025‎-‎09‎-‎25T18:57:50.214494800Z.
+Time Delta: 1 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T14:57:50.216367200Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 2:57:52 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Touchpad."
+"9/25/2025 2:57:52 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 600 to 602.","The system session has transitioned from 600 to 602.
+
+Reason InputPoUserPresent 
+
+BootId: 22"
+"9/25/2025 5:50:36 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 602 to 603.","The system session has transitioned from 602 to 603.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 5:50:36 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"9/25/2025 5:50:43 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 603 to 604.","The system session has transitioned from 603 to 604.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 5:50:43 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 5:50:43 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎25T21:50:43.664486600Z from ‎2025‎-‎09‎-‎25T21:50:43.660945300Z.","The system time has changed to ‎2025‎-‎09‎-‎25T21:50:43.664486600Z from ‎2025‎-‎09‎-‎25T21:50:43.660945300Z.
+Time Delta: 3 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T17:50:43.664486600Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 5:55:18 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 5:55:18 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 604 to 605.","The system session has transitioned from 604 to 605.
+
+Reason 16777224 
+
+BootId: 22"
+"9/25/2025 5:55:18 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 6:25:43 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Mouse."
+"9/25/2025 6:25:43 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 605 to 607.","The system session has transitioned from 605 to 607.
+
+Reason InputHid 
+
+BootId: 22"
+"9/25/2025 6:34:24 PM","20003","Microsoft-Windows-UserPnp","","Driver Management has concluded the process to add Service HidUsb for Device Instance ID USB\VID_046D&PID_C548&MI_00\9&2F22F2BB&0&0000 with the following status: 0.","Driver Management has concluded the process to add Service HidUsb for Device Instance ID USB\VID_046D&PID_C548&MI_00\9&2F22F2BB&0&0000 with the following status: 0."
+"9/25/2025 6:38:30 PM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\ProgramData\Microsoft\Windows\AppRepository\Packages\Microsoft.OutlookForWindows_1.2025.916.400_x64__8wekyb3d8bbwe\ActivationStore.dat was cleared updating 0 keys and creating 0 modified pages.","The access history in hive \??\C:\ProgramData\Microsoft\Windows\AppRepository\Packages\Microsoft.OutlookForWindows_1.2025.916.400_x64__8wekyb3d8bbwe\ActivationStore.dat was cleared updating 0 keys and creating 0 modified pages."
+"9/25/2025 9:36:43 PM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 9:38:16 PM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/25/2025 9:38:33 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 607 to 608.","The system session has transitioned from 607 to 608.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:38:33 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/25/2025 9:38:37 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 608 to 609.","The system session has transitioned from 608 to 609.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/25/2025 9:38:37 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 9:38:37 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T01:38:37.509046800Z from ‎2025‎-‎09‎-‎26T01:38:37.508880100Z.","The system time has changed to ‎2025‎-‎09‎-‎26T01:38:37.509046800Z from ‎2025‎-‎09‎-‎26T01:38:37.508880100Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T21:38:37.509046800Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 9:39:55 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 9:39:55 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Mouse."
+"9/25/2025 9:39:55 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 609 to 610.","The system session has transitioned from 609 to 610.
+
+Reason InputHid 
+
+BootId: 22"
+"9/25/2025 9:39:55 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T01:39:55.551515300Z from ‎2025‎-‎09‎-‎26T01:39:55.551394400Z.","The system time has changed to ‎2025‎-‎09‎-‎26T01:39:55.551515300Z from ‎2025‎-‎09‎-‎26T01:39:55.551394400Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T21:39:55.551515300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 9:40:33 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 610 to 611.","The system session has transitioned from 610 to 611.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 9:40:33 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"9/25/2025 10:10:15 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 611 to 612.","The system session has transitioned from 611 to 612.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 10:10:15 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 10:10:15 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T02:10:15.925883000Z from ‎2025‎-‎09‎-‎26T02:10:15.924905600Z.","The system time has changed to ‎2025‎-‎09‎-‎26T02:10:15.925883000Z from ‎2025‎-‎09‎-‎26T02:10:15.924905600Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T22:10:15.925883000Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 11:38:51 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 11:38:51 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 612 to 613.","The system session has transitioned from 612 to 613.
+
+Reason 16777224 
+
+BootId: 22"
+"9/25/2025 11:38:51 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/25/2025 11:38:51 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 11:38:51 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T03:38:51.886731900Z from ‎2025‎-‎09‎-‎26T03:38:51.881085600Z.","The system time has changed to ‎2025‎-‎09‎-‎26T03:38:51.886731900Z from ‎2025‎-‎09‎-‎26T03:38:51.881085600Z.
+Time Delta: 5 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T23:38:51.886731900Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 11:45:50 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 613 to 614.","The system session has transitioned from 613 to 614.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/25/2025 11:45:50 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/25/2025 11:45:50 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T03:45:50.230248500Z from ‎2025‎-‎09‎-‎26T03:45:50.216810200Z.","The system time has changed to ‎2025‎-‎09‎-‎26T03:45:50.230248500Z from ‎2025‎-‎09‎-‎26T03:45:50.216810200Z.
+Time Delta: 13 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎25T23:45:50.230248500Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/25/2025 11:47:13 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 11:47:13 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 614 to 615.","The system session has transitioned from 614 to 615.
+
+Reason 16777220 
+
+BootId: 22"
+"9/25/2025 11:47:13 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/25/2025 11:47:15 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 615 to 616.","The system session has transitioned from 615 to 616.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 12:26:39 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 12:26:39 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 616 to 617.","The system session has transitioned from 616 to 617.
+
+Reason 16777220 
+
+BootId: 22"
+"9/26/2025 12:26:39 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 12:26:39 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 12:26:39 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T04:26:39.349624100Z from ‎2025‎-‎09‎-‎26T04:26:39.347804400Z.","The system time has changed to ‎2025‎-‎09‎-‎26T04:26:39.349624100Z from ‎2025‎-‎09‎-‎26T04:26:39.347804400Z.
+Time Delta: 1 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T00:26:39.349624100Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 12:36:25 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 617 to 618.","The system session has transitioned from 617 to 618.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 12:36:25 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 12:36:25 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T04:36:25.740023100Z from ‎2025‎-‎09‎-‎26T04:36:25.733108000Z.","The system time has changed to ‎2025‎-‎09‎-‎26T04:36:25.740023100Z from ‎2025‎-‎09‎-‎26T04:36:25.733108000Z.
+Time Delta: 6 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T00:36:25.740023100Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 12:36:26 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 12:36:26 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 618 to 619.","The system session has transitioned from 618 to 619.
+
+Reason 16777220 
+
+BootId: 22"
+"9/26/2025 12:36:26 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 12:40:09 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 619 to 620.","The system session has transitioned from 619 to 620.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 12:40:09 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 12:40:09 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T04:40:09.904348400Z from ‎2025‎-‎09‎-‎26T04:40:09.903270100Z.","The system time has changed to ‎2025‎-‎09‎-‎26T04:40:09.904348400Z from ‎2025‎-‎09‎-‎26T04:40:09.903270100Z.
+Time Delta: 1 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T00:40:09.904348400Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 12:40:10 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 12:40:10 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 620 to 621.","The system session has transitioned from 620 to 621.
+
+Reason 16777220 
+
+BootId: 22"
+"9/26/2025 12:40:10 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 12:41:30 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 621 to 622.","The system session has transitioned from 621 to 622.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 12:41:30 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 12:41:30 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T04:41:30.739369900Z from ‎2025‎-‎09‎-‎26T04:41:30.737430100Z.","The system time has changed to ‎2025‎-‎09‎-‎26T04:41:30.739369900Z from ‎2025‎-‎09‎-‎26T04:41:30.737430100Z.
+Time Delta: 1 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T00:41:30.739369900Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 12:41:31 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 12:41:31 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 622 to 623.","The system session has transitioned from 622 to 623.
+
+Reason 16777220 
+
+BootId: 22"
+"9/26/2025 12:41:31 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 12:44:00 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 623 to 624.","The system session has transitioned from 623 to 624.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 12:44:00 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 12:44:00 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T04:44:00.108170700Z from ‎2025‎-‎09‎-‎26T04:44:00.108319800Z.","The system time has changed to ‎2025‎-‎09‎-‎26T04:44:00.108170700Z from ‎2025‎-‎09‎-‎26T04:44:00.108319800Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T00:44:00.108170700Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 1:39:16 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 1:39:16 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 624 to 625.","The system session has transitioned from 624 to 625.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 1:39:16 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 1:39:16 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 1:39:16 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T05:39:16.333236500Z from ‎2025‎-‎09‎-‎26T05:39:16.332588600Z.","The system time has changed to ‎2025‎-‎09‎-‎26T05:39:16.333236500Z from ‎2025‎-‎09‎-‎26T05:39:16.332588600Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T01:39:16.333236500Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 1:44:17 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 625 to 626.","The system session has transitioned from 625 to 626.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 1:44:17 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 1:44:17 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T05:44:17.636558000Z from ‎2025‎-‎09‎-‎26T05:44:17.632115900Z.","The system time has changed to ‎2025‎-‎09‎-‎26T05:44:17.636558000Z from ‎2025‎-‎09‎-‎26T05:44:17.632115900Z.
+Time Delta: 4 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T01:44:17.636558000Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 2:38:46 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 2:38:46 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 626 to 627.","The system session has transitioned from 626 to 627.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 2:38:46 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 2:38:46 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 2:38:46 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T06:38:46.711797700Z from ‎2025‎-‎09‎-‎26T06:38:46.711190800Z.","The system time has changed to ‎2025‎-‎09‎-‎26T06:38:46.711797700Z from ‎2025‎-‎09‎-‎26T06:38:46.711190800Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T02:38:46.711797700Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 2:43:43 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 627 to 628.","The system session has transitioned from 627 to 628.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 2:43:43 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 2:43:43 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T06:43:43.971182000Z from ‎2025‎-‎09‎-‎26T06:43:43.968841200Z.","The system time has changed to ‎2025‎-‎09‎-‎26T06:43:43.971182000Z from ‎2025‎-‎09‎-‎26T06:43:43.968841200Z.
+Time Delta: 2 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T02:43:43.971182000Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 3:18:18 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 3:18:18 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 628 to 629.","The system session has transitioned from 628 to 629.
+
+Reason 16777220 
+
+BootId: 22"
+"9/26/2025 3:18:18 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 3:18:18 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 3:18:18 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T07:18:18.676099200Z from ‎2025‎-‎09‎-‎26T07:18:18.675342400Z.","The system time has changed to ‎2025‎-‎09‎-‎26T07:18:18.676099200Z from ‎2025‎-‎09‎-‎26T07:18:18.675342400Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T03:18:18.676099200Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 3:20:20 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 629 to 630.","The system session has transitioned from 629 to 630.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 3:20:20 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 3:20:20 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T07:20:20.625127300Z from ‎2025‎-‎09‎-‎26T07:20:20.619493000Z.","The system time has changed to ‎2025‎-‎09‎-‎26T07:20:20.625127300Z from ‎2025‎-‎09‎-‎26T07:20:20.619493000Z.
+Time Delta: 5 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T03:20:20.625127300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 3:39:18 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 3:39:18 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 630 to 631.","The system session has transitioned from 630 to 631.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 3:39:18 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 3:39:18 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 3:39:18 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T07:39:18.498201300Z from ‎2025‎-‎09‎-‎26T07:39:18.497947100Z.","The system time has changed to ‎2025‎-‎09‎-‎26T07:39:18.498201300Z from ‎2025‎-‎09‎-‎26T07:39:18.497947100Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T03:39:18.498201300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 3:42:34 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 631 to 632.","The system session has transitioned from 631 to 632.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 3:42:34 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 3:42:34 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T07:42:34.063623700Z from ‎2025‎-‎09‎-‎26T07:42:34.056746000Z.","The system time has changed to ‎2025‎-‎09‎-‎26T07:42:34.063623700Z from ‎2025‎-‎09‎-‎26T07:42:34.056746000Z.
+Time Delta: 6 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T03:42:34.063623700Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 4:39:16 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 4:39:16 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 632 to 633.","The system session has transitioned from 632 to 633.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 4:39:16 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 4:39:16 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 4:39:16 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T08:39:16.364766000Z from ‎2025‎-‎09‎-‎26T08:39:16.364385000Z.","The system time has changed to ‎2025‎-‎09‎-‎26T08:39:16.364766000Z from ‎2025‎-‎09‎-‎26T08:39:16.364385000Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T04:39:16.364766000Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 4:43:34 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 633 to 634.","The system session has transitioned from 633 to 634.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 4:43:34 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 4:43:34 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T08:43:34.241198300Z from ‎2025‎-‎09‎-‎26T08:43:34.231726300Z.","The system time has changed to ‎2025‎-‎09‎-‎26T08:43:34.241198300Z from ‎2025‎-‎09‎-‎26T08:43:34.231726300Z.
+Time Delta: 9 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T04:43:34.241198300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 4:47:15 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 4:47:15 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 634 to 635.","The system session has transitioned from 634 to 635.
+
+Reason 16777220 
+
+BootId: 22"
+"9/26/2025 4:47:15 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"9/26/2025 4:47:17 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 635 to 636.","The system session has transitioned from 635 to 636.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 5:38:46 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 5:38:46 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 636 to 637.","The system session has transitioned from 636 to 637.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 5:38:46 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 5:38:46 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 5:38:46 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T09:38:46.891305300Z from ‎2025‎-‎09‎-‎26T09:38:46.889162200Z.","The system time has changed to ‎2025‎-‎09‎-‎26T09:38:46.891305300Z from ‎2025‎-‎09‎-‎26T09:38:46.889162200Z.
+Time Delta: 2 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T05:38:46.891305300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 5:41:54 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 637 to 638.","The system session has transitioned from 637 to 638.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 5:41:54 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 5:41:54 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T09:41:54.493250500Z from ‎2025‎-‎09‎-‎26T09:41:54.487130600Z.","The system time has changed to ‎2025‎-‎09‎-‎26T09:41:54.493250500Z from ‎2025‎-‎09‎-‎26T09:41:54.487130600Z.
+Time Delta: 6 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T05:41:54.493250500Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 6:39:16 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 6:39:16 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 638 to 639.","The system session has transitioned from 638 to 639.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 6:39:16 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 6:39:17 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 6:39:17 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T10:39:17.011090500Z from ‎2025‎-‎09‎-‎26T10:39:17.009778000Z.","The system time has changed to ‎2025‎-‎09‎-‎26T10:39:17.011090500Z from ‎2025‎-‎09‎-‎26T10:39:17.009778000Z.
+Time Delta: 1 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T06:39:17.011090500Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 6:44:30 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 639 to 640.","The system session has transitioned from 639 to 640.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 6:44:30 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 6:44:30 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T10:44:30.321760700Z from ‎2025‎-‎09‎-‎26T10:44:30.312725600Z.","The system time has changed to ‎2025‎-‎09‎-‎26T10:44:30.321760700Z from ‎2025‎-‎09‎-‎26T10:44:30.312725600Z.
+Time Delta: 9 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T06:44:30.321760700Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 7:39:16 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 7:39:16 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 640 to 641.","The system session has transitioned from 640 to 641.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 7:39:16 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 7:39:16 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 7:39:16 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T11:39:16.788709900Z from ‎2025‎-‎09‎-‎26T11:39:16.788255000Z.","The system time has changed to ‎2025‎-‎09‎-‎26T11:39:16.788709900Z from ‎2025‎-‎09‎-‎26T11:39:16.788255000Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T07:39:16.788709900Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 7:43:14 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 641 to 642.","The system session has transitioned from 641 to 642.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 7:43:14 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 7:43:14 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T11:43:14.509689700Z from ‎2025‎-‎09‎-‎26T11:43:14.507685300Z.","The system time has changed to ‎2025‎-‎09‎-‎26T11:43:14.509689700Z from ‎2025‎-‎09‎-‎26T11:43:14.507685300Z.
+Time Delta: 2 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T07:43:14.509689700Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 8:09:52 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 8:09:52 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Mouse."
+"9/26/2025 8:09:52 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 642 to 643.","The system session has transitioned from 642 to 643.
+
+Reason InputHid 
+
+BootId: 22"
+"9/26/2025 8:09:52 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T12:09:52.524459300Z from ‎2025‎-‎09‎-‎26T12:09:52.524419900Z.","The system time has changed to ‎2025‎-‎09‎-‎26T12:09:52.524459300Z from ‎2025‎-‎09‎-‎26T12:09:52.524419900Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T08:09:52.524459300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 8:10:22 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 643 to 644.","The system session has transitioned from 643 to 644.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 8:10:22 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"9/26/2025 8:12:10 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"9/26/2025 8:12:10 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 644 to 646.","The system session has transitioned from 644 to 646.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/26/2025 10:26:37 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\ProgramData\Microsoft\Windows\AppRepository\Packages\Microsoft.WindowsStore_22508.1401.4.0_x64__8wekyb3d8bbwe\ActivationStore.dat was cleared updating 0 keys and creating 0 modified pages.","The access history in hive \??\C:\ProgramData\Microsoft\Windows\AppRepository\Packages\Microsoft.WindowsStore_22508.1401.4.0_x64__8wekyb3d8bbwe\ActivationStore.dat was cleared updating 0 keys and creating 0 modified pages."
+"9/26/2025 10:52:24 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/26/2025 10:55:04 AM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/26/2025 11:55:19 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Windows.PrintDialog_cw5n1h2txyewy\Settings\settings.dat was cleared updating 2 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Windows.PrintDialog_cw5n1h2txyewy\Settings\settings.dat was cleared updating 2 keys and creating 1 modified pages."
+"9/26/2025 12:00:01 PM","6013","EventLog","","The system uptime is 963330 seconds.","The system uptime is 963330 seconds."
+"9/26/2025 1:11:43 PM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.OutlookForWindows_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 1 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.OutlookForWindows_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 1 keys and creating 1 modified pages."
+"9/26/2025 3:57:36 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 646 to 647.","The system session has transitioned from 646 to 647.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 3:57:36 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"9/26/2025 3:57:43 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 647 to 648.","The system session has transitioned from 647 to 648.
+
+Reason SessionUnlock 
+
+BootId: 22"
+"9/26/2025 3:57:43 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 3:57:43 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T19:57:43.634293300Z from ‎2025‎-‎09‎-‎26T19:57:43.629144300Z.","The system time has changed to ‎2025‎-‎09‎-‎26T19:57:43.634293300Z from ‎2025‎-‎09‎-‎26T19:57:43.629144300Z.
+Time Delta: 5 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T15:57:43.634293300Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 4:04:14 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 4:04:14 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T20:04:14.057216800Z from ‎2025‎-‎09‎-‎26T20:04:14.056594700Z.","The system time has changed to ‎2025‎-‎09‎-‎26T20:04:14.057216800Z from ‎2025‎-‎09‎-‎26T20:04:14.056594700Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T16:04:14.057216800Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 4:04:15 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Mouse."
+"9/26/2025 4:04:15 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 648 to 649.","The system session has transitioned from 648 to 649.
+
+Reason InputHid 
+
+BootId: 22"
+"9/26/2025 5:41:46 PM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/26/2025 5:42:13 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 649 to 650.","The system session has transitioned from 649 to 650.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/26/2025 5:42:13 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"9/26/2025 5:42:14 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 650 to 651.","The system session has transitioned from 650 to 651.
+
+Reason PolicyChange 
+
+BootId: 22"
+"9/26/2025 5:42:14 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"9/26/2025 5:42:14 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎09‎-‎26T21:42:14.061827800Z from ‎2025‎-‎09‎-‎26T21:42:14.055892300Z.","The system time has changed to ‎2025‎-‎09‎-‎26T21:42:14.061827800Z from ‎2025‎-‎09‎-‎26T21:42:14.055892300Z.
+Time Delta: 5 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1992).
+
+RTC time: ‎2025‎-‎09‎-‎26T17:42:14.061827800Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"9/26/2025 5:42:19 PM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby","Connectivity state in standby: Disconnected, Reason: Adaptive Connected Standby"
+"9/26/2025 5:50:19 PM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/26/2025 5:50:19 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/26/2025 5:50:19 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 651 to 652.","The system session has transitioned from 651 to 652.
+
+Reason 55 
+
+BootId: 22"
+"9/26/2025 5:50:19 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Austerity Battery Drain Budget Exceeded."
+"9/26/2025 5:50:27 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 652 to 653.","The system session has transitioned from 652 to 653.
+
+Reason 55 
+
+BootId: 22"
+"9/26/2025 5:50:34 PM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Disconnected, Reason: Policy Setting","Connectivity state in standby: Disconnected, Reason: Policy Setting"
+"9/26/2025 6:16:51 PM","105","Microsoft-Windows-Kernel-Power","Power source change","Power source change.","Power source change."
+"9/26/2025 6:16:51 PM","172","Microsoft-Windows-Kernel-Power","","Connectivity state in standby: Connected, Reason: None","Connectivity state in standby: Connected, Reason: None"
+"9/26/2025 6:16:51 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: AC/DC Display Burst Suppressed."
+"9/26/2025 6:16:51 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 653 to 654.","The system session has transitioned from 653 to 654.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/26/2025 6:16:51 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: AC/DC Display Burst Suppressed."
+"9/26/2025 6:16:57 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 654 to 655.","The system session has transitioned from 654 to 655.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/26/2025 6:20:40 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 6:20:40 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 655 to 656.","The system session has transitioned from 655 to 656.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 6:20:40 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 6:23:44 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 656 to 657.","The system session has transitioned from 656 to 657.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/26/2025 8:20:46 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 8:20:46 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 657 to 658.","The system session has transitioned from 657 to 658.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 8:20:46 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 8:23:25 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 658 to 659.","The system session has transitioned from 658 to 659.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/26/2025 10:20:46 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 10:20:46 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 659 to 660.","The system session has transitioned from 659 to 660.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 10:20:46 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 10:25:11 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 660 to 661.","The system session has transitioned from 660 to 661.
+
+Reason InputMouse 
+
+BootId: 22"
+"9/26/2025 11:20:46 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 11:20:46 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 661 to 662.","The system session has transitioned from 661 to 662.
+
+Reason 16777224 
+
+BootId: 22"
+"9/26/2025 11:20:46 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"9/26/2025 11:23:48 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 662 to 663.","The system session has transitioned from 662 to 663.
+
+Reason InputMouse 
+
+BootId: 22"

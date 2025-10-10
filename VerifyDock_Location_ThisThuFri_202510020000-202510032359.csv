@@ -1,0 +1,2302 @@
+﻿"Date","EventId","Provider","Hint","Summary","Message"
+"10/2/2025 12:39:16 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"10/2/2025 12:39:16 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 86 to 87.","The system session has transitioned from 86 to 87.
+
+Reason 16777224 
+
+BootId: 23"
+"10/2/2025 12:39:16 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"10/2/2025 12:39:16 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 12:39:16 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T04:39:16.217126700Z from ‎2025‎-‎10‎-‎02T04:39:16.215774700Z.","The system time has changed to ‎2025‎-‎10‎-‎02T04:39:16.217126700Z from ‎2025‎-‎10‎-‎02T04:39:16.215774700Z.
+Time Delta: 1 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T00:39:16.217126700Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 1:54:33 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 87 to 88.","The system session has transitioned from 87 to 88.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 1:54:33 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 1:54:33 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T05:54:33.849847800Z from ‎2025‎-‎10‎-‎02T05:54:33.849795800Z.","The system time has changed to ‎2025‎-‎10‎-‎02T05:54:33.849847800Z from ‎2025‎-‎10‎-‎02T05:54:33.849795800Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T01:54:33.849847800Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 1:54:34 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 1:54:34 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 88 to 89.","The system session has transitioned from 88 to 89.
+
+Reason 16777220 
+
+BootId: 23"
+"10/2/2025 1:54:34 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 1:58:21 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 89 to 90.","The system session has transitioned from 89 to 90.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 1:58:21 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 1:58:21 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T05:58:21.915594900Z from ‎2025‎-‎10‎-‎02T05:58:21.916033900Z.","The system time has changed to ‎2025‎-‎10‎-‎02T05:58:21.915594900Z from ‎2025‎-‎10‎-‎02T05:58:21.916033900Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T01:58:21.915594900Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 1:58:22 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 1:58:22 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 90 to 91.","The system session has transitioned from 90 to 91.
+
+Reason 16777220 
+
+BootId: 23"
+"10/2/2025 1:58:22 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 3:04:09 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 91 to 92.","The system session has transitioned from 91 to 92.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 3:04:09 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 3:04:09 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T07:04:09.824961600Z from ‎2025‎-‎10‎-‎02T07:04:09.824635200Z.","The system time has changed to ‎2025‎-‎10‎-‎02T07:04:09.824961600Z from ‎2025‎-‎10‎-‎02T07:04:09.824635200Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T03:04:09.824961600Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 3:04:10 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 3:04:10 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 92 to 93.","The system session has transitioned from 92 to 93.
+
+Reason 16777220 
+
+BootId: 23"
+"10/2/2025 3:04:10 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 3:07:17 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 93 to 94.","The system session has transitioned from 93 to 94.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 3:07:17 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 3:07:17 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T07:07:17.774884400Z from ‎2025‎-‎10‎-‎02T07:07:17.774859500Z.","The system time has changed to ‎2025‎-‎10‎-‎02T07:07:17.774884400Z from ‎2025‎-‎10‎-‎02T07:07:17.774859500Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T03:07:17.774884400Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 3:07:18 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 3:07:18 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 94 to 95.","The system session has transitioned from 94 to 95.
+
+Reason 16777220 
+
+BootId: 23"
+"10/2/2025 3:07:18 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 4:07:33 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 95 to 96.","The system session has transitioned from 95 to 96.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 4:07:33 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 4:07:33 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T08:07:33.664913100Z from ‎2025‎-‎10‎-‎02T08:07:33.664330900Z.","The system time has changed to ‎2025‎-‎10‎-‎02T08:07:33.664913100Z from ‎2025‎-‎10‎-‎02T08:07:33.664330900Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T04:07:33.664913100Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 4:07:34 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 4:07:34 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 96 to 97.","The system session has transitioned from 96 to 97.
+
+Reason 16777220 
+
+BootId: 23"
+"10/2/2025 4:07:34 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 4:11:47 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 97 to 98.","The system session has transitioned from 97 to 98.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 4:11:47 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 4:11:47 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T08:11:47.220985400Z from ‎2025‎-‎10‎-‎02T08:11:47.220835100Z.","The system time has changed to ‎2025‎-‎10‎-‎02T08:11:47.220985400Z from ‎2025‎-‎10‎-‎02T08:11:47.220835100Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T04:11:47.220985400Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 4:11:47 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 4:11:47 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 98 to 99.","The system session has transitioned from 98 to 99.
+
+Reason 16777220 
+
+BootId: 23"
+"10/2/2025 4:11:47 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 5:15:20 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 99 to 100.","The system session has transitioned from 99 to 100.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 5:15:20 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 5:15:20 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T09:15:20.407849100Z from ‎2025‎-‎10‎-‎02T09:15:20.407752300Z.","The system time has changed to ‎2025‎-‎10‎-‎02T09:15:20.407849100Z from ‎2025‎-‎10‎-‎02T09:15:20.407752300Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T05:15:20.407849100Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 6:15:52 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 6:15:52 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 100 to 101.","The system session has transitioned from 100 to 101.
+
+Reason 16777220 
+
+BootId: 23"
+"10/2/2025 6:15:52 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777220."
+"10/2/2025 6:15:52 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 6:15:52 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T10:15:52.479241500Z from ‎2025‎-‎10‎-‎02T10:15:52.478695700Z.","The system time has changed to ‎2025‎-‎10‎-‎02T10:15:52.479241500Z from ‎2025‎-‎10‎-‎02T10:15:52.478695700Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T06:15:52.479241500Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 7:36:29 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 101 to 102.","The system session has transitioned from 101 to 102.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 7:36:29 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 7:36:29 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T11:36:29.210594700Z from ‎2025‎-‎10‎-‎02T11:36:29.210818500Z.","The system time has changed to ‎2025‎-‎10‎-‎02T11:36:29.210594700Z from ‎2025‎-‎10‎-‎02T11:36:29.210818500Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T07:36:29.210594700Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 8:12:35 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 8:12:35 AM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T12:12:35.801910400Z from ‎2025‎-‎10‎-‎02T12:12:35.801418300Z.","The system time has changed to ‎2025‎-‎10‎-‎02T12:12:35.801910400Z from ‎2025‎-‎10‎-‎02T12:12:35.801418300Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T08:12:35.801910400Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 8:12:36 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Lid."
+"10/2/2025 8:12:36 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 102 to 103.","The system session has transitioned from 102 to 103.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 8:13:12 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 103 to 104.","The system session has transitioned from 103 to 104.
+
+Reason SessionUnlock 
+
+BootId: 23"
+"10/2/2025 8:13:12 AM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"10/2/2025 8:31:44 AM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Keyboard."
+"10/2/2025 8:31:44 AM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 104 to 106.","The system session has transitioned from 104 to 106.
+
+Reason InputAccelerometer 
+
+BootId: 23"
+"10/2/2025 10:15:24 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Realtek RTL8852BE WiFi 6 802.11ax PCIe Adapter
+Interface GUID: {1a40731b-9ecb-40b4-be67-6418d4951693}
+Connection Mode: Automatic connection with a profile
+Profile Name: BluePhotonSecure
+SSID: BluePhotonSecure
+BSS Type: Infrastructure
+"
+"10/2/2025 10:15:24 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Realtek RTL8852BE WiFi 6 802.11ax PCIe Adapter
+Interface GUID: {1a40731b-9ecb-40b4-be67-6418d4951693}
+Local MAC Address: 24:B2:B9:5F:3C:8B
+Network SSID: BluePhotonSecure
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 10:15:24 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Realtek RTL8852BE WiFi 6 802.11ax PCIe Adapter
+Interface GUID: {1a40731b-9ecb-40b4-be67-6418d4951693}
+Local MAC Address: 24:B2:B9:5F:3C:8B
+Network SSID: BluePhotonSecure
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x900000000
+"
+"10/2/2025 10:15:24 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Realtek RTL8852BE WiFi 6 802.11ax PCIe Adapter
+Interface GUID: {1a40731b-9ecb-40b4-be67-6418d4951693}
+Local MAC Address: 24:B2:B9:5F:3C:8B
+Network SSID: BluePhotonSecure
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 10:15:24 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Realtek RTL8852BE WiFi 6 802.11ax PCIe Adapter
+Interface GUID: {1a40731b-9ecb-40b4-be67-6418d4951693}
+Local MAC Address: 24:B2:B9:5F:3C:8B
+Network SSID: BluePhotonSecure
+BSS Type: Infrastructure
+"
+"10/2/2025 10:15:24 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Realtek RTL8852BE WiFi 6 802.11ax PCIe Adapter
+Interface GUID: {1a40731b-9ecb-40b4-be67-6418d4951693}
+Connection Mode: Automatic connection with a profile
+Profile Name: BluePhotonSecure
+SSID: BluePhotonSecure
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: false
+"
+"10/2/2025 11:10:01 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:10:01 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 11:10:02 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1200000000
+"
+"10/2/2025 11:10:02 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 11:10:02 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:10:02 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 11:10:07 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 11:10:07 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 11:10:09 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:10:09 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 11:10:10 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1300000000
+"
+"10/2/2025 11:10:10 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 11:10:10 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:10:10 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 11:10:13 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 11:10:14 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 11:10:15 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:10:15 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 11:10:15 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1400000000
+"
+"10/2/2025 11:10:15 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 11:10:16 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:10:16 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 11:11:04 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 11:11:05 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 11:16:19 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:16:19 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 11:16:19 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1500000000
+"
+"10/2/2025 11:16:19 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 11:16:19 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:16:19 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 11:17:23 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 11:17:23 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 11:58:36 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:58:36 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 11:58:36 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1600000000
+"
+"10/2/2025 11:58:36 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 11:58:36 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 11:58:36 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 11:59:40 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 11:59:40 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 12:00:01 PM","6013","EventLog","","The system uptime is 271688 seconds.","The system uptime is 271688 seconds."
+"10/2/2025 12:29:26 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 106 to 107.","The system session has transitioned from 106 to 107.
+
+Reason SessionUnlock 
+
+BootId: 23"
+"10/2/2025 12:29:26 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"10/2/2025 12:29:30 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 107 to 108.","The system session has transitioned from 107 to 108.
+
+Reason SessionUnlock 
+
+BootId: 23"
+"10/2/2025 12:29:30 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 12:29:30 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T16:29:30.665937500Z from ‎2025‎-‎10‎-‎02T16:29:30.665037500Z.","The system time has changed to ‎2025‎-‎10‎-‎02T16:29:30.665937500Z from ‎2025‎-‎10‎-‎02T16:29:30.665037500Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T12:29:30.665937500Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 1:03:36 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: 16777224."
+"10/2/2025 1:03:36 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 108 to 109.","The system session has transitioned from 108 to 109.
+
+Reason 16777224 
+
+BootId: 23"
+"10/2/2025 1:03:36 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: 16777224."
+"10/2/2025 1:37:44 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 109 to 110.","The system session has transitioned from 109 to 110.
+
+Reason SessionUnlock 
+
+BootId: 23"
+"10/2/2025 1:37:44 PM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/2/2025 1:37:44 PM","1","Microsoft-Windows-Kernel-General","","The system time has changed to ‎2025‎-‎10‎-‎02T17:37:44.900113800Z from ‎2025‎-‎10‎-‎02T17:37:44.900516600Z.","The system time has changed to ‎2025‎-‎10‎-‎02T17:37:44.900113800Z from ‎2025‎-‎10‎-‎02T17:37:44.900516600Z.
+Time Delta: 0 ms
+
+Change Reason: An application or system component changed the time.
+Process: '\Device\HarddiskVolume3\Windows\System32\svchost.exe' (PID 1996).
+
+RTC time: ‎2025‎-‎10‎-‎02T13:37:44.900113800Z
+Current time zone bias: 240
+RTC time is in UTC: false
+System time was based on RTC time: false"
+"10/2/2025 2:03:27 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Mouse."
+"10/2/2025 2:03:27 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 110 to 111.","The system session has transitioned from 110 to 111.
+
+Reason InputHid 
+
+BootId: 23"
+"10/2/2025 2:03:57 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 111 to 112.","The system session has transitioned from 111 to 112.
+
+Reason SessionUnlock 
+
+BootId: 23"
+"10/2/2025 2:03:57 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"10/2/2025 2:07:48 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Mouse."
+"10/2/2025 2:07:48 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 112 to 114.","The system session has transitioned from 112 to 114.
+
+Reason InputHid 
+
+BootId: 23"
+"10/2/2025 2:29:05 PM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 2:29:05 PM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 2:29:06 PM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1700000000
+"
+"10/2/2025 2:29:06 PM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 2:29:06 PM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 2:29:06 PM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 2:30:11 PM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 2:30:11 PM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 2:30:14 PM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 2:30:14 PM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 2:30:14 PM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1800000000
+"
+"10/2/2025 2:30:14 PM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 2:30:14 PM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 2:30:14 PM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 2:31:48 PM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 2:31:48 PM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 3:19:05 PM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 3:19:05 PM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 3:19:05 PM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1900000000
+"
+"10/2/2025 3:19:05 PM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 3:19:05 PM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 3:19:05 PM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 3:20:09 PM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 3:20:09 PM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 3:20:11 PM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 3:20:11 PM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 3:20:12 PM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1a00000000
+"
+"10/2/2025 3:20:12 PM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 3:20:12 PM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 3:20:12 PM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 3:21:30 PM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 3:21:31 PM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 3:51:03 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 114 to 115.","The system session has transitioned from 114 to 115.
+
+Reason SessionUnlock 
+
+BootId: 23"
+"10/2/2025 3:51:03 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"10/2/2025 3:51:30 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 115 to 116.","The system session has transitioned from 115 to 116.
+
+Reason SessionUnlock 
+
+BootId: 23"
+"10/2/2025 4:25:32 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Mouse."
+"10/2/2025 4:25:32 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 116 to 117.","The system session has transitioned from 116 to 117.
+
+Reason InputHid 
+
+BootId: 23"
+"10/2/2025 5:08:52 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 117 to 118.","The system session has transitioned from 117 to 118.
+
+Reason SessionUnlock 
+
+BootId: 23"
+"10/2/2025 5:08:52 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Idle Timeout."
+"10/2/2025 5:08:58 PM","507","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is exiting Modern Standby ","The system is exiting Modern Standby 
+
+Reason: Input Keyboard."
+"10/2/2025 5:08:58 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 118 to 120.","The system session has transitioned from 118 to 120.
+
+Reason InputAccelerometer 
+
+BootId: 23"
+"10/2/2025 5:51:41 PM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 5:51:41 PM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 5:51:42 PM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1b00000000
+"
+"10/2/2025 5:51:42 PM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 5:51:42 PM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 5:51:42 PM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 5:52:13 PM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 5:52:13 PM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 6:00:20 PM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 6:00:20 PM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 6:00:21 PM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1c00000000
+"
+"10/2/2025 6:00:21 PM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 6:00:21 PM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 6:00:21 PM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 6:00:52 PM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 6:00:52 PM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 6:07:32 PM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 6:07:32 PM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/2/2025 6:07:32 PM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x1d00000000
+"
+"10/2/2025 6:07:32 PM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/2/2025 6:07:33 PM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/2/2025 6:07:33 PM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/2/2025 6:08:03 PM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/2/2025 6:08:04 PM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/2/2025 6:43:32 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 120 to 121.","The system session has transitioned from 120 to 121.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/2/2025 6:43:32 PM","506","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system is entering Modern Standby ","The system is entering Modern Standby 
+
+Reason: Lid."
+"10/2/2025 6:43:34 PM","566","Microsoft-Windows-Kernel-Power","Modern Standby transition (lid closed likely)","The system session has transitioned from 121 to 122.","The system session has transitioned from 121 to 122.
+
+Reason PolicyChange 
+
+BootId: 23"
+"10/3/2025 9:19:17 AM","12","Microsoft-Windows-Kernel-General","","The operating system started at system time ‎2025‎-‎10‎-‎03T13:19:17.500000000Z.","The operating system started at system time ‎2025‎-‎10‎-‎03T13:19:17.500000000Z."
+"10/3/2025 9:19:17 AM","25","Microsoft-Windows-Kernel-General","","The system time was initialized to ‎2025‎-‎10‎-‎03T13:19:17.500000000Z. ","The system time was initialized to ‎2025‎-‎10‎-‎03T13:19:17.500000000Z. 
+
+Loader time: ‎2025‎-‎10‎-‎03T13:19:15.000000000Z
+Internal boot flags: 0x2
+HAL RTC error code: 0x0
+RTC time is in UTC: false
+Soft boot: false
+Success: true
+Phase: 0"
+"10/3/2025 9:19:17 AM","20","Microsoft-Windows-Kernel-General","","The leap second configuration has been updated.","The leap second configuration has been updated.
+Reason: Leap second data initialized from registry during boot
+Leap seconds enabled: true
+New leap second count: 0
+Old leap second count: 0"
+"10/3/2025 9:19:20 AM","125","Microsoft-Windows-Kernel-Power","","ACPI thermal zone \_TZ.TZS0 has been enumerated.             ","ACPI thermal zone \_TZ.TZS0 has been enumerated.             
+_PSV = 0K             
+_TC1 = 0             
+_TC2 = 0             
+_TSP = 0ms             
+_AC0 = 0K             
+_AC1 = 0K             
+_AC2 = 0K             
+_AC3 = 0K             
+_AC4 = 0K             
+_AC5 = 0K             
+_AC6 = 0K             
+_AC7 = 0K             
+_AC8 = 0K             
+_AC9 = 0K             
+_CRT = 382K             
+_HOT = 0K             
+minimum throttle = 0             
+_CR3 = 0K"
+"10/3/2025 9:19:20 AM","125","Microsoft-Windows-Kernel-Power","","ACPI thermal zone \_TZ.TZS1 has been enumerated.             ","ACPI thermal zone \_TZ.TZS1 has been enumerated.             
+_PSV = 0K             
+_TC1 = 0             
+_TC2 = 0             
+_TSP = 0ms             
+_AC0 = 0K             
+_AC1 = 0K             
+_AC2 = 0K             
+_AC3 = 0K             
+_AC4 = 0K             
+_AC5 = 0K             
+_AC6 = 0K             
+_AC7 = 0K             
+_AC8 = 0K             
+_AC9 = 0K             
+_CRT = 399K             
+_HOT = 0K             
+minimum throttle = 0             
+_CR3 = 0K"
+"10/3/2025 9:19:20 AM","41","Microsoft-Windows-Kernel-Power","CRITICAL power loss/unexpected shutdown","The system has rebooted without cleanly shutting down first. This error could be caused if the system stopped responding, crashed, or lost power unexpectedly.","The system has rebooted without cleanly shutting down first. This error could be caused if the system stopped responding, crashed, or lost power unexpectedly."
+"10/3/2025 9:19:23 AM","24","Microsoft-Windows-Kernel-General","","The time zone information was refreshed with exit reason 0. Current time zone bias is 240.","The time zone information was refreshed with exit reason 0. Current time zone bias is 240."
+"10/3/2025 9:19:24 AM","521","Microsoft-Windows-Kernel-Power","","Active battery count change.","Active battery count change."
+"10/3/2025 9:19:24 AM","521","Microsoft-Windows-Kernel-Power","","Active battery count change.","Active battery count change."
+"10/3/2025 9:19:34 AM","6008","EventLog","CRITICAL power loss/unexpected shutdown","The previous system shutdown at 6:48:20 PM on ‎10/‎2/‎2025 was unexpected.","The previous system shutdown at 6:48:20 PM on ‎10/‎2/‎2025 was unexpected."
+"10/3/2025 9:19:34 AM","6009","EventLog","","Microsoft (R) Windows (R) 10.00. 26100  Multiprocessor Free.","Microsoft (R) Windows (R) 10.00. 26100  Multiprocessor Free."
+"10/3/2025 9:19:34 AM","6005","EventLog","","The Event log service was started.","The Event log service was started."
+"10/3/2025 9:19:34 AM","6013","EventLog","","The system uptime is 17 seconds.","The system uptime is 17 seconds."
+"10/3/2025 9:19:39 AM","4000","Microsoft-Windows-WLAN-AutoConfig","","WLAN AutoConfig service has successfully started.","WLAN AutoConfig service has successfully started.
+"
+"10/3/2025 9:19:44 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\State\dosvcState.dat was cleared updating 44 keys and creating 10 modified pages.","The access history in hive \??\C:\Windows\ServiceProfiles\NetworkService\AppData\Local\Microsoft\Windows\DeliveryOptimization\State\dosvcState.dat was cleared updating 44 keys and creating 10 modified pages."
+"10/3/2025 9:19:45 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\Settings\settings.dat was cleared updating 8 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\Microsoft.Windows.StartMenuExperienceHost_cw5n1h2txyewy\Settings\settings.dat was cleared updating 8 keys and creating 1 modified pages."
+"10/3/2025 9:20:14 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 2 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 2 keys and creating 1 modified pages."
+"10/3/2025 9:20:23 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\ProgramData\Microsoft\Windows\AppRepository\Packages\Microsoft.OfficePushNotificationUtility_16.0.19231.20156_neutral__8wekyb3d8bbwe\ActivationStore.dat was cleared updating 0 keys and creating 0 modified pages.","The access history in hive \??\C:\ProgramData\Microsoft\Windows\AppRepository\Packages\Microsoft.OfficePushNotificationUtility_16.0.19231.20156_neutral__8wekyb3d8bbwe\ActivationStore.dat was cleared updating 0 keys and creating 0 modified pages."
+"10/3/2025 9:20:24 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\ProgramData\Microsoft\Windows\AppRepository\Packages\Microsoft.Office.ActionsServer_16.0.19231.20156_neutral__8wekyb3d8bbwe\ActivationStore.dat was cleared updating 0 keys and creating 0 modified pages.","The access history in hive \??\C:\ProgramData\Microsoft\Windows\AppRepository\Packages\Microsoft.Office.ActionsServer_16.0.19231.20156_neutral__8wekyb3d8bbwe\ActivationStore.dat was cleared updating 0 keys and creating 0 modified pages."
+"10/3/2025 9:20:49 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\aimgr_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\aimgr_8wekyb3d8bbwe\Settings\settings.dat was cleared updating 3 keys and creating 1 modified pages."
+"10/3/2025 9:20:54 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:20:54 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:20:55 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x100000000
+"
+"10/3/2025 9:20:55 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/3/2025 9:20:55 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:20:55 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/3/2025 9:21:10 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/3/2025 9:21:10 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/3/2025 9:21:19 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:21:19 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:21:20 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x200000000
+"
+"10/3/2025 9:21:20 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/3/2025 9:21:20 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:21:20 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/3/2025 9:21:20 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/3/2025 9:21:20 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/3/2025 9:21:34 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:21:34 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:21:34 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x300000000
+"
+"10/3/2025 9:21:34 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/3/2025 9:21:34 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:21:34 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/3/2025 9:21:44 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\SystemAppData\Helium\User.dat was cleared updating 45 keys and creating 8 modified pages.","The access history in hive \??\C:\Users\angela\AppData\Local\Packages\MSTeams_8wekyb3d8bbwe\SystemAppData\Helium\User.dat was cleared updating 45 keys and creating 8 modified pages."
+"10/3/2025 9:26:16 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/3/2025 9:26:16 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/3/2025 9:27:42 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:27:42 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:27:46 AM","8002","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service failed to connect to a wireless network.","WLAN AutoConfig service failed to connect to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Failure Reason:The specific network is not available.
+RSSI: 255
+"
+"10/3/2025 9:27:50 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:27:50 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:27:52 AM","8002","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service failed to connect to a wireless network.","WLAN AutoConfig service failed to connect to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Failure Reason:The specific network is not available.
+RSSI: 255
+"
+"10/3/2025 9:28:03 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:28:03 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:28:06 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x600000000
+"
+"10/3/2025 9:28:06 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/3/2025 9:28:07 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:28:07 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/3/2025 9:28:20 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/3/2025 9:28:20 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/3/2025 9:28:36 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:28:36 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:28:37 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x700000000
+"
+"10/3/2025 9:28:37 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/3/2025 9:28:42 AM","11006","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security failed.","Wireless security failed.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Peer MAC Address: D2:AD:08:77:B2:90
+Reason: Dynamic key exchange did not succeed within configured time
+Error: 0x0
+"
+"10/3/2025 9:28:42 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/3/2025 9:28:42 AM","8002","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service failed to connect to a wireless network.","WLAN AutoConfig service failed to connect to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Failure Reason:The specific network is not available.
+RSSI: 255
+"
+"10/3/2025 9:28:45 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:28:45 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:28:46 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0x800000000
+"
+"10/3/2025 9:28:46 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/3/2025 9:28:47 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:28:47 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/3/2025 9:40:40 AM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\ProgramData\Microsoft\Provisioning\Microsoft-Desktop-Provisioning-Sequence.dat was cleared updating 0 keys and creating 0 modified pages.","The access history in hive \??\C:\ProgramData\Microsoft\Provisioning\Microsoft-Desktop-Provisioning-Sequence.dat was cleared updating 0 keys and creating 0 modified pages."
+"10/3/2025 9:47:50 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/3/2025 9:47:51 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected due WFD Client Disconnect request.
+"
+"10/3/2025 9:48:46 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:48:46 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:48:49 AM","8002","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service failed to connect to a wireless network.","WLAN AutoConfig service failed to connect to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Failure Reason:The specific network is not available.
+RSSI: 255
+"
+"10/3/2025 9:49:10 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:49:10 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:49:13 AM","8002","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service failed to connect to a wireless network.","WLAN AutoConfig service failed to connect to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Failure Reason:The specific network is not available.
+RSSI: 255
+"
+"10/3/2025 9:49:34 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:49:34 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:49:44 AM","8002","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service failed to connect to a wireless network.","WLAN AutoConfig service failed to connect to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Failure Reason:The specific network is not available.
+RSSI: 255
+"
+"10/3/2025 9:50:20 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:50:20 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:50:20 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0xc00000000
+"
+"10/3/2025 9:50:20 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/3/2025 9:50:20 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:50:20 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11n
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/3/2025 9:50:33 AM","11004","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security stopped.","Wireless security stopped.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Security Hint: The operation was successful.
+"
+"10/3/2025 9:50:43 AM","8003","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully disconnected from a wireless network.","WLAN AutoConfig service has successfully disconnected from a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Reason: The network is disconnected by the driver.
+"
+"10/3/2025 9:51:05 AM","8000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service started a connection to a wireless network.","WLAN AutoConfig service started a connection to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:51:05 AM","11000","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association started.","Wireless network association started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+802.1X Enabled: No
+"
+"10/3/2025 9:51:06 AM","11001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless network association succeeded.","Wireless network association succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Management Frame Protection Enabled: 0xd00000000
+"
+"10/3/2025 9:51:06 AM","11010","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security started.","Wireless security started.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+Authentication: WPA2-Personal
+Encryption: AES-GCMP-128
+FIPS Mode: Disabled
+802.1x Enabled: No
+"
+"10/3/2025 9:51:06 AM","11005","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","Wireless security succeeded.","Wireless security succeeded.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Local MAC Address: 2A:B2:B9:5F:3C:8B
+Network SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+"
+"10/3/2025 9:51:06 AM","8001","Microsoft-Windows-WLAN-AutoConfig","Wi-Fi SSID change","WLAN AutoConfig service has successfully connected to a wireless network.","WLAN AutoConfig service has successfully connected to a wireless network.
+
+Network Adapter: Microsoft Wi-Fi Direct Virtual Adapter #2
+Interface GUID: {936cf83e-c0c1-40bf-a442-011cc2d8f2f8}
+Connection Mode: Connection with a temporary profile
+Profile Name: WFD Client Profile
+SSID: DIRECT-90-HP OfficeJet Pro 8130e
+BSS Type: Infrastructure
+PHY Type: 802.11ac
+Authentication: WPA2-Personal
+Encryption: AES-CCMP
+802.1x Enabled: No
+Hidden: true
+"
+"10/3/2025 12:00:00 PM","6013","EventLog","","The system uptime is 9643 seconds.","The system uptime is 9643 seconds."
+"10/3/2025 12:13:34 PM","16","Microsoft-Windows-Kernel-General","","The access history in hive \??\C:\ProgramData\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\S-1-5-21-1234757352-3320457402-2554121513-2660\SystemAppData\Helium\Cache\7552756eb5fac153_COM15.dat was cleared updating 1 keys and creating 1 modified pages.","The access history in hive \??\C:\ProgramData\Packages\Microsoft.WindowsStore_8wekyb3d8bbwe\S-1-5-21-1234757352-3320457402-2554121513-2660\SystemAppData\Helium\Cache\7552756eb5fac153_COM15.dat was cleared updating 1 keys and creating 1 modified pages."
