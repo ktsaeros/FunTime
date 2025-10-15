@@ -306,10 +306,8 @@ Write-Log ("Start free space on {0}: {1} GB" -f $TargetDrive, $startFree)
 Write-Log "===== Baseline inventory (pre-clean) ====="
 
 # 1) Folder sizes (Aeros/CCS/Downloads)
-if ($ReportPostMetrics) #-and #$ReportFolderSizes) 
-{
-  Write-Log "===== Post-clean folder sizes ====="
-  $folderReportPost = Report-FolderSizes
+if ($ReportFolderSizes) {
+  $folderReportPre = Report-FolderSizes
 }
 
 
