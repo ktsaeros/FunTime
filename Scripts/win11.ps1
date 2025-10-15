@@ -84,4 +84,4 @@ finally {
 }
 
 Write-Progress -Activity "Downloading" -Completed
-Write-Host "Download complete. Saved to: $OutFile"
+Write-Host "Download complete. Saved to: $OutFile"`

@@ -58,6 +58,7 @@ function Provider-Exists {
   param([string]$Name)
   try { $null -ne (Get-WinEvent -ListProvider $Name -ErrorAction Stop) } catch { $false }
 }
+# --- Decode 1074 reason code (planned bit + major/minor) ---
 function Decode-User32Reason {
   param([uint32]$Code)
   $planned = [bool]($Code -band 0x80000000)
@@ -74,7 +75,38 @@ function Decode-User32Reason {
     MinorHex = ('0x{0:x}' -f $minor)
   }
 }
+# --- Attribution windows around a shutdown event time ---
+function Get-Attribution {
+  param([datetime]$center,[int]$minutes=10)
+  $start = $center.AddMinutes(-$minutes)
+  $end   = $center.AddMinutes($minutes)
 
+  $h = @{ StartTime=$start; EndTime=$end }
+
+  $ev4647 = Get-WinEvent -FilterHashtable (@{LogName='Security'; Id=4647} + $h) -ErrorAction SilentlyContinue
+  $ev4624 = Get-WinEvent -FilterHashtable (@{LogName='Security'; Id=4624} + $h) -ErrorAction SilentlyContinue
+  $ev4634 = Get-WinEvent -FilterHashtable (@{LogName='Security'; Id=4634} + $h) -ErrorAction SilentlyContinue
+  $rdp1149 = Get-WinEvent -FilterHashtable (@{LogName='Microsoft-Windows-TerminalServices-RemoteConnectionManager/Operational'; Id=1149} + $h) -ErrorAction SilentlyContinue
+  $lsm2123 = Get-WinEvent -FilterHashtable (@{LogName='Microsoft-Windows-TerminalServices-LocalSessionManager/Operational'; Id=@(21,23)} + $h) -ErrorAction SilentlyContinue
+
+  [pscustomobject]@{
+    Start=$start; End=$end
+    Logoff4647=$ev4647; Logon4624=$ev4624; Logoff4634=$ev4634
+    RDP1149=$rdp1149; LSM2123=$lsm2123
+  }
+}
+# --- Scripted shutdown signals (optional) ---
+function Get-ScriptedShutdownSignals {
+  param([datetime]$center,[int]$minutes=10)
+  $start = $center.AddMinutes(-$minutes)
+  $end   = $center.AddMinutes($minutes)
+
+  $ev4688 = Get-WinEvent -FilterHashtable @{LogName='Security'; Id=4688; StartTime=$start; EndTime=$end} -ErrorAction SilentlyContinue |
+            Where-Object { $_.Message -match 'shutdown\.exe' }
+  $tasks = Get-ScheduledTask | Where-Object { $_.Actions.Execute -match 'shutdown\.exe' }
+
+  [pscustomobject]@{ Proc4688=$ev4688; Tasks=$tasks }
+}
 
 # ---------- Gather events (noise filtered, with fallback) ----------
 $events = @()
@@ -133,6 +165,7 @@ function Get-InitiatorAndReason {
 
 $evAll   = $events | Sort-Object TimeCreated
 $ev1074  = $evAll  | Where-Object { $_.ProviderName -eq 'USER32' -and $_.Id -eq 1074 }
+$timeline1074 = $ev1074 | ForEach-Object { Get-InitiatorAndReason $_ }
 $evShut  = $evAll  | Where-Object { ($_.Id -eq 6006) -and ($_.ProviderName -in @('EventLog','Microsoft-Windows-Eventlog')) }
 $evStart = $evAll  | Where-Object { ($_.Id -eq 6005) -and ($_.ProviderName -in @('EventLog','Microsoft-Windows-Eventlog')) }
 $evSleep = $evAll  | Where-Object { $_.ProviderName -eq 'Microsoft-Windows-Kernel-Power' -and $_.Id -eq 42  }
