@@ -64,8 +64,9 @@ param(
   [switch]$PurgeDellSARemediation,
   [switch]$TouchNableFileCache,
   [switch]$ReportShadowsOnly,
-  [switch]$ShrinkShadowStorage
+  [switch]$ShrinkShadowStorage,
   [switch]$ReportFolderSizes,
+  [switch]$ReportPostMetrics
 )
 
 # ---------- Defaults then override with provided switches ----------
@@ -78,6 +79,8 @@ $ComponentCleanup     = $true
 $TouchNableFileCache  = $true
 $ReportShadowsOnly    = $true
 $ReportFolderSizes    = $true
+$ReportFolderSizes    = $true
+$ReportPostMetrics    = $true
 # Aggressive/destructive (opt-in)
 $DeepComponentCleanup   = $false
 $RemoveOptionalFeatures = $false
@@ -94,7 +97,12 @@ foreach ($key in $PSBoundParameters.Keys) {
 }
 
 # Compute effective enabled switches for logging
-$__switchNames = @('DisableHibernate','CleanMgr','ClearWUCache','ClearTemp','ComponentCleanup','DeepComponentCleanup','RemoveOptionalFeatures','EmptyRecycleBin','PurgeDellSARemediation','TouchNableFileCache','ReportShadowsOnly','ShrinkShadowStorage')
+$__switchNames = @(
+  'DisableHibernate','CleanMgr','ClearWUCache','ClearTemp','ComponentCleanup',
+  'DeepComponentCleanup','RemoveOptionalFeatures','EmptyRecycleBin','PurgeDellSARemediation',
+  'TouchNableFileCache','ReportShadowsOnly','ShrinkShadowStorage',
+  'ReportFolderSizes','ReportPostMetrics'
+)
 $__enabled = @()
 foreach ($__n in $__switchNames) { if (Get-Variable -Name $__n -ValueOnly) { $__enabled += $__n } }
 
@@ -105,7 +113,7 @@ function _Should([string]$target, [string]$action) {
     if ($PSBoundParameters.ContainsKey('WhatIf') -or $WhatIfPreference) { return $false }
   } catch { }
   if ($null -ne $PSCmdlet) {
-    try { return _Should($target, $action) } catch { return $true }
+    try { return $PSCmdlet.ShouldProcess($target, $action) } catch { return $true }
   }
   return $true
 }
@@ -472,13 +480,7 @@ if ($ShrinkShadowStorage) {
   Write-Log "SKIP: Shrink VSS Shadow Storage"
 }
 
-# 12) CSC presence (Offline Files cache)
-$CSCPath = 'C:\Windows\CSC'
-if (Test-Path $CSCPath) {
-  Write-Log "NOTICE: CSC folder present at $CSCPath (Offline Files cache). Can be large; do NOT delete blindly. Typically requires reboot to reinitialize."
-} else {
-  Write-Log "INFO: CSC folder not present."
-}
+
 
 # ===== Post-clean snapshot (optional) =====
 if ($ReportPostMetrics) {
