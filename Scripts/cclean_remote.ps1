@@ -126,10 +126,16 @@ $logFile = Join-Path $logDir ("disk_cleanup_{0}_{1}.txt" -f $env:COMPUTERNAME, $
 $scriptStart = Get-Date
 
 function Write-Log {
-  param([string]$Message)
-  $line = '{0:u}  {1}' -f (Get-Date), $Message
-  Write-Host $line
-  Add-Content -Path $logFile -Value $line
+    param([string]$Message)
+    $line = '{0:u}  {1}' -f (Get-Date), $Message
+
+    # 1. Print live to console (immediate feedback)
+    Write-Host $line
+
+    # 2. Append to the persistent log file
+    Add-Content -Path $logFile -Value $line
+
+    # 3. Do NOT Write-Output here, so this function never pollutes the data pipeline
 }
 
 function Try-Run {
