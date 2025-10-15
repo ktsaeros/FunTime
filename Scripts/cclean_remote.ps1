@@ -66,7 +66,8 @@ param(
   [switch]$ReportShadowsOnly,
   [switch]$ShrinkShadowStorage,
   [switch]$ReportFolderSizes,
-  [switch]$ReportPostMetrics
+  [switch]$ReportPostMetrics,
+  [switch]$AnalyzeComponentStore
 )
 
 # ---------- Defaults then override with provided switches ----------
@@ -316,9 +317,6 @@ if ($ReportFolderSizes) {
   $folderReportPre = Report-FolderSizes
 }
 
-
-
-
 # 2) Recycle Bin (executing user approx) + per-drive/SID breakdown
 Write-Log "===== Recycle Bin inventory ====="
 $rbBytesPre = Get-RecycleBinSizeBytes
@@ -357,6 +355,16 @@ Write-Log "===== VSS Shadow Storage (baseline) ====="
 Try-Run {
   (vssadmin list shadowstorage) -split "`n" | ForEach-Object { Write-Log $_ }
 } "Report VSS shadow storage (baseline)"
+
+
+if ($AnalyzeComponentStore) {
+  Try-Run {
+    $out = Dism.exe /Online /Cleanup-Image /AnalyzeComponentStore
+    ($out -split "`n") | ForEach-Object { Write-Log $_ }
+  } "DISM AnalyzeComponentStore"
+} else {
+  Write-Log "SKIP: DISM AnalyzeComponentStore"
+}
 
 # ---------- Actions ----------
 
