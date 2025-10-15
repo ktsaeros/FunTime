@@ -122,8 +122,11 @@ function _Should([string]$target, [string]$action) {
 $ErrorActionPreference = 'Stop'
 $logDir = 'C:\Aeros'
 if (-not (Test-Path $logDir)) { New-Item -Path $logDir -ItemType Directory -Force | Out-Null }
-$timestamp = Get-Date -Format 'yyyyMMdd-HHmmss'
-$logFile = Join-Path $logDir ("disk_cleanup_{0}_{1}.txt" -f $env:COMPUTERNAME, $timestamp)
+
+# Single rolling log file (always the same file)
+$logFile = Join-Path $logDir 'disk_cleanup_log.txt'
+
+# Record start time for elapsed calculation
 $scriptStart = Get-Date
 
 function Write-Log {
