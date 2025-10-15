@@ -318,6 +318,22 @@ if ($rbGBPre -ge 1) { Write-Log "NOTICE: Recycle Bin (executing user) approx $rb
 else { Write-Log "INFO: Recycle Bin (executing user) approx $rbGBPre GB" }
 Report-AllRecycleBins
 
+# 3) System caches (Dell SARemediation + CSC)
+Write-Log "===== System caches (Dell SAR, CSC) ====="
+$saBase   = 'C:\ProgramData\Dell\SARemediation'
+$saBackup = 'C:\ProgramData\Dell\SARemediation\SystemRepair\Snapshots\Backup'
+if (Test-Path $saBase) {
+  $saSize = Get-FolderSizeBytes -Path $saBase
+  Write-Log ("DETAIL: Dell SARemediation at {0}, size {1}" -f $saBase, (Get-PrettySize $saSize))
+  if (Test-Path $saBackup) {
+    $bkSize = Get-FolderSizeBytes -Path $saBackup
+    Write-Log ("DETAIL:   Backup folder size {0}" -f (Get-PrettySize $bkSize))
+  } else {
+    Write-Log "INFO:   Backup folder not found."
+  }
+} else {
+  Write-Log "INFO: Dell SARemediation folder not found."
+}
 
 $CSCPath = 'C:\Windows\CSC'
 if (Test-Path $CSCPath) {
@@ -330,8 +346,7 @@ if (Test-Path $CSCPath) {
 # 4) VSS ShadowStorage (baseline)
 Write-Log "===== VSS Shadow Storage (baseline) ====="
 Try-Run {
-  $v = (vssadmin list shadowstorage) -join "`n"
-  $v -split "`n" | ForEach-Object { Write-Log $_ }
+  (vssadmin list shadowstorage) -split "`n" | ForEach-Object { Write-Log $_ }
 } "Report VSS shadow storage (baseline)"
 
 # ---------- Actions ----------
@@ -407,11 +422,6 @@ if ($DeepComponentCleanup) {
   }
 } else { Write-Log "SKIP: DISM ResetBase" }
 
-# 8) Dell SARemediation backup purge (optional)
-if ($PurgeDellSARemediation) {
-  $saPath = 'C:\ProgramData\Dell\SARemediation\SystemRepair\Snapshots\Backup'
-  Remove-PathSafe "$saPath\*"
-} else { Write-Log "SKIP: Dell SARemediation purge" }
 
 
 
