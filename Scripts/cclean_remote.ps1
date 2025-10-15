@@ -128,7 +128,7 @@ $scriptStart = Get-Date
 function Write-Log {
   param([string]$Message)
   $line = '{0:u}  {1}' -f (Get-Date), $Message
-  Write-Output $line
+  Write-Host $line
   Add-Content -Path $logFile -Value $line
 }
 
