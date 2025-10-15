@@ -302,21 +302,21 @@ Write-Log ("Params: TargetDrive={0}; Switches: {1}" -f $TargetDrive, ($__enabled
 $startFree = Get-FreeGB $TargetDrive
 Write-Log ("Start free space on {0}: {1} GB" -f $TargetDrive, $startFree)
 
-# Folder sizes BEFORE cleanup
+# ===== Baseline space inventory (pre-clean) =====
+
+# 1) Folder sizes (Aeros/CCS/Downloads)
 if ($ReportFolderSizes) {
   $folderReportPre = Report-FolderSizes
 }
 
-# ===== Baseline space inventory (pre-clean) =====
-
-# Recycle Bin (executing user approx, plus per-drive/SID breakdown)
+# 2) Recycle Bin (executing user approx) + per-drive/SID breakdown
 $rbBytesPre = Get-RecycleBinSizeBytes
 $rbGBPre = [math]::Round($rbBytesPre / 1GB, 2)
 if ($rbGBPre -ge 1) { Write-Log "NOTICE: Recycle Bin (executing user) approx $rbGBPre GB" }
 else { Write-Log "INFO: Recycle Bin (executing user) approx $rbGBPre GB" }
 Report-AllRecycleBins
 
-# Dell SARemediation (overall + Backup subfolder)
+# 3) Dell SARemediation (overall + Backup subfolder)
 $saBase   = 'C:\ProgramData\Dell\SARemediation'
 $saBackup = 'C:\ProgramData\Dell\SARemediation\SystemRepair\Snapshots\Backup'
 if (Test-Path $saBase) {
@@ -332,7 +332,7 @@ if (Test-Path $saBase) {
   Write-Log "INFO: Dell SARemediation folder not found."
 }
 
-# CSC (Offline Files) size only (no delete)
+# 4) CSC (Offline Files) size only (no delete)
 $CSCPath = 'C:\Windows\CSC'
 if (Test-Path $CSCPath) {
   $csize = Get-FolderSizeBytes -Path $CSCPath
@@ -341,10 +341,9 @@ if (Test-Path $CSCPath) {
   Write-Log "INFO: CSC folder not present."
 }
 
-# VSS ShadowStorage summary for C:
+# 5) VSS ShadowStorage summary for C: (keep after the file/folder inventory)
 Try-Run {
   $v = (vssadmin list shadowstorage) -join "`n"
-  # log the whole thing (already helpful)
   $v -split "`n" | ForEach-Object { Write-Log $_ }
 } "Report VSS shadow storage (baseline)"
 
