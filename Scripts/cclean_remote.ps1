@@ -65,6 +65,7 @@ param(
   [switch]$TouchNableFileCache,
   [switch]$ReportShadowsOnly,
   [switch]$ShrinkShadowStorage
+  [switch]$ReportFolderSizes
 )
 
 # ---------- Defaults then override with provided switches ----------
@@ -76,6 +77,7 @@ $ClearTemp            = $true
 $ComponentCleanup     = $true
 $TouchNableFileCache  = $true
 $ReportShadowsOnly    = $true
+$ReportFolderSizes    = $true
 # Aggressive/destructive (opt-in)
 $DeepComponentCleanup   = $false
 $RemoveOptionalFeatures = $false
@@ -206,6 +208,56 @@ function Resolve-SID([string]$sid) {
   } catch { return $sid }
 }
 
+function Report-FolderSizes {
+  param(
+    [string[]]$FixedFolders = @('C:\Aeros','C:\CCS')
+  )
+  Write-Log "===== Folder size inventory (Aeros/CCS/Downloads) ====="
+
+  $items = New-Object System.Collections.Generic.List[object]
+
+  # Fixed folders: C:\Aeros, C:\CCS
+  foreach ($p in $FixedFolders) {
+    $sz = Get-FolderSizeBytes -Path $p
+    Write-Log ("DETAIL: {0} size {1}" -f $p, (Get-PrettySize $sz))
+    $items.Add([pscustomobject]@{ Type='Folder'; User=''; Path=$p; SizeBytes=$sz })
+  }
+
+  # Downloads for all user profiles under C:\Users (keep Public & Administrator; skip Default profiles)
+  $profiles = Get-ChildItem 'C:\Users' -Directory -Force -ErrorAction SilentlyContinue |
+              Where-Object { $_.Name -notin @('Default','Default User','All Users') }
+
+  foreach ($prof in $profiles) {
+    $dl = Join-Path $prof.FullName 'Downloads'
+    if (Test-Path -LiteralPath $dl) {
+      $dsz = Get-FolderSizeBytes -Path $dl
+      Write-Log ("DETAIL: Downloads for {0} size {1} ({2})" -f $prof.Name, (Get-PrettySize $dsz), $dl)
+      $items.Add([pscustomobject]@{ Type='Downloads'; User=$prof.Name; Path=$dl; SizeBytes=$dsz })
+    } else {
+      Write-Log ("INFO: Downloads not found for {0} ({1})" -f $prof.Name, $dl)
+    }
+  }
+
+  # Totals
+  $aerosBytes = ($items | Where-Object { $_.Path -eq 'C:\Aeros' }     | Measure-Object SizeBytes -Sum).Sum
+  $ccsBytes   = ($items | Where-Object { $_.Path -eq 'C:\CCS' }       | Measure-Object SizeBytes -Sum).Sum
+  $dlBytes    = ($items | Where-Object { $_.Type -eq 'Downloads' }    | Measure-Object SizeBytes -Sum).Sum
+  $grandBytes = ($items | Measure-Object SizeBytes -Sum).Sum
+
+  Write-Log ("TOTAL: C:\Aeros   {0}" -f (Get-PrettySize $aerosBytes))
+  Write-Log ("TOTAL: C:\CCS     {0}" -f (Get-PrettySize $ccsBytes))
+  Write-Log ("TOTAL: Downloads  {0}" -f (Get-PrettySize $dlBytes))
+  Write-Log ("TOTAL: Grand      {0}" -f (Get-PrettySize $grandBytes))
+
+  # Return an object with totals for the summary
+  [pscustomobject]@{
+    AerosBytes     = [int64]$aerosBytes
+    CcsBytes       = [int64]$ccsBytes
+    DownloadsBytes = [int64]$dlBytes
+    GrandBytes     = [int64]$grandBytes
+  }
+}
+
 function Report-AllRecycleBins {
   $fixed = Get-CimInstance Win32_LogicalDisk -Filter "DriveType=3 AND FileSystem != NULL"
   foreach ($d in $fixed) {
@@ -241,6 +293,11 @@ Write-Log ("Params: TargetDrive={0}; Switches: {1}" -f $TargetDrive, ($__enabled
 
 $startFree = Get-FreeGB $TargetDrive
 Write-Log ("Start free space on {0}: {1} GB" -f $TargetDrive, $startFree)
+
+# Folder sizes BEFORE cleanup
+if ($ReportFolderSizes) {
+  $folderReportPre = Report-FolderSizes
+}
 
 # ===== Baseline space inventory (pre-clean) =====
 
@@ -450,6 +507,11 @@ if ($ReportPostMetrics) {
   } "Report VSS shadow storage (post)"
 }
 
+if ($ReportPostMetrics -and $ReportFolderSizes) {
+  Write-Log "===== Post-clean folder sizes ====="
+  $folderReportPost = Report-FolderSizes
+}
+
 # ---------- Summary ----------
 $endFree = Get-FreeGB $TargetDrive
 $delta = [math]::Round(($endFree - $startFree), 2)
@@ -460,6 +522,13 @@ $summary += 'Ran low disk space triage procedure'
 $summary += ('Recycle Bin (pre): ~{0} GB (executing user)' -f $rbGBPre)
 $summary += ('Free space on {0}: now {1} GB  (delta {2} GB)' -f $TargetDrive, $endFree, $delta)
 $summary += ('Elapsed: {0} sec' -f [int]((Get-Date)-$scriptStart).TotalSeconds)
+
+if ($ReportFolderSizes -and $null -ne $folderReportPre) {
+  $summary += ('Folders (pre): C:\Aeros {0}, C:\CCS {1}, Downloads {2}' -f `
+               (Get-PrettySize $folderReportPre.AerosBytes), `
+               (Get-PrettySize $folderReportPre.CcsBytes), `
+               (Get-PrettySize $folderReportPre.DownloadsBytes))
+}
 
 $summaryText = ($summary -join [Environment]::NewLine)
 
