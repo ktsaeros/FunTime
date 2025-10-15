@@ -65,7 +65,7 @@ param(
   [switch]$TouchNableFileCache,
   [switch]$ReportShadowsOnly,
   [switch]$ShrinkShadowStorage
-  [switch]$ReportFolderSizes
+  [switch]$ReportFolderSizes,
 )
 
 # ---------- Defaults then override with provided switches ----------
