@@ -309,6 +309,7 @@ Write-Log "===== Baseline inventory (pre-clean) ====="
 if ($ReportPostMetrics -and $ReportFolderSizes) {
   Write-Log "===== Post-clean folder sizes ====="
   $folderReportPost = Report-FolderSizes
+}
 
 # 2) Recycle Bin (executing user approx) + per-drive/SID breakdown
 Write-Log "===== Recycle Bin inventory ====="
