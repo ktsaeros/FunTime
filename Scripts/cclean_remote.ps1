@@ -182,6 +182,53 @@ function Empty-RecycleBinSafe {
   }
 }
 
+function Get-PrettySize([Int64]$bytes) {
+  if ($bytes -lt 1KB) { return "$bytes B" }
+  elseif ($bytes -lt 1MB) { return ("{0:N2} KB" -f ($bytes/1KB)) }
+  elseif ($bytes -lt 1GB) { return ("{0:N2} MB" -f ($bytes/1MB)) }
+  else { return ("{0:N2} GB" -f ($bytes/1GB)) }
+}
+
+function Get-FolderSizeBytes([string]$Path) {
+  try {
+    if (-not (Test-Path -LiteralPath $Path)) { return 0 }
+    $sum = 0
+    Get-ChildItem -LiteralPath $Path -Force -Recurse -ErrorAction SilentlyContinue |
+      ForEach-Object { if (-not $_.PSIsContainer) { $sum += $_.Length } }
+    return [Int64]$sum
+  } catch { return 0 }
+}
+
+function Resolve-SID([string]$sid) {
+  try {
+    $objSID = New-Object System.Security.Principal.SecurityIdentifier($sid)
+    return ($objSID.Translate([System.Security.Principal.NTAccount])).Value
+  } catch { return $sid }
+}
+
+function Report-AllRecycleBins {
+  $fixed = Get-CimInstance Win32_LogicalDisk -Filter "DriveType=3 AND FileSystem != NULL"
+  foreach ($d in $fixed) {
+    $rb = Join-Path $d.DeviceID '$Recycle.Bin'
+    if (-not (Test-Path -LiteralPath $rb)) {
+      Write-Log "INFO: Recycle Bin path not found on $($d.DeviceID)"
+      continue
+    }
+    $total = Get-FolderSizeBytes -Path $rb
+    Write-Log ("DETAIL: Recycle Bin on {0}: total {1}" -f $d.DeviceID, (Get-PrettySize $total))
+
+    # Per-user breakdown (SID folder names)
+    Get-ChildItem -LiteralPath $rb -Force -ErrorAction SilentlyContinue |
+      Where-Object { $_.PSIsContainer } |
+      ForEach-Object {
+        $sid = $_.Name
+        $owner = Resolve-SID $sid
+        $sz = Get-FolderSizeBytes -Path $_.FullName
+        Write-Log ("  - {0}: {1}" -f $owner, (Get-PrettySize $sz))
+      }
+  }
+}
+
 # ---------- Preconditions ----------
 if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
   Write-Output "ERROR: Must run as Administrator."
@@ -194,6 +241,47 @@ Write-Log ("Params: TargetDrive={0}; Switches: {1}" -f $TargetDrive, ($__enabled
 
 $startFree = Get-FreeGB $TargetDrive
 Write-Log ("Start free space on {0}: {1} GB" -f $TargetDrive, $startFree)
+
+# ===== Baseline space inventory (pre-clean) =====
+
+# Recycle Bin (executing user approx, plus per-drive/SID breakdown)
+$rbBytesPre = Get-RecycleBinSizeBytes
+$rbGBPre = [math]::Round($rbBytesPre / 1GB, 2)
+if ($rbGBPre -ge 1) { Write-Log "NOTICE: Recycle Bin (executing user) approx $rbGBPre GB" }
+else { Write-Log "INFO: Recycle Bin (executing user) approx $rbGBPre GB" }
+Report-AllRecycleBins
+
+# Dell SARemediation (overall + Backup subfolder)
+$saBase   = 'C:\ProgramData\Dell\SARemediation'
+$saBackup = 'C:\ProgramData\Dell\SARemediation\SystemRepair\Snapshots\Backup'
+if (Test-Path $saBase) {
+  $saSize = Get-FolderSizeBytes -Path $saBase
+  Write-Log ("DETAIL: Dell SARemediation at {0}, size {1}" -f $saBase, (Get-PrettySize $saSize))
+  if (Test-Path $saBackup) {
+    $bkSize = Get-FolderSizeBytes -Path $saBackup
+    Write-Log ("DETAIL:   Backup folder size {0}" -f (Get-PrettySize $bkSize))
+  } else {
+    Write-Log "INFO:   Backup folder not found."
+  }
+} else {
+  Write-Log "INFO: Dell SARemediation folder not found."
+}
+
+# CSC (Offline Files) size only (no delete)
+$CSCPath = 'C:\Windows\CSC'
+if (Test-Path $CSCPath) {
+  $csize = Get-FolderSizeBytes -Path $CSCPath
+  Write-Log ("NOTICE: CSC present at {0}, size {1}. Do NOT delete blindly; reinit typically requires reboot." -f $CSCPath, (Get-PrettySize $csize))
+} else {
+  Write-Log "INFO: CSC folder not present."
+}
+
+# VSS ShadowStorage summary for C:
+Try-Run {
+  $v = (vssadmin list shadowstorage) -join "`n"
+  # log the whole thing (already helpful)
+  $v -split "`n" | ForEach-Object { Write-Log $_ }
+} "Report VSS shadow storage (baseline)"
 
 # ---------- Actions ----------
 
@@ -274,17 +362,30 @@ if ($PurgeDellSARemediation) {
   Remove-PathSafe "$saPath\*"
 } else { Write-Log "SKIP: Dell SARemediation purge" }
 
-# 9) Recycle Bin: report (and optionally empty)
-$rbBytesBefore = Get-RecycleBinSizeBytes
-$rbGB = [math]::Round($rbBytesBefore / 1GB, 2)
-if ($rbGB -ge 1) { Write-Log "NOTICE: Recycle Bin (executing user) approx $rbGB GB" }
-else { Write-Log "INFO: Recycle Bin (executing user) approx $rbGB GB" }
+$saBase = 'C:\ProgramData\Dell\SARemediation'
+if (Test-Path $saBase) {
+  $saSize = Get-FolderSizeBytes -Path $saBase
+  Write-Log ("DETAIL: Dell SARemediation exists at {0}, size {1}" -f $saBase, (Get-PrettySize $saSize))
+  $saBackup = Join-Path $saBase 'SystemRepair\Snapshots\Backup'
+  if (Test-Path $saBackup) {
+    $bkSize = Get-FolderSizeBytes -Path $saBackup
+    Write-Log ("DETAIL:   Backup folder size {0}" -f (Get-PrettySize $bkSize))
+  } else {
+    Write-Log "INFO:   Backup folder not found."
+  }
+} else {
+  Write-Log "INFO: Dell SARemediation folder not found."
+}
+
+
 
 if ($EmptyRecycleBin) {
   Empty-RecycleBinSafe
 } else {
   Write-Log "SKIP: Empty Recycle Bin (technician/user approval required)"
 }
+
+
 
 # 10) Shadow storage report only (no deletions by default)
 if ($ReportShadowsOnly) {
@@ -322,16 +423,43 @@ if (Test-Path $CSCPath) {
   Write-Log "INFO: CSC folder not present."
 }
 
+# ===== Post-clean snapshot (optional) =====
+if ($ReportPostMetrics) {
+  Write-Log "===== Post-clean snapshot ====="
+  $rbBytesPost = Get-RecycleBinSizeBytes
+  $rbGBPost = [math]::Round($rbBytesPost / 1GB, 2)
+  Write-Log ("INFO: Recycle Bin (executing user) now approx {0} GB" -f $rbGBPost)
+  Report-AllRecycleBins
+
+  if (Test-Path $saBase) {
+    $saSize2 = Get-FolderSizeBytes -Path $saBase
+    Write-Log ("DETAIL: Dell SARemediation now {0}" -f (Get-PrettySize $saSize2))
+    if (Test-Path $saBackup) {
+      $bkSize2 = Get-FolderSizeBytes -Path $saBackup
+      Write-Log ("DETAIL:   Backup folder now {0}" -f (Get-PrettySize $bkSize2))
+    }
+  }
+
+  if (Test-Path $CSCPath) {
+    $csize2 = Get-FolderSizeBytes -Path $CSCPath
+    Write-Log ("DETAIL: CSC now {0}" -f (Get-PrettySize $csize2))
+  }
+
+  Try-Run {
+    (vssadmin list shadowstorage) -split "`n" | ForEach-Object { Write-Log $_ }
+  } "Report VSS shadow storage (post)"
+}
+
 # ---------- Summary ----------
 $endFree = Get-FreeGB $TargetDrive
 $delta = [math]::Round(($endFree - $startFree), 2)
 
 $summary = @()
 $summary += ('Free space on {0}: was {1} GB' -f $TargetDrive, $startFree)
-$summary += "Ran low disk space triage procedure"
-$summary += "Recycle Bin (pre): ~${rbGB} GB (executing user)"
+$summary += 'Ran low disk space triage procedure'
+$summary += ('Recycle Bin (pre): ~{0} GB (executing user)' -f $rbGBPre)
 $summary += ('Free space on {0}: now {1} GB  (delta {2} GB)' -f $TargetDrive, $endFree, $delta)
-$summary += "Elapsed: $([int]((Get-Date)-$scriptStart).TotalSeconds) sec"
+$summary += ('Elapsed: {0} sec' -f [int]((Get-Date)-$scriptStart).TotalSeconds)
 
 $summaryText = ($summary -join [Environment]::NewLine)
 
