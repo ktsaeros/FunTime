@@ -275,7 +275,7 @@ function Report-AllRecycleBins {
       continue
     }
     $total = Get-FolderSizeBytes -Path $rb
-    Write-Log ("DETAIL: Recycle Bin on {0}: total {1}" -f $d.DeviceID, (Get-PrettySize $total))
+    Write-Log ("DETAIL: Recycle Bin on {0} total {1}" -f $d.DeviceID, (Get-PrettySize $total))
 
     # Per-user breakdown (SID folder names)
     Get-ChildItem -LiteralPath $rb -Force -ErrorAction SilentlyContinue |
@@ -302,21 +302,23 @@ Write-Log ("Params: TargetDrive={0}; Switches: {1}" -f $TargetDrive, ($__enabled
 $startFree = Get-FreeGB $TargetDrive
 Write-Log ("Start free space on {0}: {1} GB" -f $TargetDrive, $startFree)
 
-# ===== Baseline space inventory (pre-clean) =====
+# ===== Pre-clean snapshot =====
 
 # 1) Folder sizes (Aeros/CCS/Downloads)
 if ($ReportFolderSizes) {
-  $folderReportPre = Report-FolderSizes
+  $folderReportPre = Report-FolderSizes  # This function logs its own heading + details + totals
 }
 
-# 2) Recycle Bin (executing user approx) + per-drive/SID breakdown
+# 2) Recycle Bin inventory
+Write-Log "===== Recycle Bin inventory ====="
 $rbBytesPre = Get-RecycleBinSizeBytes
 $rbGBPre = [math]::Round($rbBytesPre / 1GB, 2)
 if ($rbGBPre -ge 1) { Write-Log "NOTICE: Recycle Bin (executing user) approx $rbGBPre GB" }
 else { Write-Log "INFO: Recycle Bin (executing user) approx $rbGBPre GB" }
 Report-AllRecycleBins
 
-# 3) Dell SARemediation (overall + Backup subfolder)
+# 3) System caches (Dell SAR, CSC)
+Write-Log "===== System caches (Dell SAR, CSC) ====="
 $saBase   = 'C:\ProgramData\Dell\SARemediation'
 $saBackup = 'C:\ProgramData\Dell\SARemediation\SystemRepair\Snapshots\Backup'
 if (Test-Path $saBase) {
@@ -332,7 +334,6 @@ if (Test-Path $saBase) {
   Write-Log "INFO: Dell SARemediation folder not found."
 }
 
-# 4) CSC (Offline Files) size only (no delete)
 $CSCPath = 'C:\Windows\CSC'
 if (Test-Path $CSCPath) {
   $csize = Get-FolderSizeBytes -Path $CSCPath
@@ -341,7 +342,8 @@ if (Test-Path $CSCPath) {
   Write-Log "INFO: CSC folder not present."
 }
 
-# 5) VSS ShadowStorage summary for C: (keep after the file/folder inventory)
+# 4) VSS Shadow Storage (baseline)
+Write-Log "===== VSS Shadow Storage (baseline) ====="
 Try-Run {
   $v = (vssadmin list shadowstorage) -join "`n"
   $v -split "`n" | ForEach-Object { Write-Log $_ }
@@ -426,20 +428,7 @@ if ($PurgeDellSARemediation) {
   Remove-PathSafe "$saPath\*"
 } else { Write-Log "SKIP: Dell SARemediation purge" }
 
-$saBase = 'C:\ProgramData\Dell\SARemediation'
-if (Test-Path $saBase) {
-  $saSize = Get-FolderSizeBytes -Path $saBase
-  Write-Log ("DETAIL: Dell SARemediation exists at {0}, size {1}" -f $saBase, (Get-PrettySize $saSize))
-  $saBackup = Join-Path $saBase 'SystemRepair\Snapshots\Backup'
-  if (Test-Path $saBackup) {
-    $bkSize = Get-FolderSizeBytes -Path $saBackup
-    Write-Log ("DETAIL:   Backup folder size {0}" -f (Get-PrettySize $bkSize))
-  } else {
-    Write-Log "INFO:   Backup folder not found."
-  }
-} else {
-  Write-Log "INFO: Dell SARemediation folder not found."
-}
+
 
 
 
@@ -450,15 +439,6 @@ if ($EmptyRecycleBin) {
 }
 
 
-
-# 10) Shadow storage report only (no deletions by default)
-if ($ReportShadowsOnly) {
-  if (_Should("VSS ShadowStorage", "Report usage")) {
-    Try-Run { vssadmin list shadowstorage | ForEach-Object { Write-Log $_ } } "Report VSS shadow storage"
-  }
-} else {
-  Write-Log "INFO: Shadow storage deletion is disabled by default. Handle case-by-case."
-}
 
 # 11) Shrink VSS Shadow Storage (optional, 10% cap per fixed drive)
 if ($ShrinkShadowStorage) {
