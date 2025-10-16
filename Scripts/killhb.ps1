@@ -1,4 +1,4 @@
-# killhb.ps1 (enhanced cleanup version – brace-balanced)
+# killhb.ps1 (enhanced cleanup + self delete)
 $ErrorActionPreference = 'SilentlyContinue'
 $TaskName   = 'Aeros Heartbeat'
 $FolderPath = 'C:\Aeros\Heartbeat'
@@ -51,34 +51,28 @@ catch {
 # 4) Delete related heartbeat scripts within C:\Aeros
 try {
     if (Test-Path $RootPath) {
-        # Exact-match targets
         $patternList = @(
             'cpc_heartbeat.ps1',
             'install_heartbeat.ps1'
         )
 
         foreach ($pattern in $patternList) {
-            $matches = Get-ChildItem -Path $RootPath -Filter $pattern -ErrorAction SilentlyContinue
-            foreach ($m in $matches) {
+            Get-ChildItem -Path $RootPath -Filter $pattern -ErrorAction SilentlyContinue | ForEach-Object {
                 try {
-                    Remove-Item $m.FullName -Force -ErrorAction Stop
-                    Write-Host ("Deleted file: {0}" -f $m.FullName)
-                }
-                catch {
-                    Write-Host ("Failed to delete {0}: {1}" -f $m.FullName, $_.Exception.Message)
+                    Remove-Item $_.FullName -Force -ErrorAction Stop
+                    Write-Host ("Deleted file: {0}" -f $_.FullName)
+                } catch {
+                    Write-Host ("Failed to delete {0}: {1}" -f $_.FullName, $_.Exception.Message)
                 }
             }
         }
 
-        # Wildcard install_hb_*.ps1
-        $wildMatches = Get-ChildItem -Path $RootPath -Filter 'install_hb_*.ps1' -ErrorAction SilentlyContinue
-        foreach ($m in $wildMatches) {
+        Get-ChildItem -Path $RootPath -Filter 'install_hb_*.ps1' -ErrorAction SilentlyContinue | ForEach-Object {
             try {
-                Remove-Item $m.FullName -Force -ErrorAction Stop
-                Write-Host ("Deleted wildcard file: {0}" -f $m.FullName)
-            }
-            catch {
-                Write-Host ("Failed to delete wildcard {0}: {1}" -f $m.FullName, $_.Exception.Message)
+                Remove-Item $_.FullName -Force -ErrorAction Stop
+                Write-Host ("Deleted wildcard file: {0}" -f $_.FullName)
+            } catch {
+                Write-Host ("Failed to delete wildcard {0}: {1}" -f $_.FullName, $_.Exception.Message)
             }
         }
     }
@@ -88,3 +82,14 @@ catch {
 }
 
 Write-Host "Uninstall complete."
+
+# 5) Self-delete
+try {
+    $self = $MyInvocation.MyCommand.Path
+    Write-Host ("Self-deleting: {0}" -f $self)
+    Start-Sleep -Seconds 2
+    Start-Process powershell -ArgumentList "-NoProfile -WindowStyle Hidden -Command `"Start-Sleep 1; Remove-Item -Force -Path '$self'`""
+}
+catch {
+    Write-Host ("Self-delete failed: {0}" -f $_.Exception.Message)
+}
