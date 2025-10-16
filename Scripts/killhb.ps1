@@ -35,7 +35,7 @@ if (Test-Path $FolderPath) {
     Remove-Item $FolderPath -Recurse -Force -ErrorAction Stop
     Write-Host "Deleted folder: $FolderPath"
   } catch {
-    Write-Host "Could not delete $FolderPath: $($_.Exception.Message)"
+    Write-Host ("Could not delete {0}: {1}" -f $FolderPath, $_.Exception.Message)
   }
 } else {
   Write-Host "Folder not found: $FolderPath (already gone)"
