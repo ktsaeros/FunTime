@@ -62,6 +62,32 @@ function Test-OutlookNewGlobal {
     }
 }
 
+# helper: decode a REG_BINARY/byte[] to a proper string
+function Decode-RegUnicode {
+    param($val)
+    if ($val -is [byte[]]) {
+        return [Text.Encoding]::Unicode.GetString($val).TrimEnd([char]0)
+    }
+    return $val
+}
+
+# when you read the account properties (e.g., $p)
+$imapServer = $null
+foreach ($n in @('IMAP Server','POP3 Server','POP Server','Server','IncomingServer','001f3001')) {
+    if ($p.PSObject.Properties.Name -contains $n) {
+        $imapServer = Decode-RegUnicode $p.$n
+        if ($imapServer) { break }
+    }
+}
+
+$smtpServer = $null
+foreach ($n in @('SMTP Server','OutgoingServer','001f3006')) {
+    if ($p.PSObject.Properties.Name -contains $n) {
+        $smtpServer = Decode-RegUnicode $p.$n
+        if ($smtpServer) { break }
+    }
+}
+
 # --- C2R Sku/Lifecycle Detection ---
 function Get-OfficeSkuClassification {
     param([Parameter(Mandatory)][string[]]$Ids)
