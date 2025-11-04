@@ -33,23 +33,6 @@ function Get-OutlookNameFromVersion {
         default { return "Outlook (unknown mapping, version $VersionString)" }
     }
 }
-
-# --- NEW HELPER: Decodes Registry Binary Values ---
-function Convert-RegValueToString {
-    param($Value)
-    if ($Value -is [string]) {
-        return $Value
-    }
-    if ($Value -is [byte[]]) {
-        try {
-            # Try to decode as Unicode (UTF-16 LE), trimming null terminators
-            return [System.Text.Encoding]::Unicode.GetString($Value).TrimEnd([char]0)
-        } catch {
-            return $null # Failed to decode
-        }
-    }
-    return $null
-}
 #endregion
 
 #region Machine-Wide Install Detection
@@ -76,6 +59,22 @@ function Test-OutlookNewGlobal {
         Type           = 'New Outlook (Store app)'
         Present        = $present
         PackageFull    = if ($pkgAll) { $pkgAll.PackageFullName } elseif ($pkg) { $pkg.PackageFullName } else { $null }
+    }
+}
+
+$imapServer = $null
+foreach ($n in @('IMAP Server','POP3 Server','POP Server','Server','IncomingServer','001f3001')) {
+    if ($p.PSObject.Properties.Name -contains $n) {
+        $imapServer = Decode-RegUnicode $p.$n
+        if ($imapServer) { break }
+    }
+}
+
+$smtpServer = $null
+foreach ($n in @('SMTP Server','OutgoingServer','001f3006')) {
+    if ($p.PSObject.Properties.Name -contains $n) {
+        $smtpServer = Decode-RegUnicode $p.$n
+        if ($smtpServer) { break }
     }
 }
 
@@ -342,80 +341,59 @@ function Get-OutlookAccountsFromMountedHive {
                 $acctKeyPath = $_.PSPath
                 try { $p = Get-ItemProperty -LiteralPath $acctKeyPath -ErrorAction Stop } catch { return }
 
-                # --- Protocol Detection (Handles REG_BINARY) ---
+                # --- NEW "Best of Both" Protocol Detection ---
                 $protocol = $null
                 $server = $null
-                $svc = Convert-RegValueToString -Value $p.'Service Name' # Check for Service Name first
+                $svc = $p.'Service Name' # Check for Service Name first
                 
                 if ($svc -eq 'MSEMS') {
                     $protocol = 'Exchange'
-                    $server = Convert-RegValueToString -Value $p.'001f6622' # Exchange Server DN
+                    $server = $p.'001f6622' # Exchange Server DN
                 } elseif ($svc -eq 'IMAP') {
                      $protocol = 'IMAP'
-                     $server = Convert-RegValueToString -Value $p.'IMAP Server'
-                     if (-not $server) { $server = Convert-RegValueToString -Value $p.'001f3a21' }
+                     $server = $p.'IMAP Server'
+                     if (-not $server) { $server = $p.'001f3a21' }
                 } elseif ($svc -eq 'POP3') {
                     $protocol = 'POP3'
-                    $server = Convert-RegValueToString -Value $p.'POP3 Server'
-                    if (-not $server) { $server = Convert-RegValueToString -Value $p.'001f3a1f' }
-                } elseif ($svc -eq 'HTTP' -or (Convert-RegValueToString -Value $p.'Account Type') -eq 'http') {
+                    $server = $p.'POP3 Server'
+                    if (-not $server) { $server = $p.'001f3a1f' }
+                } elseif ($svc -eq 'HTTP' -or $p.'Account Type' -eq 'http') {
                     $protocol = 'Outlook.com/Hotmail'
-                    $server = Convert-RegValueToString -Value $p.'001f3a28' # HTTP Server URL
+                    $server = $p.'001f3a28' # HTTP Server URL
                 }
                 
                 # --- Fallback: Check for server keys if ServiceName was not present/useful ---
                 if (-not $protocol) {
-                    if (Convert-RegValueToString -Value $p.'001f6622') { # Exchange Server DN
+                    if ($p.'001f6622') { # Exchange Server DN
                         $protocol = 'Exchange'
-                        $server = Convert-RegValueToString -Value $p.'001f6622'
-                    } elseif (Convert-RegValueToString -Value $p.'001f3a21') { # IMAP Server
+                        $server = $p.'001f6622'
+                    } elseif ($p.'001f3a21' -or $p.'IMAP Server') { # IMAP Server
                         $protocol = 'IMAP'
-                        $server = Convert-RegValueToString -Value $p.'IMAP Server'
-                        if (-not $server) { $server = Convert-RegValueToString -Value $p.'001f3a21' }
-                    } elseif (Convert-RegValueToString -Value $p.'001f3a1f') { # POP3 Server
+                        $server = $p.'IMAP Server'
+                        if (-not $server) { $server = $p.'001f3a21' }
+                    } elseif ($p.'001f3a1f' -or $p.'POP3 Server') { # POP3 Server
                         $protocol = 'POP3'
-                        $server = Convert-RegValueToString -Value $p.'POP3 Server'
-                        if (-not $server) { $server = Convert-RegValueToString -Value $p.'001f3a1f' }
+                        $server = $p.'POP3 Server'
+                        if (-not $server) { $server = $p.'001f3a1f' }
                     }
                 }
 
                 # --- FILTER 1: If we *still* couldn't find a protocol, it's not a mail account. ---
                 if (-not $protocol) { return }
 
-                # --- Get Email Address (Handles REG_BINARY) ---
                 $smtp = $null
                 foreach ($n in @('SMTP Address','Smtp Address','Email','EmailAddress', '001f39fe')) {
-                    if ($p.PSObject.Properties.Name -contains $n) { 
-                        $smtp = Convert-RegValueToString -Value $p.$n
-                        if ($smtp) { break }
-                    }
+                    if ($p.PSObject.Properties.Name -contains $n -and $p.$n -is [string] -and $p.$n) { $smtp = $p.$n; break }
                 }
-                if (-not $smtp) {
-                    $name = $null
-                    foreach ($n in @('Account Name','AccountName')) {
-                        if ($p.PSObject.Properties.Name -contains $n) {
-                           $name = Convert-RegValueToString -Value $p.$n
-                           if ($name -like '*@*') { $smtp = $name; break }
-                        }
-                    }
-                }
-                if (-not $smtp) { 
-                    $name = Convert-RegValueToString -Value $p.'Account Name'
-                    if ($name) { $smtp = $name } # Final fallback
-                }
+                if (-not $smtp -and $p.'Account Name' -like '*@*') { $smtp = $p.'Account Name' }
+                if (-not $smtp) { $smtp = $p.'Account Name' }
                 
                 if (-not $smtp -or $smtp -eq 'Outlook Address Book') { return }
 
-                # --- Get SMTP Server (for non-Exchange) (Handles REG_BINARY) ---
+                # --- Get SMTP Server (for non-Exchange) ---
                 if ($protocol -ne 'Exchange') {
-                    $smtpServer = $null
-                    foreach ($n in @('SMTP Server', '001f6740')) {
-                         if ($p.PSObject.Properties.Name -contains $n) {
-                            $smtpServer = Convert-RegValueToString -Value $p.$n
-                            if ($smtpServer) { break }
-                         }
-                    }
-                    
+                    $smtpServer = $p.'SMTP Server'
+                    if (-not $smtpServer) { $smtpServer = $p.'001f6740' }
                     if ($smtpServer) {
                         if ($server -and $server -ne $smtpServer) { $server = "$server (SMTP: $smtpServer)" }
                         elseif (-not $server) { $server = $smtpServer }
@@ -583,8 +561,7 @@ $foundFiles = Get-OutlookDataFiles -Extensions $Extensions -AllUsers:$AllUsers
 # --- Find Most Recent User for Header ---
 $primaryUser = 'N/A'
 if ($foundFiles.Count -gt 0) {
-    # Filter out null LastWriteTime objects just in case
-    $mostRecentFile = $foundFiles | Where-Object { $_.LastWriteTime } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    $mostRecentFile = $foundFiles | Sort-Object LastWriteTime -Descending | Select-Object -First 1
     if ($mostRecentFile) {
         $primaryUser = $mostRecentFile.UserProfile
     }
@@ -596,7 +573,7 @@ Write-Host "Primary User: $primaryUser" -ForegroundColor Green
 
 
 # 1. Detect Machine-Wide Installs
-Write-Host "`n=== Office/Outlook Install Summary ===`n" -ForegroundColor Cyan
+Write-Host "Office/Outlook Install Summary" -ForegroundColor Cyan
 $officeInfo = Get-OfficeC2RInfo
 $newOutlook = Test-OutlookNewGlobal
 
@@ -622,7 +599,7 @@ if ($newOutlook.Present -and !$officeInfo) {
 }
 
 # 2. Find and Display Email Accounts (RMM-Safe)
-Write-Host "`n=== Outlook Email Accounts (Correlated by User) ===`n" -ForegroundColor Cyan
+Write-Host "Outlook Email Accounts (Correlated by User)" -ForegroundColor Cyan
 # This function loads/unloads hives, so it must run *before* Get-PerUserOutlookFootprints
 $accounts = Get-OutlookAccountsAllUsers
 
@@ -634,7 +611,7 @@ if ($accounts.Count -eq 0) {
 
 
 # 3. Find Files and Correlate by User
-Write-Host "`n=== Outlook Data Files (Correlated by User) ===`n" -ForegroundColor Cyan
+Write-Host "Outlook Data Files (Correlated by User)" -ForegroundColor Cyan
 # Now that hives are unloaded, we can run the file correlation logic
 $perUser = Get-PerUserOutlookFootprints -ProfileSidMap $sidMapForFiles
 # $foundFiles is already populated from the header logic
@@ -666,11 +643,7 @@ if ($foundFiles.Count -eq 0) {
         elseif ($item.SizeBytes -gt 1MB) { $sizeFormatted = "{0:N2} MB" -f ($item.SizeBytes / 1MB) }
         elseif ($item.SizeBytes -gt 0) { $sizeFormatted = "{0:N0} KB" -f ($item.SizeBytes / 1KB) }
         else { $sizeFormatted = "0 KB" }
-        
-        $dateFormatted = "N/A"
-        if ($item.LastWriteTime) {
-            $dateFormatted = $item.LastWriteTime.ToString('yyyy-MM-dd')
-        }
+        $dateFormatted = $item.LastWriteTime.ToString('yyyy-MM-dd')
 
         [PSCustomObject]@{
             UserProfile = $user
