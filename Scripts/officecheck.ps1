@@ -62,22 +62,6 @@ function Test-OutlookNewGlobal {
     }
 }
 
-$imapServer = $null
-foreach ($n in @('IMAP Server','POP3 Server','POP Server','Server','IncomingServer','001f3001')) {
-    if ($p.PSObject.Properties.Name -contains $n) {
-        $imapServer = Decode-RegUnicode $p.$n
-        if ($imapServer) { break }
-    }
-}
-
-$smtpServer = $null
-foreach ($n in @('SMTP Server','OutgoingServer','001f3006')) {
-    if ($p.PSObject.Properties.Name -contains $n) {
-        $smtpServer = Decode-RegUnicode $p.$n
-        if ($smtpServer) { break }
-    }
-}
-
 # --- C2R Sku/Lifecycle Detection ---
 function Get-OfficeSkuClassification {
     param([Parameter(Mandatory)][string[]]$Ids)
