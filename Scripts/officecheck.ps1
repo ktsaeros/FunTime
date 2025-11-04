@@ -61,17 +61,6 @@ function Test-OutlookNewGlobal {
         PackageFull    = if ($pkgAll) { $pkgAll.PackageFullName } elseif ($pkg) { $pkg.PackageFullName } else { $null }
     }
 }
-
-# helper: decode a REG_BINARY/byte[] to a proper string
-function Decode-RegUnicode {
-    param($val)
-    if ($val -is [byte[]]) {
-        return [Text.Encoding]::Unicode.GetString($val).TrimEnd([char]0)
-    }
-    return $val
-}
-
-# when you read the account properties (e.g., $p)
 $imapServer = $null
 foreach ($n in @('IMAP Server','POP3 Server','POP Server','Server','IncomingServer','001f3001')) {
     if ($p.PSObject.Properties.Name -contains $n) {
@@ -351,59 +340,80 @@ function Get-OutlookAccountsFromMountedHive {
                 $acctKeyPath = $_.PSPath
                 try { $p = Get-ItemProperty -LiteralPath $acctKeyPath -ErrorAction Stop } catch { return }
 
-                # --- NEW "Best of Both" Protocol Detection ---
+                # --- Protocol Detection (Handles REG_BINARY) ---
                 $protocol = $null
                 $server = $null
-                $svc = $p.'Service Name' # Check for Service Name first
+                $svc = Convert-RegValueToString -Value $p.'Service Name' # Check for Service Name first
                 
                 if ($svc -eq 'MSEMS') {
                     $protocol = 'Exchange'
-                    $server = $p.'001f6622' # Exchange Server DN
+                    $server = Convert-RegValueToString -Value $p.'001f6622' # Exchange Server DN
                 } elseif ($svc -eq 'IMAP') {
                      $protocol = 'IMAP'
-                     $server = $p.'IMAP Server'
-                     if (-not $server) { $server = $p.'001f3a21' }
+                     $server = Convert-RegValueToString -Value $p.'IMAP Server'
+                     if (-not $server) { $server = Convert-RegValueToString -Value $p.'001f3a21' }
                 } elseif ($svc -eq 'POP3') {
                     $protocol = 'POP3'
-                    $server = $p.'POP3 Server'
-                    if (-not $server) { $server = $p.'001f3a1f' }
-                } elseif ($svc -eq 'HTTP' -or $p.'Account Type' -eq 'http') {
+                    $server = Convert-RegValueToString -Value $p.'POP3 Server'
+                    if (-not $server) { $server = Convert-RegValueToString -Value $p.'001f3a1f' }
+                } elseif ($svc -eq 'HTTP' -or (Convert-RegValueToString -Value $p.'Account Type') -eq 'http') {
                     $protocol = 'Outlook.com/Hotmail'
-                    $server = $p.'001f3a28' # HTTP Server URL
+                    $server = Convert-RegValueToString -Value $p.'001f3a28' # HTTP Server URL
                 }
                 
                 # --- Fallback: Check for server keys if ServiceName was not present/useful ---
                 if (-not $protocol) {
-                    if ($p.'001f6622') { # Exchange Server DN
+                    if (Convert-RegValueToString -Value $p.'001f6622') { # Exchange Server DN
                         $protocol = 'Exchange'
-                        $server = $p.'001f6622'
-                    } elseif ($p.'001f3a21' -or $p.'IMAP Server') { # IMAP Server
+                        $server = Convert-RegValueToString -Value $p.'001f6622'
+                    } elseif (Convert-RegValueToString -Value $p.'001f3a21') { # IMAP Server
                         $protocol = 'IMAP'
-                        $server = $p.'IMAP Server'
-                        if (-not $server) { $server = $p.'001f3a21' }
-                    } elseif ($p.'001f3a1f' -or $p.'POP3 Server') { # POP3 Server
+                        $server = Convert-RegValueToString -Value $p.'IMAP Server'
+                        if (-not $server) { $server = Convert-RegValueToString -Value $p.'001f3a21' }
+                    } elseif (Convert-RegValueToString -Value $p.'001f3a1f') { # POP3 Server
                         $protocol = 'POP3'
-                        $server = $p.'POP3 Server'
-                        if (-not $server) { $server = $p.'001f3a1f' }
+                        $server = Convert-RegValueToString -Value $p.'POP3 Server'
+                        if (-not $server) { $server = Convert-RegValueToString -Value $p.'001f3a1f' }
                     }
                 }
 
                 # --- FILTER 1: If we *still* couldn't find a protocol, it's not a mail account. ---
                 if (-not $protocol) { return }
 
+                # --- Get Email Address (Handles REG_BINARY) ---
                 $smtp = $null
                 foreach ($n in @('SMTP Address','Smtp Address','Email','EmailAddress', '001f39fe')) {
-                    if ($p.PSObject.Properties.Name -contains $n -and $p.$n -is [string] -and $p.$n) { $smtp = $p.$n; break }
+                    if ($p.PSObject.Properties.Name -contains $n) { 
+                        $smtp = Convert-RegValueToString -Value $p.$n
+                        if ($smtp) { break }
+                    }
                 }
-                if (-not $smtp -and $p.'Account Name' -like '*@*') { $smtp = $p.'Account Name' }
-                if (-not $smtp) { $smtp = $p.'Account Name' }
+                if (-not $smtp) {
+                    $name = $null
+                    foreach ($n in @('Account Name','AccountName')) {
+                        if ($p.PSObject.Properties.Name -contains $n) {
+                           $name = Convert-RegValueToString -Value $p.$n
+                           if ($name -like '*@*') { $smtp = $name; break }
+                        }
+                    }
+                }
+                if (-not $smtp) { 
+                    $name = Convert-RegValueToString -Value $p.'Account Name'
+                    if ($name) { $smtp = $name } # Final fallback
+                }
                 
                 if (-not $smtp -or $smtp -eq 'Outlook Address Book') { return }
 
-                # --- Get SMTP Server (for non-Exchange) ---
+                # --- Get SMTP Server (for non-Exchange) (Handles REG_BINARY) ---
                 if ($protocol -ne 'Exchange') {
-                    $smtpServer = $p.'SMTP Server'
-                    if (-not $smtpServer) { $smtpServer = $p.'001f6740' }
+                    $smtpServer = $null
+                    foreach ($n in @('SMTP Server', '001f6740')) {
+                         if ($p.PSObject.Properties.Name -contains $n) {
+                            $smtpServer = Convert-RegValueToString -Value $p.$n
+                            if ($smtpServer) { break }
+                         }
+                    }
+                    
                     if ($smtpServer) {
                         if ($server -and $server -ne $smtpServer) { $server = "$server (SMTP: $smtpServer)" }
                         elseif (-not $server) { $server = $smtpServer }
