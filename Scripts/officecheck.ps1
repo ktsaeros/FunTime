@@ -33,6 +33,23 @@ function Get-OutlookNameFromVersion {
         default { return "Outlook (unknown mapping, version $VersionString)" }
     }
 }
+
+# --- NEW HELPER: Decodes Registry Binary Values ---
+function Convert-RegValueToString {
+    param($Value)
+    if ($Value -is [string]) {
+        return $Value
+    }
+    if ($Value -is [byte[]]) {
+        try {
+            # Try to decode as Unicode (UTF-16 LE), trimming null terminators
+            return [System.Text.Encoding]::Unicode.GetString($Value).TrimEnd([char]0)
+        } catch {
+            return $null # Failed to decode
+        }
+    }
+    return $null
+}
 #endregion
 
 #region Machine-Wide Install Detection
@@ -59,21 +76,6 @@ function Test-OutlookNewGlobal {
         Type           = 'New Outlook (Store app)'
         Present        = $present
         PackageFull    = if ($pkgAll) { $pkgAll.PackageFullName } elseif ($pkg) { $pkg.PackageFullName } else { $null }
-    }
-}
-$imapServer = $null
-foreach ($n in @('IMAP Server','POP3 Server','POP Server','Server','IncomingServer','001f3001')) {
-    if ($p.PSObject.Properties.Name -contains $n) {
-        $imapServer = Decode-RegUnicode $p.$n
-        if ($imapServer) { break }
-    }
-}
-
-$smtpServer = $null
-foreach ($n in @('SMTP Server','OutgoingServer','001f3006')) {
-    if ($p.PSObject.Properties.Name -contains $n) {
-        $smtpServer = Decode-RegUnicode $p.$n
-        if ($smtpServer) { break }
     }
 }
 
@@ -581,7 +583,8 @@ $foundFiles = Get-OutlookDataFiles -Extensions $Extensions -AllUsers:$AllUsers
 # --- Find Most Recent User for Header ---
 $primaryUser = 'N/A'
 if ($foundFiles.Count -gt 0) {
-    $mostRecentFile = $foundFiles | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    # Filter out null LastWriteTime objects just in case
+    $mostRecentFile = $foundFiles | Where-Object { $_.LastWriteTime } | Sort-Object LastWriteTime -Descending | Select-Object -First 1
     if ($mostRecentFile) {
         $primaryUser = $mostRecentFile.UserProfile
     }
@@ -593,7 +596,7 @@ Write-Host "Primary User: $primaryUser" -ForegroundColor Green
 
 
 # 1. Detect Machine-Wide Installs
-Write-Host "Office/Outlook Install Summary" -ForegroundColor Cyan
+Write-Host "`n=== Office/Outlook Install Summary ===`n" -ForegroundColor Cyan
 $officeInfo = Get-OfficeC2RInfo
 $newOutlook = Test-OutlookNewGlobal
 
@@ -619,7 +622,7 @@ if ($newOutlook.Present -and !$officeInfo) {
 }
 
 # 2. Find and Display Email Accounts (RMM-Safe)
-Write-Host "Outlook Email Accounts (Correlated by User)" -ForegroundColor Cyan
+Write-Host "`n=== Outlook Email Accounts (Correlated by User) ===`n" -ForegroundColor Cyan
 # This function loads/unloads hives, so it must run *before* Get-PerUserOutlookFootprints
 $accounts = Get-OutlookAccountsAllUsers
 
@@ -631,7 +634,7 @@ if ($accounts.Count -eq 0) {
 
 
 # 3. Find Files and Correlate by User
-Write-Host "Outlook Data Files (Correlated by User)" -ForegroundColor Cyan
+Write-Host "`n=== Outlook Data Files (Correlated by User) ===`n" -ForegroundColor Cyan
 # Now that hives are unloaded, we can run the file correlation logic
 $perUser = Get-PerUserOutlookFootprints -ProfileSidMap $sidMapForFiles
 # $foundFiles is already populated from the header logic
@@ -663,7 +666,11 @@ if ($foundFiles.Count -eq 0) {
         elseif ($item.SizeBytes -gt 1MB) { $sizeFormatted = "{0:N2} MB" -f ($item.SizeBytes / 1MB) }
         elseif ($item.SizeBytes -gt 0) { $sizeFormatted = "{0:N0} KB" -f ($item.SizeBytes / 1KB) }
         else { $sizeFormatted = "0 KB" }
-        $dateFormatted = $item.LastWriteTime.ToString('yyyy-MM-dd')
+        
+        $dateFormatted = "N/A"
+        if ($item.LastWriteTime) {
+            $dateFormatted = $item.LastWriteTime.ToString('yyyy-MM-dd')
+        }
 
         [PSCustomObject]@{
             UserProfile = $user
