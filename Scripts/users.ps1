@@ -1,69 +1,66 @@
-<# 
-.SYNOPSIS
-  Show domain status, local users, and domain users who have signed in (profiles).
+# === Profile Path / Local vs Domain / Admin (Yes/No/Unknown) ===
 
-.NOTES
-  PS v5 compatible; safe to run as NT AUTHORITY\SYSTEM (e.g., N-able Remote Background).
-#>
+# 1) Get the "machine SID base" (local accounts share this root; Administrator ends in -500)
+$localAdminSid = ([System.Security.Principal.NTAccount]"$env:COMPUTERNAME\Administrator").
+  Translate([System.Security.Principal.SecurityIdentifier]).Value
+$machineSidBase = $localAdminSid -replace '-500$',''
 
-$cs      = Get-WmiObject Win32_ComputerSystem
-$domDns  = $cs.Domain
-$domNet  = if ($cs.PartOfDomain -and $domDns) { ($domDns -replace '\..*$','') } else { '' }
-
-Write-Output ("DomainJoined: {0}  Domain(DNS): {1}  Domain(NETBIOS): {2}`n" -f $cs.PartOfDomain, $domDns, $domNet)
-
-# --- Local users ---
-Write-Output 'Local users:'
+# 2) Read members of the local Administrators group (WinNT provider)
+$adminMembers = @()
 try {
-    Get-LocalUser |
-        Select-Object @{n='Name';e={$_.Name}} |
-        Sort-Object Name |
-        Format-Table -AutoSize
-}
-catch {
-    # Fallback for older boxes without Get-LocalUser
-    Get-WmiObject Win32_UserAccount -Filter ("LocalAccount=True AND Domain='{0}'" -f $env:COMPUTERNAME) |
-        Select-Object @{n='Name';e={$_.Name}} |
-        Sort-Object Name |
-        Format-Table -AutoSize
-}
-Write-Output ''
-
-# --- Domain users with local profiles (i.e., have logged on) ---
-Write-Output 'Domain users with local profiles (have signed in):'
-
-$profileItems =
-    Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' |
-    Where-Object { $_.PSChildName -like 'S-1-5-21-*' } |
-    ForEach-Object {
-        $sid  = $_.PSChildName
-        $path = $_.GetValue('ProfileImagePath')
-
-        $nt = $null
-        try { $nt = ([Security.Principal.SecurityIdentifier]$sid).Translate([Security.Principal.NTAccount]).Value } catch {}
-
-        $scope = 'Unknown (profile)'
-        if ($nt) {
-            if ($nt -like "$($env:COMPUTERNAME)\*") {
-                $scope = 'Local (profile)'
-            }
-            elseif ($cs.PartOfDomain -and ( $nt -like "$domDns\*" -or $nt -like "$domNet\*" -or $nt -like "$(($domNet).ToUpper())\*" )) {
-                $scope = 'Domain (profile)'
-            }
-        }
-
-        [pscustomobject]@{ User = $nt; Scope = $scope; ProfilePath = $path }
+  $grp = [ADSI]"WinNT://$env:COMPUTERNAME/Administrators,group"
+  $grp.Members() | ForEach-Object {
+    $path   = $_.GetType().InvokeMember('ADsPath','GetProperty',$null,$_,$null)
+    $member = [ADSI]$path
+    $sid    = $null
+    try {
+      $sidBytes = $member.Properties['objectSid'].Value
+      if ($sidBytes) { $sid = (New-Object System.Security.Principal.SecurityIdentifier($sidBytes,0)).Value }
+    } catch {}
+    $adminMembers += [pscustomobject]@{
+      Sid   = $sid
+      Class = $member.Class  # User or Group
+      Name  = $member.Name
     }
-
-$domainSignedIn =
-    $profileItems |
-    Where-Object { $_.Scope -eq 'Domain (profile)' } |
-    ForEach-Object { $_.User.Split('\')[-1] } |
-    Sort-Object -Unique
-
-if ($domainSignedIn.Count -gt 0) {
-    $domainSignedIn | ForEach-Object { [pscustomobject]@{ Name = $_ } } | Format-Table -AutoSize
+  }
+} catch {
+  # Fallback if ADSI fails: best-effort parse of 'net localgroup Administrators'
+  $names = (& net localgroup Administrators) 2>$null |
+           Select-Object -SkipWhile {$_ -notmatch '^-+$'} | Select-Object -Skip 1 |
+           Where-Object { $_ -and $_ -notmatch 'The command completed successfully' }
+  foreach ($n in $names) {
+    $adminMembers += [pscustomobject]@{ Sid=$null; Class='unknown'; Name=$n.Trim() }
+  }
 }
-else {
-    Write-Output '(none found)'
-}
+
+$adminUserSids  = $adminMembers | Where-Object { $_.Class -eq 'User'  -and $_.Sid } | ForEach-Object Sid
+$adminGroupSeen = $adminMembers | Where-Object { $_.Class -eq 'Group' } | Measure-Object | Select-Object -ExpandProperty Count
+
+# 3) Walk profiles on disk (who has used this PC)
+$rows = Get-CimInstance Win32_UserProfile |
+  Where-Object { $_.LocalPath -like 'C:\Users\*' -and -not $_.Special } |
+  ForEach-Object {
+    $sid = $_.SID
+
+    # Local vs Domain: compare SID root against machine SID base
+    $type = if ($sid -like "$machineSidBase-*") { 'Local' } else { 'Domain' }
+
+    # Admin determination:
+    #  - YES if this exact SID is directly in local Administrators
+    #  - UNKNOWN if not direct, but Admins contains groups (could be admin via domain group)
+    #  - otherwise NO
+    $admin =
+      if ($adminUserSids -contains $sid) { 'Yes' }
+      elseif ($type -eq 'Domain' -and $adminGroupSeen -gt 0) { 'Unknown' }  # needs DC to fully expand
+      else { 'No' }
+
+    [pscustomobject]@{
+      ProfilePath = $_.LocalPath
+      Type        = $type            # Local or Domain
+      Admin       = $admin           # Yes / No / Unknown
+    }
+  }
+
+$rows | Sort-Object ProfilePath | Format-Table -AutoSize
+# To export:
+# $rows | Export-Csv "$env:USERPROFILE\Desktop\pc_user_audit.csv" -NoTypeInformation
