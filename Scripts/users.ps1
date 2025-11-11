@@ -1,11 +1,16 @@
-# === Profile Path / Local vs Domain / Admin (Yes/No/Unknown) ===
+# === Profile Path / [Local or <DOMAIN>] / Admin (Yes/No/Unknown) ===
 
-# 1) Get the "machine SID base" (local accounts share this root; Administrator ends in -500)
+# Domain info (works as SYSTEM, too)
+$cs = Get-CimInstance Win32_ComputerSystem
+$IsDomainJoined = [bool]$cs.PartOfDomain
+$DomainName     = if ($IsDomainJoined) { $cs.Domain } else { $null }
+
+# 1) Machine SID "root" (local accounts share this base; local Administrator ends with -500)
 $localAdminSid = ([System.Security.Principal.NTAccount]"$env:COMPUTERNAME\Administrator").
   Translate([System.Security.Principal.SecurityIdentifier]).Value
 $machineSidBase = $localAdminSid -replace '-500$',''
 
-# 2) Read members of the local Administrators group (WinNT provider)
+# 2) Members of local Administrators
 $adminMembers = @()
 try {
   $grp = [ADSI]"WinNT://$env:COMPUTERNAME/Administrators,group"
@@ -24,7 +29,7 @@ try {
     }
   }
 } catch {
-  # Fallback if ADSI fails: best-effort parse of 'net localgroup Administrators'
+  # Fallback if ADSI fails: parse 'net localgroup Administrators'
   $names = (& net localgroup Administrators) 2>$null |
            Select-Object -SkipWhile {$_ -notmatch '^-+$'} | Select-Object -Skip 1 |
            Where-Object { $_ -and $_ -notmatch 'The command completed successfully' }
@@ -34,33 +39,37 @@ try {
 }
 
 $adminUserSids  = $adminMembers | Where-Object { $_.Class -eq 'User'  -and $_.Sid } | ForEach-Object Sid
-$adminGroupSeen = $adminMembers | Where-Object { $_.Class -eq 'Group' } | Measure-Object | Select-Object -ExpandProperty Count
+$adminGroupSeen = ($adminMembers | Where-Object { $_.Class -eq 'Group' }).Count
 
-# 3) Walk profiles on disk (who has used this PC)
+# 3) Enumerate user profiles (who has used this PC)
 $rows = Get-CimInstance Win32_UserProfile |
   Where-Object { $_.LocalPath -like 'C:\Users\*' -and -not $_.Special } |
   ForEach-Object {
     $sid = $_.SID
 
-    # Local vs Domain: compare SID root against machine SID base
-    $type = if ($sid -like "$machineSidBase-*") { 'Local' } else { 'Domain' }
+    # Type: 'Local' if SID shares the machine SID root; otherwise the actual domain, or 'Workgroup'
+    $type =
+      if ($sid -like "$machineSidBase-*") { 'Local' }
+      elseif ($IsDomainJoined) { $DomainName }
+      else { 'Workgroup' }
 
-    # Admin determination:
-    #  - YES if this exact SID is directly in local Administrators
-    #  - UNKNOWN if not direct, but Admins contains groups (could be admin via domain group)
-    #  - otherwise NO
+    # Admin:
+    #  - Yes if SID directly in local Administrators
+    #  - Unknown if non-Local and Administrators contains groups (could be admin via domain group we can’t expand offline)
+    #  - No otherwise
     $admin =
       if ($adminUserSids -contains $sid) { 'Yes' }
-      elseif ($type -eq 'Domain' -and $adminGroupSeen -gt 0) { 'Unknown' }  # needs DC to fully expand
+      elseif ($type -ne 'Local' -and $adminGroupSeen -gt 0) { 'Unknown' }
       else { 'No' }
 
     [pscustomobject]@{
       ProfilePath = $_.LocalPath
-      Type        = $type            # Local or Domain
-      Admin       = $admin           # Yes / No / Unknown
+      Local_Domain        = $type      # 'Local' or '<your.domain.tld>' or 'Workgroup'
+      Admin       = $admin     # Yes / No / Unknown
     }
   }
 
 $rows | Sort-Object ProfilePath | Format-Table -AutoSize
-# To export:
+
+# Export (optional):
 # $rows | Export-Csv "$env:USERPROFILE\Desktop\pc_user_audit.csv" -NoTypeInformation
