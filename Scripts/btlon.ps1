@@ -29,34 +29,42 @@ function Get-OrAddRecoveryPassword {
     $v = Get-BitLockerVolume -MountPoint $MountPoint
     $existing = $v.KeyProtector | Where-Object { $_.KeyProtectorType -eq 'RecoveryPassword' }
     if ($existing) {
+        # Try to read the password if the object model happens to expose it
+        $pwExisting = ($existing | Select-Object -First 1).RecoveryPassword
         return [pscustomobject]@{
             NewlyCreated     = $false
-            RecoveryPassword = $null
+            RecoveryPassword = $pwExisting
             ProtectorId      = $existing[0].KeyProtectorId
         }
     }
 
-        $added = Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector
+    # Create the protector
+    $added = Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector
+
+    # Capture path A: direct from Add-* output
     $pw  = $added.RecoveryPassword
     $ProtId = if ($added.KeyProtector) { $added.KeyProtector.KeyProtectorId } else { $null }
 
+    # Capture path B: sometimes the object model has it after creation
+    if (-not $pw) {
+        $v2 = Get-BitLockerVolume -MountPoint $MountPoint
+        $kp = $v2.KeyProtector | Where-Object { $_.KeyProtectorType -eq 'RecoveryPassword' } | Select-Object -First 1
+        if ($kp) {
+            if (-not $ProtId) { $ProtId = $kp.KeyProtectorId }
+            if ($kp.RecoveryPassword) { $pw = $kp.RecoveryPassword }
+        }
+    }
+
+    # Capture path C (fallback): scrape manage-bde for any 48-digit pattern
     if (-not $pw) {
         $txt = (manage-bde -protectors -get $MountPoint | Out-String)
-        $pw  = ($txt -split "`r?`n" | Where-Object { $_ -match '^\s*Numerical Password:\s*([0-9-]+)\s*$' } |
-               ForEach-Object { ($_ -split ':')[1].Trim() }) | Select-Object -First 1
+        $pw  = [regex]::Matches($txt, '([0-9]{6}-){7}[0-9]{6}') | Select-Object -First 1 -ExpandProperty Value
     }
 
-    if (-not $pw) { throw "Failed to capture a new recovery password." }
-
-    if (-not $ProtId) {
-        $v2 = Get-BitLockerVolume -MountPoint $MountPoint
-        $ProtId = ($v2.KeyProtector | Where-Object { $_.KeyProtectorType -eq 'RecoveryPassword' } |
-               Select-Object -First 1 -ExpandProperty KeyProtectorId)
-    }
-
+    # Do NOT throw if we still couldn't capture it — protector exists and we can fetch later
     [pscustomobject]@{
         NewlyCreated     = $true
-        RecoveryPassword = $pw
+        RecoveryPassword = $pw      # may be $null; we’ll still proceed
         ProtectorId      = $ProtId
     }
 }
@@ -92,4 +100,6 @@ if ($info -and $info.NewlyCreated -and $info.RecoveryPassword) {
     New-ItemProperty -Path $RegKey -Name 'RecoveryPassword' -Value $info.RecoveryPassword -PropertyType String -Force | Out-Null
     New-ItemProperty -Path $RegKey -Name 'ProtectorId'      -Value $info.ProtectorId      -PropertyType String -Force | Out-Null
     New-ItemProperty -Path $RegKey -Name 'Timestamp'        -Value $stamp                 -PropertyType String -Force | Out-Null
+} else {
+    Write-Host "Recovery Password was created but not captured to stdout; you can query it via manage-bde or the BitLocker object model."
 }
