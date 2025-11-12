@@ -38,7 +38,7 @@ function Get-OrAddRecoveryPassword {
 
     $added = Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector
     $pw  = $added.RecoveryPassword
-    $pid = if ($added.KeyProtector) { $added.KeyProtector.KeyProtectorId } else { $null }
+    $ProtId = if ($added.KeyProtector) { $added.KeyProtector.KeyProtectorId } else { $null }
 
     if (-not $pw) {
         $txt = (manage-bde -protectors -get $MountPoint | Out-String)
@@ -48,18 +48,17 @@ function Get-OrAddRecoveryPassword {
 
     if (-not $pw) { throw "Failed to capture a new recovery password." }
 
-    if (-not $pid) {
+    if (-not $ProtId) {
         $v2 = Get-BitLockerVolume -MountPoint $MountPoint
-        $pid = ($v2.KeyProtector | Where-Object { $_.KeyProtectorType -eq 'RecoveryPassword' } |
+        $ProtId = ($v2.KeyProtector | Where-Object { $_.KeyProtectorType -eq 'RecoveryPassword' } |
                Select-Object -First 1 -ExpandProperty KeyProtectorId)
     }
 
     [pscustomobject]@{
         NewlyCreated     = $true
         RecoveryPassword = $pw
-        ProtectorId      = $pid
+        ProtectorId      = $ProtId
     }
-}
 
 $bv = Get-BitLockerVolume -MountPoint $Drive
 $info = $null
@@ -67,7 +66,7 @@ $info = $null
 if ($bv.ProtectionStatus -eq 'Off' -and $bv.VolumeStatus -ne 'EncryptionInProgress') {
     Write-Host "Enabling BitLocker on $Drive with TPM + Recovery Password (UsedSpaceOnly)..."
     $info = Get-OrAddRecoveryPassword -MountPoint $Drive
-    Enable-BitLocker -MountPoint $Drive -TpmProtector -SkipHardwareTest -UsedSpaceOnly
+    Enable-BitLocker -MountPoint $Drive -TpmProtector -SkipHardwareTest -EncryptionMethod XTSAes256
     Write-Host "BitLocker enable initiated on $Drive."
 } else {
     Write-Host "BitLocker already enabled or in progress on $Drive. Ensuring a Recovery Password exists..."
