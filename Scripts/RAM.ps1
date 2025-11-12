@@ -25,6 +25,26 @@ function Decode-TypeDetail { param([int]$flags)
   return "0x{0:X2} ({1})" -f $flags, ($names -join ' | ')
 }
 
+function Decode-MemoryType {
+  param([int]$smbiosCode, [string]$formFactor)
+
+  # Canonical mapping (subset)
+  $map = @{
+    20='DDR'; 21='DDR2'; 22='DDR2 FB-DIMM'; 24='DDR3'; 26='DDR4'; 34='DDR5'
+    27='LPDDR'; 28='LPDDR2'; 29='LPDDR3'; 30='LPDDR4'; 35='LPDDR5'
+  }
+
+  $label = $map[$smbiosCode]
+
+  # Sanity check: desktop-sized DIMM shouldn't be LPDDR
+  if ($null -ne $label -and $formFactor -eq 'DIMM' -and $label -like 'LPDDR*') {
+    if ($smbiosCode -ge 34) { $label = 'DDR5' } else { $label = 'DDR4' }
+  }
+
+  if (-not $label) { $label = "Unknown($smbiosCode)" }
+  return $label
+}
+
 function Decode-FormFactor { param([int]$code)
   switch ($code) {
     8  { 'DIMM' }
@@ -71,7 +91,7 @@ $report = $modules | ForEach-Object {
     FormFactor    = Decode-FormFactor -code $_.FormFactor
     CapacityGB    = [math]::Round($_.Capacity/1GB,2)
     SpeedMTs      = $_.ConfiguredClockSpeed
-    MemoryType    = if ($_.SMBIOSMemoryType -lt $MEMORY_TYPES.Length) { $MEMORY_TYPES[$_.SMBIOSMemoryType] } else { "Unknown(0x$($_.SMBIOSMemoryType):X)" }
+    MemoryType    = Decode-MemoryType -smbiosCode $_.SMBIOSMemoryType -formFactor (Decode-FormFactor -code $_.FormFactor)
     TypeDetail    = Decode-TypeDetail -flags $_.TypeDetail
     SerialNumber  = $_.SerialNumber
   }
