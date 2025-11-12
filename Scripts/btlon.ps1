@@ -59,7 +59,7 @@ function Get-OrAddRecoveryPassword {
         RecoveryPassword = $pw
         ProtectorId      = $ProtId
     }
-}
+
 $bv = Get-BitLockerVolume -MountPoint $Drive
 $info = $null
 
@@ -71,6 +71,7 @@ if ($bv.ProtectionStatus -eq 'Off' -and $bv.VolumeStatus -ne 'EncryptionInProgre
 } else {
     Write-Host "BitLocker already enabled or in progress on $Drive. Ensuring a Recovery Password exists..."
     $info = Get-OrAddRecoveryPassword -MountPoint $Drive
+}
 }
 
 Write-Host ""
