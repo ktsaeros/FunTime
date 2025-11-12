@@ -59,7 +59,7 @@ function Get-OrAddRecoveryPassword {
         RecoveryPassword = $pw
         ProtectorId      = $ProtId
     }
-
+}
 $bv = Get-BitLockerVolume -MountPoint $Drive
 $info = $null
 
