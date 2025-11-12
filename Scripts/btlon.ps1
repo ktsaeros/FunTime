@@ -39,7 +39,7 @@ function Get-OrAddRecoveryPassword {
     }
 
     # Create the protector
-    $added = Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector
+    $added = Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector -WarningAction SilentlyContinue
 
     # Capture path A: direct from Add-* output
     $pw  = $added.RecoveryPassword
