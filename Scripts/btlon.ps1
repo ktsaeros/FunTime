@@ -85,7 +85,7 @@ if ($bv.ProtectionStatus -eq 'Off' -and $bv.VolumeStatus -ne 'EncryptionInProgre
 
 # Always show current protectors (type + ID) for audit
 Write-Host ""
-Write-Host "Key Protectors on $Drive:"
+Write-Host "Key Protectors on ${Drive}:"
 (Get-BitLockerVolume -MountPoint $Drive).KeyProtector |
     Format-Table KeyProtectorType, KeyProtectorId -AutoSize
 
