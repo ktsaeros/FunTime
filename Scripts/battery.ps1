@@ -3,7 +3,7 @@
   Lists system batteries (laptop + HID/USB UPS) with useful status fields.
 
 .NOTES
-  - Works on Windows 10/11.
+  - Works on Windows 10/11/Server 2016+ (and newer).
   - UPS devices that expose a "HID UPS Battery" will show up via Win32_Battery.
   - Requires no admin privileges.
 #>
@@ -13,6 +13,9 @@ param(
   [switch]$EnableGenericHIDUPS,    # Optional: re-enable HID UPS Battery (admin)
   [switch]$AuditOnly               # Show what would happen, don't change devices
 )
+
+# Initialize variable for script hygiene
+$upsAgentMissing = $false
 
 function Test-IsAdmin {
   $id = [Security.Principal.WindowsIdentity]::GetCurrent()
@@ -57,6 +60,8 @@ function Get-UPSAgents {
     @($services + $procs)
 }
 
+# --- Main PnP & Device Discovery ---
+
 # Collect PnP devices (Battery + HIDClass + anything that mentions UPS-ish names)
 $pnp = Get-PnpDevice -PresentOnly -ErrorAction SilentlyContinue |
        Select-Object InstanceId, FriendlyName, Class, Status
@@ -90,8 +95,7 @@ if ($upsView) {
     $upsAgents | Format-Table Type, Name, DisplayName, Status -AutoSize
   } else {
     Write-Host "WARNING: UPS detected but no UPS/power-management agents are running."
-    # Uncomment this if you want the script to FAIL in monitoring when this happens:
-    # $global:UPSAgentMissing = $true
+    $upsAgentMissing = $true
   }
 }
 else {
@@ -139,6 +143,8 @@ if ($EnableGenericHIDUPS) {
 }
 
 
+# --- Functions & Data Maps ---
+
 # Map common enums to friendly text
 $BatteryStatusMap = @{
   1  = "Discharging"
@@ -167,8 +173,19 @@ function Get-SystemACState {
       BatteryLifeRemainingSec = $ps.BatteryLifeRemaining
     }
   } catch {
-    # Fallback using Win32_Battery (less reliable for AC state on desktops)
-    $b = Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue
+    # BUGFIX: Added | Select-Object -First 1 to prevent errors if $b is an array
+    $b = Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue | Select-Object -First 1
+    
+    #!# REVISION: Handle edge case where fallback fails and $b is $null
+    if (-not $b) {
+        # No battery detected via fallback, so must be on AC
+        return [pscustomobject]@{
+          OnACPower = $true
+          BatteryPercent = $null
+          BatteryLifeRemainingSec = 0
+        }
+    }
+    
     [pscustomobject]@{
       OnACPower = ($b.BatteryStatus -in 2,3,6,7,8,9,11)
       BatteryPercent = $b.EstimatedChargeRemaining
@@ -178,100 +195,74 @@ function Get-SystemACState {
 }
 
 function Get-PowerBatteries {
+  # REFACTOR: Function now accepts the PnP list as a parameter
+  param (
+    [Parameter(Mandatory=$true)]
+    [array]$PnpDeviceList
+  )
+    
   # Primary source: Win32_Battery (covers laptop batteries and most HID UPS)
   $bats = Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue
+  
+  $results = @()
 
-  # Enrich with PnP hints to help distinguish UPS vs Laptop pack
-  try {
-    # Prefer Get-PnpDevice if available (newer systems)
-    $pnp = Get-PnpDevice -Class Battery -ErrorAction Stop |
-           Select-Object InstanceId, FriendlyName, Status
-  } catch {
-    # Fallback to Win32_PnPEntity
-    $pnp = Get-CimInstance -ClassName Win32_PnPEntity -Filter "PNPClass='Battery'" -ErrorAction SilentlyContinue |
-           Select-Object PNPDeviceID, Name, Status
-    # Normalize names for later join
-    $pnp = $pnp | ForEach-Object {
-      [pscustomobject]@{
-        InstanceId   = $_.PNPDeviceID
-        FriendlyName = $_.Name
-        Status       = $_.Status
+  foreach ($b in ($bats | Where-Object { $_ })) {
+    $match = $null
+    if ($b.PNPDeviceID) {
+      # REFACTOR: Using the $PnpDeviceList parameter
+      $match = $PnpDeviceList | Where-Object { $_.InstanceId -eq $b.PNPDeviceID }
+      if (-not $match) {
+        $tail = $b.PNPDeviceID.Split('\')[-1]
+        $match = $PnpDeviceList | Where-Object { $_.InstanceId -like "*$tail*" }
+      }
+    }
+    $friendly = if ($match) { $match.FriendlyName } else { $b.Name }
+    $isUPS = ($friendly -match $upsPattern) -or ($b.Name -match $upsPattern) -or ($b.Description -match $upsPattern)
+
+    $results += [pscustomobject]@{
+      Type                   = if ($isUPS) { "UPS" } else { "Laptop Battery" }
+      Name                   = $friendly
+      DeviceID               = $b.DeviceID
+      PNPDeviceID            = $b.PNPDeviceID
+      Chemistry              = $ChemistryMap[[int]$b.Chemistry]
+      DesignVoltage_mV       = $b.DesignVoltage
+      EstimatedChargePercent = $b.EstimatedChargeRemaining
+      EstimatedRunTime_min   = if ($b.EstimatedRunTime -ge 0) { $b.EstimatedRunTime } else { $null }
+      BatteryStatus          = $BatteryStatusMap[[int]$b.BatteryStatus]
+      Status                 = $b.Status
+      TimeOnBattery_sec      = $b.TimeOnBattery
+      ExpectedLife_min       = $b.ExpectedLife
+      DesignCapacity_mWh     = $b.DesignCapacity
+      FullChargeCapacity_mWh = $b.FullChargeCapacity
+    }
+  }
+
+  # If Win32_Battery gave us nothing, surface UPS-looking PnP devices as hints (Battery + HIDClass)
+  if (-not $results) {
+    # REFACTOR: Using the $PnpDeviceList parameter
+    $upsHints = $PnpDeviceList | Where-Object {
+      $_.FriendlyName -match $upsPattern -or ($_.Class -in 'Battery','HIDClass' -and $_.FriendlyName -match 'UPS|Battery')
+    }
+
+    foreach ($u in $upsHints) {
+      $results += [pscustomobject]@{
+        Type                   = "UPS (PnP hint)"
+        Name                   = $u.FriendlyName
+        DeviceID               = $null
+        PNPDeviceID            = $u.InstanceId
+        Chemistry              = $null
+        DesignVoltage_mV       = $null
+        EstimatedChargePercent = $null
+        EstimatedRunTime_min   = $null
+        BatteryStatus          = $null
+        Status                 = $u.Status
+        TimeOnBattery_sec      = $null
+        ExpectedLife_min       = $null
+        DesignCapacity_mWh     = $null
+        FullChargeCapacity_MWh = $null
       }
     }
   }
-
- # --- Replace your existing PnP discovery + UPS hints with this ---
-
-# Grab PnP devices across classes (Battery & HIDClass) and look for UPS-ish names
-$pnp = Get-PnpDevice -PresentOnly -ErrorAction SilentlyContinue |
-       Select-Object InstanceId, FriendlyName, Class, Status
-
-# Patterns that commonly identify UPS vendors/devices, match UPS as a word, so we don't catch "Upstream"
-$upsPattern = '\bUPS\b|Uninterruptible|Power Conversion|APC|CyberPower|Tripp|Eaton|Vertiv|Liebert|HID UPS'
-
-# Primary source: Win32_Battery (covers laptops and many HID UPSes)
-$bats = Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue
-
-$results = @()
-
-foreach ($b in ($bats | Where-Object { $_ })) {
-  $match = $null
-  if ($b.PNPDeviceID) {
-    $match = $pnp | Where-Object { $_.InstanceId -eq $b.PNPDeviceID }
-    if (-not $match) {
-      $tail = $b.PNPDeviceID.Split('\')[-1]
-      $match = $pnp | Where-Object { $_.InstanceId -like "*$tail*" }
-    }
-  }
-  $friendly = if ($match) { $match.FriendlyName } else { $b.Name }
-  $isUPS = ($friendly -match $upsPattern) -or ($b.Name -match $upsPattern) -or ($b.Description -match $upsPattern)
-
-  $results += [pscustomobject]@{
-    Type                   = if ($isUPS) { "UPS" } else { "Laptop Battery" }
-    Name                   = $friendly
-    DeviceID               = $b.DeviceID
-    PNPDeviceID            = $b.PNPDeviceID
-    Chemistry              = @{1="Other";2="Unknown";3="Lead Acid";4="NiCd";5="NiMH";6="Li-ion";7="Zinc-air";8="Li-Polymer"}[[int]$b.Chemistry]
-    DesignVoltage_mV       = $b.DesignVoltage
-    EstimatedChargePercent = $b.EstimatedChargeRemaining
-    EstimatedRunTime_min   = if ($b.EstimatedRunTime -ge 0) { $b.EstimatedRunTime } else { $null }
-    BatteryStatus          = @{
-      1="Discharging";2="AC (not charging)";3="Fully Charged";4="Low";5="Critical";6="Charging";7="Charging (High)";
-      8="Charging (Low)";9="Charging (Critical)";10="Undefined";11="Partially Charged"
-    }[[int]$b.BatteryStatus]
-    Status                 = $b.Status
-    TimeOnBattery_sec      = $b.TimeOnBattery
-    ExpectedLife_min       = $b.ExpectedLife
-    DesignCapacity_mWh     = $b.DesignCapacity
-    FullChargeCapacity_mWh = $b.FullChargeCapacity
-  }
-}
-
-# If Win32_Battery gave us nothing, surface UPS-looking PnP devices as hints (Battery + HIDClass)
-if (-not $results) {
-  $upsHints = $pnp | Where-Object {
-    $_.FriendlyName -match $upsPattern -or ($_.Class -in 'Battery','HIDClass' -and $_.FriendlyName -match 'UPS|Battery')
-  }
-
-  foreach ($u in $upsHints) {
-    $results += [pscustomobject]@{
-      Type                   = "UPS (PnP hint)"
-      Name                   = $u.FriendlyName
-      DeviceID               = $null
-      PNPDeviceID            = $u.InstanceId
-      Chemistry              = $null
-      DesignVoltage_mV       = $null
-      EstimatedChargePercent = $null
-      EstimatedRunTime_min   = $null
-      BatteryStatus          = $null
-      Status                 = $u.Status
-      TimeOnBattery_sec      = $null
-      ExpectedLife_min       = $null
-      DesignCapacity_mWh     = $null
-      FullChargeCapacity_mWh = $null
-    }
-  }
-}
 
   $results
 }
@@ -279,16 +270,17 @@ if (-not $results) {
 # ---------- Run & Display ----------
 
 $ac = Get-SystemACState
-$batteries = Get-PowerBatteries
+$batteries = Get-PowerBatteries -PnpDeviceList $pnp
 
 Write-Host "AC Power: " -NoNewline
 if ($ac.OnACPower) { Write-Host "Online" } else { Write-Host "On Battery" }
 
-# Only show "System Battery %" if Win32_Battery actually exists and is not fake
-$realBattery = Get-WmiObject Win32_Battery -ErrorAction SilentlyContinue
+# REFACTOR: Switched from Get-WmiObject to Get-CimInstance for consistency
+$realBattery = Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue
 
 if ($realBattery -and $realBattery.BatteryStatus -ne $null -and $realBattery.BatteryStatus -ne 0) {
-    Write-Host ("System Battery %: {0}%" -f $ac.BatteryPercent)
+    #!# REVISION: Changed label for clarity (e.g., on UPS-only machines)
+    Write-Host ("UPS/Battery %: {0}%" -f $ac.BatteryPercent)
 }
 if ($ac.BatteryLifeRemainingSec -gt 0) {
   $mins = [int]([math]::Round($ac.BatteryLifeRemainingSec / 60,0))
@@ -296,9 +288,8 @@ if ($ac.BatteryLifeRemainingSec -gt 0) {
 }
 
 if (-not $batteries) {
-  # Nothing in Win32_Battery and no UPS hints → perfectly normal on your ML350
   Write-Host "No UPS or battery device detected."
-  exit 0   # change to 'exit 1' *only* if you want this to fail when no UPS is present
+  exit 0
 }
 
 $batteries |
@@ -306,7 +297,7 @@ $batteries |
   Format-Table Type, Name, EstimatedChargePercent, BatteryStatus,
                EstimatedRunTime_min, Chemistry, PNPDeviceID -AutoSize
 
-if ($global:UPSAgentMissing) {
+if ($upsAgentMissing) {
   exit 1
 }
 
