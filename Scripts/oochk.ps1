@@ -148,12 +148,26 @@ function Add-LifecycleSummary {
 function Get-OfficeC2RInfo {
     $base = 'HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration'
     if (-not (Test-Path $base)) { return $null }
+
+    # We already get this property, so we can use it
     $p = Get-ItemProperty -Path $base
+
+    # --- Start: Platform Logic (Moved inside this function) ---
+    $officePlatform = 'Unknown' # Default
+    switch ($p.Platform) {      # Use the '$p' variable we already have
+        'x64' { $officePlatform = '64-bit' }
+        'x86' { $officePlatform = '32-bit' }
+    }
+    # --- End: Platform Logic ---
+
     $ids = ($p.ProductReleaseIds -split ',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
     $classification = Get-OfficeSkuClassification -Ids $ids
+    
+    # We create the object here, adding Platform in the desired spot
     $info = [pscustomobject]@{
         InstallType       = 'Click-to-Run'
         Edition           = $classification.FamilySummary
+        Platform          = $officePlatform # <--- HERE IS THE FIX
         Version           = $p.ClientVersionToReport
         UpdateChannel     = $p.UpdateChannel
         CDNBaseUrl        = $p.CDNBaseUrl
@@ -164,7 +178,7 @@ function Get-OfficeC2RInfo {
     return $info
 }
 
-# --- Fallback: MSI/Legacy Detection ---
+
 function Get-OfficeMsiInfo {
     $results = @()
     $paths = @(
