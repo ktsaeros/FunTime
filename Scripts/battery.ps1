@@ -31,12 +31,38 @@ function Get-ChassisIsDesktop {
   $true # default to desktop if unknown
 }
 
+function Get-UPSAgents {
+    # Services whose name or display name suggests a UPS agent
+    $servicePattern = 'APC|PowerChute|CyberPower|Eaton|Tripp|UPS|NUT|Vertiv|Liebert|PowerPanel|WinPower'
+
+    $services = Get-Service -ErrorAction SilentlyContinue |
+        Where-Object {
+            $_.Status -eq 'Running' -and (
+                $_.DisplayName -match $servicePattern -or
+                $_.Name        -match $servicePattern
+            )
+        } |
+        Select-Object @{n='Type';e={'Service'}}, Name, DisplayName, Status
+
+    # Common UPS agent processes (a bit broader, no harm in being generous)
+    $procPattern = 'apc|powerchute|cyberpower|eaton|upsmon|usv|nut|winpower|powerpanel'
+
+    $procs = Get-Process -ErrorAction SilentlyContinue |
+        Where-Object { $_.ProcessName -match $procPattern } |
+        Select-Object @{n='Type';e={'Process'}},
+                      @{n='Name';e={$_.ProcessName}},
+                      @{n='DisplayName';e={$_.MainWindowTitle}},
+                      @{n='Status';e={'Running'}}
+
+    @($services + $procs)
+}
+
 # Collect PnP devices (Battery + HIDClass + anything that mentions UPS-ish names)
 $pnp = Get-PnpDevice -PresentOnly -ErrorAction SilentlyContinue |
        Select-Object InstanceId, FriendlyName, Class, Status
 
-# Flag pattern
-$upsPattern = 'UPS|Uninterruptible|Power Conversion|APC|CyberPower|Tripp|Eaton|Vertiv|Liebert|HID UPS'
+# Flag pattern, match UPS as a word, so we don't catch "Upstream"
+$upsPattern = '\bUPS\b|Uninterruptible|Power Conversion|APC|CyberPower|Tripp|Eaton|Vertiv|Liebert|HID UPS'
 
 # Identify the generic HID UPS Battery (the one we might disable on CPCs)
 $genericHidUps = $pnp | Where-Object { $_.Class -eq 'Battery' -and $_.FriendlyName -eq 'HID UPS Battery' }
@@ -51,9 +77,24 @@ $upsView = $pnp |
                 Status, Class, FriendlyName, InstanceId
 
 if ($upsView) {
-  $upsView | Sort-Object -Property @{Expression='GenericHIDBattery';Descending=$true}, Class, FriendlyName |
+  Write-Host "UPS-like PnP devices detected:"
+  $upsView |
+    Sort-Object -Property @{Expression='GenericHIDBattery';Descending=$true}, Class, FriendlyName |
     Format-Table -Auto
-} else {
+
+  # Check for UPS / power-management agents (services or processes)
+  $upsAgents = Get-UPSAgents
+
+  if ($upsAgents -and $upsAgents.Count -gt 0) {
+    Write-Host "UPS / power-management agents currently running:"
+    $upsAgents | Format-Table Type, Name, DisplayName, Status -AutoSize
+  } else {
+    Write-Host "WARNING: UPS detected but no UPS/power-management agents are running."
+    # Uncomment this if you want the script to FAIL in monitoring when this happens:
+    # $global:UPSAgentMissing = $true
+  }
+}
+else {
   Write-Host "No UPS-like PnP devices detected."
 }
 
@@ -165,8 +206,8 @@ function Get-PowerBatteries {
 $pnp = Get-PnpDevice -PresentOnly -ErrorAction SilentlyContinue |
        Select-Object InstanceId, FriendlyName, Class, Status
 
-# Patterns that commonly identify UPS vendors/devices
-$upsPattern = 'UPS|Uninterruptible|Power Conversion|APC|CyberPower|Tripp|Eaton|Vertiv|Liebert|HID UPS'
+# Patterns that commonly identify UPS vendors/devices, match UPS as a word, so we don't catch "Upstream"
+$upsPattern = '\bUPS\b|Uninterruptible|Power Conversion|APC|CyberPower|Tripp|Eaton|Vertiv|Liebert|HID UPS'
 
 # Primary source: Win32_Battery (covers laptops and many HID UPSes)
 $bats = Get-CimInstance -ClassName Win32_Battery -ErrorAction SilentlyContinue
@@ -236,22 +277,37 @@ if (-not $results) {
 }
 
 # ---------- Run & Display ----------
+
 $ac = Get-SystemACState
 $batteries = Get-PowerBatteries
 
 Write-Host "AC Power: " -NoNewline
 if ($ac.OnACPower) { Write-Host "Online" } else { Write-Host "On Battery" }
 
-if ($ac.BatteryPercent -ne $null) {
-  Write-Host ("System Battery %: {0}%" -f $ac.BatteryPercent)
+# Only show "System Battery %" if Win32_Battery actually exists and is not fake
+$realBattery = Get-WmiObject Win32_Battery -ErrorAction SilentlyContinue
+
+if ($realBattery -and $realBattery.BatteryStatus -ne $null -and $realBattery.BatteryStatus -ne 0) {
+    Write-Host ("System Battery %: {0}%" -f $ac.BatteryPercent)
 }
 if ($ac.BatteryLifeRemainingSec -gt 0) {
   $mins = [int]([math]::Round($ac.BatteryLifeRemainingSec / 60,0))
   Write-Host ("Estimated Remaining: {0} min" -f $mins)
 }
 
-if ($batteries) {
-  $batteries | Sort-Object Type, Name | Format-Table Type, Name, EstimatedChargePercent, BatteryStatus, EstimatedRunTime_min, Chemistry, PNPDeviceID -AutoSize
-} else {
-  Write-Host "No batteries reported by Win32_Battery."
+if (-not $batteries) {
+  # Nothing in Win32_Battery and no UPS hints → perfectly normal on your ML350
+  Write-Host "No UPS or battery device detected."
+  exit 0   # change to 'exit 1' *only* if you want this to fail when no UPS is present
 }
+
+$batteries |
+  Sort-Object Type, Name |
+  Format-Table Type, Name, EstimatedChargePercent, BatteryStatus,
+               EstimatedRunTime_min, Chemistry, PNPDeviceID -AutoSize
+
+if ($global:UPSAgentMissing) {
+  exit 1
+}
+
+exit 0
