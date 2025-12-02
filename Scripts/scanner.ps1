@@ -23,7 +23,7 @@ try {
     } else {
         Write-Host "Creating user '$userName'..." -ForegroundColor Green
         $securePass = ConvertTo-SecureString $userPass -AsPlainText -Force
-        New-LocalUser -Name $userName -Password $securePass -FullName "Scanner Service Account" -Description "Account for Ricoh SMB Scanning"
+        New-LocalUser -Name $userName -Password $securePass -FullName "Scanner Service Account" -Description "Account for SMB Scanning"
     }
     # Set Password to Never Expire
     Set-LocalUser -Name $userName -PasswordNeverExpires $true
