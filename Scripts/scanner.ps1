@@ -72,7 +72,7 @@ try {
         Grant-SmbShareAccess -Name $shareName -AccountName $userName -AccessRight Full -Force | Out-Null
     } else {
         Write-Host "Creating SMB Share '$shareName'..." -ForegroundColor Green
-        New-SmbShare -Name $shareName -Path $folderPath -FullAccess $userName -Description "Ricoh Scans" | Out-Null
+        New-SmbShare -Name $shareName -Path $folderPath -FullAccess $userName -Description "Network Scans" | Out-Null
     }
 }
 catch {
@@ -92,4 +92,4 @@ catch {
     Write-Warning "Could not configure Network/Firewall. Please check manually."
 }
 
-Write-Host "Setup Complete! Ricoh Path: \\$(hostname)\$shareName" -ForegroundColor Cyan
+Write-Host "Setup Complete! Network Scan Path: \\$(hostname)\$shareName" -ForegroundColor Cyan
