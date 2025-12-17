@@ -59,10 +59,27 @@ function Decode-FormFactor { param([int]$code)
 $array       = Get-CimInstance Win32_PhysicalMemoryArray
 $modules     = Get-CimInstance Win32_PhysicalMemory
 
+# --- Improvement: Slot Validation ---
 $totalSlots  = $array.MemoryDevices
 $usedSlots   = $modules.Count
-$maxCapGB    = [math]::Round($array.MaxCapacity / 1MB, 2)
-$installedGB = [math]::Round(($modules | Measure-Object Capacity -Sum).Sum / 1GB, 2)
+
+# Add a warning for unrealistic slot counts often reported by generic BIOS
+$slotWarning = ""
+if ($totalSlots -gt 4) {
+    $slotWarning = "(Note: BIOS reports $totalSlots, but physical hardware likely has 2 or 4)"
+}
+
+# --- Improvement: Efficiency & Null Handling ---
+# Calculate total capacity more safely
+$installedGB = if ($modules) { 
+    [math]::Round(($modules | Measure-Object Capacity -Sum).Sum / 1GB, 2) 
+} else { 0 }
+
+# --- Improved Output ---
+Write-Host "--- Hardware Summary ---" -ForegroundColor Cyan
+Write-Host "Maximum supported RAM:   $maxCapGB GB"
+Write-Host ("Physical slots:           {0} reported, {1} used {2}" -f $totalSlots, $usedSlots, $slotWarning)
+Write-Host "Currently installed:      $installedGB GB"
 
 # Speeds summary
 $speeds = $modules |
