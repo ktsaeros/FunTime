@@ -69,6 +69,31 @@ function Get-DetailedPowerConfig {
         $sleep     = Get-IndexedMinutes '238c9fa8-0aad-41ed-83f4-97be242c8f20' '94ac6d29-73ce-41a6-809f-6363ba21b47e'
         $lidAction = Get-IndexedMinutes '4f971e89-eebd-4455-a8de-9e59040e7347' '5ca83367-6e45-459f-a27b-476b1d01c936'
         
+# --- NEW: Storage & PCIe Diagnostics ---
+        # GUIDs for Advanced Power Settings
+        $subDisk = '0012ee47-9041-4b5d-9b77-535fba8b1442'
+        $setTurnOff = '6738e2c4-e8a5-459e-b6a6-0b92ed98b3aa'
+        
+        $subPCI  = '501a4d13-42af-4429-9fd1-a8218c268e20'
+        $setLink = 'ee12f906-25ea-4e32-9679-880e263438db'
+
+        # Helper to get the raw index value (0, 1, 2, etc.)
+        function Get-PowerIndex { param([string]$Sub,[string]$Set)
+            $raw = powercfg /query $schemeGuid $Sub $Set 2>$null | Out-String
+            $ac = if ($raw -match 'Current AC Power Setting Index:\s+0x([0-9a-fA-F]+)') { [convert]::ToInt32($Matches[1], 16) } else { -1 }
+            return $ac
+        }
+
+        # 0=Off, 1=Moderate, 2=Max Savings
+        $linkVal = Get-PowerIndex $subPCI $setLink
+        $linkStateMap = @{ 0='Off (Good)'; 1='Moderate'; 2='Max Savings (Risk)'; -1='Unknown' }
+        
+        # Seconds to turn off (0 = Never)
+        $diskVal = Get-PowerIndex $subDisk $setTurnOff
+
+        $report['PCIe_Link_State'] = if ($linkStateMap.ContainsKey($linkVal)) { $linkStateMap[$linkVal] } else { $linkVal }
+        $report['Disk_Turn_Off']   = if ($diskVal -eq 0) { "Never (Good)" } else { "$diskVal sec" }
+
         $actionMap = @{ 0='Do nothing'; 1='Sleep'; 2='Hibernate'; 3='Shut down'; 4='Turn off display' }
         $resolve = { param([string]$v) if($v -match '^\d+$' -and $actionMap.ContainsKey([int]$v)){ $actionMap[[int]$v] } else { $v } }
 

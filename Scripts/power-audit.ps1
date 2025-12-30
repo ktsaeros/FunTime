@@ -53,6 +53,15 @@ $Results['Monitor_AC']   = Get-PcfgVal $SCHEME $SUB_VIDEO "3c0bc021-c8a8-4e07-a9
 $Results['Sleep_AC']     = Get-PcfgVal $SCHEME $SUB_SLEEP "29f6c1db-86da-48c5-9fdb-f2b67b1f44da"
 $Results['Sleep_DC']     = Get-PcfgVal $SCHEME $SUB_SLEEP "29f6c1db-86da-48c5-9fdb-f2b67b1f44da" # Note: powercfg /q shows AC/DC logic differently, this is simplified.
 
+$SUB_PCI  = "501a4d13-42af-4429-9fd1-a8218c268e20"
+$SUB_DISK = "0012ee47-9041-4b5d-9b77-535fba8b1442"
+
+# PCIe Link State: 0=Off, 1=Mod, 2=Max
+$Results['PCIe_Link_State'] = Get-PcfgVal $SCHEME $SUB_PCI "ee12f906-25ea-4e32-9679-880e263438db"
+
+# Disk Timeout: Seconds (0=Never)
+$Results['Disk_Timeout_Sec'] = Get-PcfgVal $SCHEME $SUB_DISK "6738e2c4-e8a5-459e-b6a6-0b92ed98b3aa"
+
 # Lid Action (0=None, 1=Sleep)
 $lidAC = powercfg /q $SCHEME $SUB_BUTTONS "5ca83367-6e45-459f-a27b-476b1d01c936" | Select-String "Current AC Power Setting"
 $Results['Lid_Action_AC'] = if ($lidAC) { [int]"0x$($lidAC.ToString().Split(':')[-1].Trim())" } else { "Err" }
