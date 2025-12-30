@@ -48,67 +48,41 @@ function Get-DetailedPowerConfig {
     $report.Reg_S0_Override = (Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name PlatformAoAcOverride -ErrorAction SilentlyContinue).PlatformAoAcOverride
     $report.Reg_FastStartup = (Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name HiberbootEnabled -ErrorAction SilentlyContinue).HiberbootEnabled
     
-    $schemeGuid = (powercfg /getactivescheme 2>$null | Select-String 'Power Scheme GUID:\s+([\w-]+)').Matches[0].Groups[1].Value
-    if ($schemeGuid) {
-        function Get-IndexedMinutes { param([string]$Subgroup,[string]$Setting)
-            $raw = powercfg /query $schemeGuid $Subgroup $Setting 2>$null; $text = $raw -join "`n"
-            $acLine = $text | Select-String 'Current AC Power Setting Index'
-            $dcLine = $text | Select-String 'Current DC Power Setting Index'
-            
-            # Helper to parse and round
-            $parse = { param($l) 
-                if ($l -match '0x([0-9a-fA-F]+)') { 
-                    $val = [convert]::ToInt32($Matches[1],16) / 60
-                    if ($val -lt 0.1 -and $val -gt 0) { "0 (Forced)" } else { "{0:N0}" -f $val }
-                } else { "Managed/Hidden (GPO)" }
-            }
-            return @{AC=(&$parse $acLine); DC=(&$parse $dcLine)}
+    # Helper to parse powercfg output safely
+    function Get-PcfgIndex { param([string]$Sub,[string]$Set)
+        # Uses SCHEME_CURRENT alias to avoid variable scope issues
+        $raw = powercfg /query SCHEME_CURRENT $Sub $Set 2>$null | Out-String
+        if ($raw -match 'Current AC Power Setting Index:\s+0x([0-9a-fA-F]+)') { 
+            return [convert]::ToInt32($Matches[1], 16) 
         }
-        
-        $monitor   = Get-IndexedMinutes '4f971e89-eebd-4455-a8de-9e59040e7347' '3c0bc021-c8a8-4e07-a973-6b14b0a7e52a'
-        $sleep     = Get-IndexedMinutes '238c9fa8-0aad-41ed-83f4-97be242c8f20' '94ac6d29-73ce-41a6-809f-6363ba21b47e'
-        $lidAction = Get-IndexedMinutes '4f971e89-eebd-4455-a8de-9e59040e7347' '5ca83367-6e45-459f-a27b-476b1d01c936'
-        
-# --- NEW: Storage & PCIe Diagnostics ---
-        # GUIDs for Advanced Power Settings
-        $subDisk = '0012ee47-9041-4b5d-9b77-535fba8b1442'
-        $setTurnOff = '6738e2c4-e8a5-459e-b6a6-0b92ed98b3aa'
-        
-        $subPCI  = '501a4d13-42af-4429-9fd1-a8218c268e20'
-        $setLink = 'ee12f906-25ea-4e32-9679-880e263438db'
-
-        # Helper to get the raw index value (0, 1, 2, etc.)
-        function Get-PowerIndex { param([string]$Sub,[string]$Set)
-            $raw = powercfg /query $schemeGuid $Sub $Set 2>$null | Out-String
-            $ac = if ($raw -match 'Current AC Power Setting Index:\s+0x([0-9a-fA-F]+)') { [convert]::ToInt32($Matches[1], 16) } else { -1 }
-            return $ac
-        }
-
-        # 0=Off, 1=Moderate, 2=Max Savings
-        $linkVal = Get-PowerIndex $subPCI $setLink
-        $linkStateMap = @{ 0='Off (Good)'; 1='Moderate'; 2='Max Savings (Risk)'; -1='Unknown' }
-        
-        # Seconds to turn off (0 = Never)
-        $diskVal = Get-PowerIndex $subDisk $setTurnOff
-
-        $report['PCIe_Link_State'] = if ($linkStateMap.ContainsKey($linkVal)) { $linkStateMap[$linkVal] } else { $linkVal }
-        $report['Disk_Turn_Off']   = if ($diskVal -eq 0) { "Never (Good)" } else { "$diskVal sec" }
-
-        $actionMap = @{ 0='Do nothing'; 1='Sleep'; 2='Hibernate'; 3='Shut down'; 4='Turn off display' }
-        $resolve = { param([string]$v) if($v -match '^\d+$' -and $actionMap.ContainsKey([int]$v)){ $actionMap[[int]$v] } else { $v } }
-
-        $report['Monitor_AC']    = $monitor.AC
-        $report['Monitor_DC']    = $monitor.DC
-        $report['Sleep_AC']      = $sleep.AC
-        $report['Sleep_DC']      = $sleep.DC
-        $report['Lid_Action_AC'] = &$resolve $lidAction.AC
-        $report['Lid_Action_DC'] = &$resolve $lidAction.DC
+        return -1
     }
+
+    # GUIDs
+    $subDisk = '0012ee47-9041-4b5d-9b77-535fba8b1442'; $setTurnOff = '6738e2c4-e8a5-459e-b6a6-0b92ed98b3aa'
+    $subPCI  = '501a4d13-42af-4429-9fd1-a8218c268e20'; $setLink    = 'ee12f906-25ea-4e32-9679-880e263438db'
+    $subUSB  = '2a737441-1930-4402-8d77-b2bebba308a3'; $setUsb     = '48e6b7a6-50f5-4782-a5d4-53bb8f07e226' # USB Selective Suspend
+
+    # Get Values
+    $diskVal = Get-PcfgIndex $subDisk $setTurnOff
+    $linkVal = Get-PcfgIndex $subPCI $setLink
+    $usbVal  = Get-PcfgIndex $subUSB $setUsb
+
+    # Map Values
+    $linkMap = @{ 0='Off (Good)'; 1='Moderate'; 2='Max Savings (Risk)'; -1='Unknown' }
+    $usbMap  = @{ 0='Disabled (Good)'; 1='Enabled (Risk)'; -1='Unknown' }
+
+    $report['Disk_Turn_Off']   = if ($diskVal -eq 0) { "Never (Good)" } elseif ($diskVal -eq -1) { "Unknown" } else { "$diskVal sec" }
+    $report['PCIe_Link_State'] = if ($linkMap.ContainsKey($linkVal)) { $linkMap[$linkVal] } else { $linkVal }
+    $report['USB_Sel_Suspend'] = if ($usbMap.ContainsKey($usbVal)) { $usbMap[$usbVal] } else { $usbVal }
+
+    # Standard Settings (Monitor/Sleep) - Simplified
+    $report['Monitor_AC']    = (powercfg /query SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da | Select-String 'Current AC Power Setting Index:\s+0x([0-9a-fA-F]+)').Matches.Groups[1].Value
+    if ($report['Monitor_AC']) { $report['Monitor_AC'] = [convert]::ToInt32($report['Monitor_AC'], 16) / 60 } else { $report['Monitor_AC'] = "GPO/Hidden" }
 
     $avail = (powercfg /a 2>$null) -join "`n"
     $report['S0_Available']        = [bool]($avail -match 'Standby \(S0 Low Power Idle\)')
     $report['S3_Available']        = [bool]($avail -match 'Standby \(S3\)')
-    $report['Hibernate_Available'] = [bool]($avail -notmatch 'Hibernate is not available|Hibernate has been disabled')
 
     $nicStatus = @()
     Get-NetAdapter -Physical -ErrorAction SilentlyContinue | Where {$_.Status -eq 'Up'} | ForEach {
@@ -183,7 +157,24 @@ if ($restarts) {
 
 # --- 4. STORAGE ---
 Write-Section "STORAGE & CONTROLLERS"
+
+# 1. Display the drive table
 Get-PhysicalDisk | Select FriendlyName, MediaType, HealthStatus, FirmwareVersion | Format-Table -AutoSize | Out-String | Write-Host
+
+# 2. Run the Logic Checks (The Bonus Part)
+$nvme = Get-PhysicalDisk | Where {$_.FriendlyName -match "Samsung.*9[89]0" -or $_.MediaType -eq 'SSD'}
+if ($nvme) {
+    # Check for Link State Power Management
+    if ($Report['PCIe_Link_State'] -match 'Max Savings|Moderate') {
+         Write-Host "WARNING: NVMe detected with PCIe '$($Report['PCIe_Link_State'])'. Risk of drive drop!" -ForegroundColor Red
+    }
+    # Check for Disk Sleep
+    if ($Report['Disk_Turn_Off'] -notmatch 'Never' -and $Report['Disk_Turn_Off'] -ne '-1 sec') {
+         Write-Host "WARNING: Disk Sleep is enabled ($($Report['Disk_Turn_Off'])). Set to 0 for stability." -ForegroundColor Yellow
+    }
+}
+
+# 3. Check for System Events
 if (Get-PhysicalDisk | Where {$_.FriendlyName -match "Samsung.*9[89]0"}) { Write-Host "NOTICE: Samsung 980/990 Pro detected. Check Firmware." -ForegroundColor Yellow }
 $errs = Get-WinEvent -FilterHashtable @{LogName='System'; ProviderName=@('stornvme','disk','Ntfs','WHEA-Logger'); StartTime=$StartDate} -ErrorAction SilentlyContinue
 if ($errs) { Write-Host "CRITICAL: Found $($errs.Count) Storage Errors." -ForegroundColor Red; $errs | Select -First 5 TimeCreated,Message | Format-List | Out-String | Write-Host } 
