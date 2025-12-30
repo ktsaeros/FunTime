@@ -35,7 +35,7 @@ function Get-OfficeVersionInfo {
 }
 
 # --- Helper: Power Configuration (Polished) ---
-function Get-DetailedPowerConfig {
+ffunction Get-DetailedPowerConfig {
     $chassis = ((Get-CimInstance Win32_SystemEnclosure -ErrorAction SilentlyContinue).ChassisTypes | ForEach-Object {
         switch ($_) { 3{'Desktop'} 6{'Mini Tower'} 8{'Portable'} 9{'Laptop'} 10{'Notebook'} 14{'Sub-Notebook'} default{"Code $_"} }
     }) -join ', '
@@ -45,30 +45,34 @@ function Get-DetailedPowerConfig {
         Timestamp    = (Get-Date).ToString("yyyy-MM-dd HH:mm")
         Chassis      = $chassis
     }
+    
+    # Registry Checks
     $report.Reg_S0_Override = (Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name PlatformAoAcOverride -ErrorAction SilentlyContinue).PlatformAoAcOverride
     $report.Reg_FastStartup = (Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name HiberbootEnabled -ErrorAction SilentlyContinue).HiberbootEnabled
     
-    # Helper to parse powercfg output safely
-    function Get-PcfgIndex { param([string]$Sub,[string]$Set)
-        # Uses SCHEME_CURRENT alias to avoid variable scope issues
-        $raw = powercfg /query SCHEME_CURRENT $Sub $Set 2>$null | Out-String
-        if ($raw -match 'Current AC Power Setting Index:\s+0x([0-9a-fA-F]+)') { 
+    # 1. Get Actual Active Scheme GUID (More reliable than SCHEME_CURRENT)
+    $planGuid = (powercfg /getactivescheme).Split()[3]
+
+    # 2. Define GUIDs (Standard Windows Constants)
+    $subDisk = '0012ee47-9041-4b5d-9b77-535fba8b1442'; $setTurnOff = '6738e2c4-e8a5-459e-b6a6-0b92ed98b3aa'
+    $subPCI  = '501a4d13-42af-4429-9fd1-a8218c268e20'; $setLink    = 'ee12f906-25ea-4e32-9679-880e263438db'
+    $subUSB  = '2a737441-1930-4402-8d77-b2bebba308a3'; $setUsb     = '48e6b7a6-50f5-4782-a5d4-53bb8f07e226'
+
+    # 3. Helper to query specific GUIDs
+    function Get-Val { param($P, $Sub, $Set)
+        $res = powercfg /query $P $Sub $Set 2>$null | Out-String
+        if ($res -match 'Current AC Power Setting Index:\s+0x([0-9a-fA-F]+)') { 
             return [convert]::ToInt32($Matches[1], 16) 
         }
         return -1
     }
 
-    # GUIDs
-    $subDisk = '0012ee47-9041-4b5d-9b77-535fba8b1442'; $setTurnOff = '6738e2c4-e8a5-459e-b6a6-0b92ed98b3aa'
-    $subPCI  = '501a4d13-42af-4429-9fd1-a8218c268e20'; $setLink    = 'ee12f906-25ea-4e32-9679-880e263438db'
-    $subUSB  = '2a737441-1930-4402-8d77-b2bebba308a3'; $setUsb     = '48e6b7a6-50f5-4782-a5d4-53bb8f07e226' # USB Selective Suspend
+    # 4. Fetch Values using the retrieved Plan GUID
+    $diskVal = Get-Val $planGuid $subDisk $setTurnOff
+    $linkVal = Get-Val $planGuid $subPCI $setLink
+    $usbVal  = Get-Val $planGuid $subUSB $setUsb
 
-    # Get Values
-    $diskVal = Get-PcfgIndex $subDisk $setTurnOff
-    $linkVal = Get-PcfgIndex $subPCI $setLink
-    $usbVal  = Get-PcfgIndex $subUSB $setUsb
-
-    # Map Values
+    # 5. Map to Human Readable
     $linkMap = @{ 0='Off (Good)'; 1='Moderate'; 2='Max Savings (Risk)'; -1='Unknown' }
     $usbMap  = @{ 0='Disabled (Good)'; 1='Enabled (Risk)'; -1='Unknown' }
 
@@ -76,14 +80,16 @@ function Get-DetailedPowerConfig {
     $report['PCIe_Link_State'] = if ($linkMap.ContainsKey($linkVal)) { $linkMap[$linkVal] } else { $linkVal }
     $report['USB_Sel_Suspend'] = if ($usbMap.ContainsKey($usbVal)) { $usbMap[$usbVal] } else { $usbVal }
 
-    # Standard Settings (Monitor/Sleep) - Simplified
-    $report['Monitor_AC']    = (powercfg /query SCHEME_CURRENT 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da | Select-String 'Current AC Power Setting Index:\s+0x([0-9a-fA-F]+)').Matches.Groups[1].Value
-    if ($report['Monitor_AC']) { $report['Monitor_AC'] = [convert]::ToInt32($report['Monitor_AC'], 16) / 60 } else { $report['Monitor_AC'] = "GPO/Hidden" }
+    # Monitor Timeout (Standard)
+    $mon = powercfg /query $planGuid 238c9fa8-0aad-41ed-83f4-97be242c8f20 29f6c1db-86da-48c5-9fdb-f2b67b1f44da | Select-String 'Current AC Power Setting Index:\s+0x([0-9a-fA-F]+)'
+    $report['Monitor_AC'] = if ($mon) { [convert]::ToInt32($mon.Matches.Groups[1].Value, 16) / 60 } else { "Managed/GPO" }
 
+    # S0/S3 Availability
     $avail = (powercfg /a 2>$null) -join "`n"
-    $report['S0_Available']        = [bool]($avail -match 'Standby \(S0 Low Power Idle\)')
-    $report['S3_Available']        = [bool]($avail -match 'Standby \(S3\)')
+    $report['S0_Available'] = [bool]($avail -match 'Standby \(S0 Low Power Idle\)')
+    $report['S3_Available'] = [bool]($avail -match 'Standby \(S3\)')
 
+    # NIC Status
     $nicStatus = @()
     Get-NetAdapter -Physical -ErrorAction SilentlyContinue | Where {$_.Status -eq 'Up'} | ForEach {
         $wol = ($_ | Get-NetAdapterAdvancedProperty -DisplayName 'Wake on Magic Packet' -ErrorAction SilentlyContinue).DisplayValue
@@ -161,15 +167,15 @@ Write-Section "STORAGE & CONTROLLERS"
 # 1. Display the drive table
 Get-PhysicalDisk | Select FriendlyName, MediaType, HealthStatus, FirmwareVersion | Format-Table -AutoSize | Out-String | Write-Host
 
-# 2. Run the Logic Checks (The Bonus Part)
+# 2. Logic Checks (Fixed for empty variables)
 $nvme = Get-PhysicalDisk | Where {$_.FriendlyName -match "Samsung.*9[89]0" -or $_.MediaType -eq 'SSD'}
 if ($nvme) {
     # Check for Link State Power Management
     if ($Report['PCIe_Link_State'] -match 'Max Savings|Moderate') {
          Write-Host "WARNING: NVMe detected with PCIe '$($Report['PCIe_Link_State'])'. Risk of drive drop!" -ForegroundColor Red
     }
-    # Check for Disk Sleep
-    if ($Report['Disk_Turn_Off'] -notmatch 'Never' -and $Report['Disk_Turn_Off'] -ne '-1 sec') {
+    # Check for Disk Sleep (Ignore if Unknown/-1)
+    if ($Report['Disk_Turn_Off'] -notmatch 'Never|Unknown' -and $Report['Disk_Turn_Off'] -ne '-1 sec') {
          Write-Host "WARNING: Disk Sleep is enabled ($($Report['Disk_Turn_Off'])). Set to 0 for stability." -ForegroundColor Yellow
     }
 }
