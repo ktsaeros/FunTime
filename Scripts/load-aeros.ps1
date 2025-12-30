@@ -10,7 +10,7 @@
 $Token = $null  # e.g. "github_pat_11A..."
 
 # The file you want to load. (Combine your tools into one 'AerosTools.ps1' later!)
-$TargetFile = "forensic4.ps1" 
+$TargetFile = "AerosTools.ps1" 
 $BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/Scripts/$TargetFile"
 
 # --- THE BULLETPROOF DOWNLOADER ---
@@ -44,4 +44,32 @@ catch {
     if ($_.Exception.Message -match "401|403") {
         Write-Host "   -> Check your Token permissions." -ForegroundColor Gray
     }
+}
+
+try {
+    # 1. Download the Toolbox
+    $ToolboxCode = $WebClient.DownloadString($BaseUrl)
+    
+    # 2. Load the functions into RAM
+    Invoke-Expression $ToolboxCode
+    
+    # 3. THE USER EXPERIENCE UPGRADE:
+    # This automatically finds all functions you just loaded and lists them
+    Clear-Host
+    Write-Host "╔════════════════════════════════════╗" -ForegroundColor Cyan
+    Write-Host "║       AEROS IT COMMAND CENTER      ║" -ForegroundColor Cyan
+    Write-Host "╚════════════════════════════════════╝" -ForegroundColor Cyan
+    Write-Host " The following tools are now ready:`n" -ForegroundColor Gray
+    
+    # Simple regex to find function names in the downloaded code
+    $matches = [regex]::Matches($ToolboxCode, "function\s+([\w-]+)")
+    foreach ($m in $matches) {
+        $cmd = $m.Groups[1].Value
+        Write-Host "  > $cmd" -ForegroundColor Green
+    }
+    
+    Write-Host "`n Type a command above and press Enter." -ForegroundColor Yellow
+}
+catch {
+    Write-Host "Error loading tools: $($_.Exception.Message)" -ForegroundColor Red
 }
