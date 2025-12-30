@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
     Aeros IT "FunTime" Loader
     Usage: irm https://raw.githubusercontent.com/ktsaeros/FunTime/main/Scripts/load-aeros.ps1 | iex
