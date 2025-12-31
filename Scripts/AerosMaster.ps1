@@ -84,7 +84,7 @@ function Install-BasicApps {
 function Install-ScreenConnect {
     <# 
     .SYNOPSIS 
-        Installs ScreenConnect. 
+        Installs ScreenConnect via MSI (Headless Safe). 
         Usage: Install-ScreenConnect -Company "Acme Corp"
     #>
     param(
@@ -95,35 +95,39 @@ function Install-ScreenConnect {
     # 1. Logic for "Manual Mode" (No Prompt)
     if (-not $Company) {
         try {
-            # Try prompts if no parameter was passed
-            $Company = Read-Host "Enter Client Company Name (e.g. 'Aeros Group')"
-        } catch {
-            # If Read-Host crashes (non-interactive shell), catch it.
-        }
+            $Company = Read-Host "Enter Client Company Name"
+        } catch {}
     }
 
-    # 2. Validation
     if (-not $Company) { 
-        Write-Warning "No company name provided."
-        Write-Warning "For remote shells, run this command manually:"
-        Write-Warning "   Install-ScreenConnect -Company 'My Client Name'"
+        Write-Warning "Usage: Install-ScreenConnect -Company 'Client Name'"
         return 
     }
     
-    # 3. Execution
-    # URL Encode spaces (Aeros Group -> Aeros%20Group)
+    # 2. Setup - Switch to MSI for reliability
     $encodedComp = $Company -replace ' ', '%20'
-    $url = "https://aerosgroup.screenconnect.com/Bin/ScreenConnect.ClientSetup.exe?e=Access&y=Guest&c=$encodedComp"
-    $dest = "$env:TEMP\scsetup.exe"
+    $url = "https://aerosgroup.screenconnect.com/Bin/ScreenConnect.ClientSetup.msi?e=Access&y=Guest&c=$encodedComp"
+    $dest = "$env:TEMP\scsetup.msi"
     
-    Write-Host "Downloading ScreenConnect for '$Company'..." -ForegroundColor Cyan
+    Write-Host "Downloading MSI for '$Company'..." -ForegroundColor Cyan
     try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         Invoke-WebRequest -Uri $url -OutFile $dest -ErrorAction Stop
         
+        # 3. Validation: Check if we actually got a file (and not a 1KB HTML error page)
+        if ((Get-Item $dest).Length -lt 100KB) {
+            throw "Download too small. Likely an error page or bad URL."
+        }
+        
+        # 4. Install via msiexec
         Write-Host "Installing..." -ForegroundColor Cyan
-        Start-Process -FilePath $dest -ArgumentList "/quiet /norestart" -Wait
-        Write-Host "Success! Agent installed." -ForegroundColor Green
+        $proc = Start-Process -FilePath "msiexec.exe" -ArgumentList "/i `"$dest`" /qn" -Wait -PassThru
+        
+        if ($proc.ExitCode -eq 0) {
+            Write-Host "Success! ScreenConnect installed." -ForegroundColor Green
+        } else {
+            Write-Error "Installer exited with code $($proc.ExitCode)."
+        }
     } catch {
         Write-Error "Failed: $($_.Exception.Message)"
     }
