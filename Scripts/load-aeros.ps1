@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Aeros IT "FunTime" Loader (Universal Version)
+    Aeros IT "FunTime" Loader (v3.0)
     Usage: irm https://raw.githubusercontent.com/ktsaeros/FunTime/main/Scripts/load-aeros.ps1 | iex
 #>
 
@@ -18,7 +18,6 @@ try {
     $WebClient = New-Object System.Net.WebClient
     
     # 1. FORCE UTF-8 ENCODING
-    # This ensures the Loader can read the *Toolbox's* fancy characters correctly
     $WebClient.Encoding = [System.Text.Encoding]::UTF8
     
     # 2. Add Auth Header (if token exists)
@@ -32,27 +31,8 @@ try {
     # 4. Load the functions into RAM
     Invoke-Expression $ToolboxCode
     
-    # 5. FIND AND LIST AVAILABLE TOOLS
-    Clear-Host
-    # Using standard ASCII borders here so this file works without BOM
-    Write-Host "+------------------------------------+" -ForegroundColor Cyan
-    Write-Host "|      AEROS IT COMMAND CENTER       |" -ForegroundColor Cyan
-    Write-Host "+------------------------------------+" -ForegroundColor Cyan
-    Write-Host " The following tools are now ready:`n" -ForegroundColor Gray
-    
-    $matches = [regex]::Matches($ToolboxCode, "function\s+([\w-]+)")
-    if ($matches.Count -gt 0) {
-        foreach ($m in $matches) {
-            $cmd = $m.Groups[1].Value
-            if ($cmd -notmatch "^Decode-") {
-                Write-Host "  > $cmd" -ForegroundColor Green
-            }
-        }
-    } else {
-        Write-Host "   (No functions found. Check AerosTools.ps1 content)" -ForegroundColor Red
-    }
-    
-    Write-Host "`n Type a command above and press Enter." -ForegroundColor Yellow
+    # 5. AUTO-START THE MENU
+    Start-Aeros
 }
 catch {
     Write-Host "   [ERROR] Loader Failed." -ForegroundColor Red

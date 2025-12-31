@@ -1,16 +1,16 @@
 <#
 .SYNOPSIS
-    AEROS IT TOOLBOX (v2.0)
-    The complete "Swiss Army Knife" for Hardware, Forensics, and Maintenance.
+    AEROS IT TOOLBOX (v3.0)
+    Interactive Menu + Renamed Functions.
 #>
 
 # ==============================================================================
 #  SECTION 1: HARDWARE & DIAGNOSTICS
 # ==============================================================================
 
-function Get-AerosRAM {
+function Get-RAM {
     <# .SYNOPSIS Shows physical memory slots, speeds, and types. #>
-    Write-Host "--- AEROS RAM ANALYSIS ---" -ForegroundColor Cyan
+    Write-Host "--- RAM ANALYSIS ---" -ForegroundColor Cyan
     $MEMORY_TYPES = @('Unknown','Other','Unknown','DRAM','EDRAM','VRAM','SRAM','ROM','FLASH','EEPROM','FEPROM','EPROM','CDRAM','3DRAM','SDRAM','SGRAM','RDRAM','DDR','DDR2','DDR2 FB-DIMM','Reserved','Reserved','Reserved','DDR3','FBD2','DDR4','LPDDR','LPDDR2','LPDDR3','LPDDR4','Logical non-volatile device','HBM','HBM2','DDR5','LPDDR5')
     $TYPE_DETAILS = @('Reserved','Other','Unknown','Fast-paged','Static column','Pseudo-static','RAMBUS','Synchronous','CMOS','EDO','Window DRAM','Cache DRAM','Non-volatile','Registered','Unbuffered','LRDIMM')
 
@@ -44,9 +44,9 @@ function Get-AerosRAM {
     }
 }
 
-function Get-AerosDock {
+function Get-Dock {
     <# .SYNOPSIS Lists Docks, USB4/Thunderbolt, and Monitor connections. #>
-    Write-Host "--- AEROS DOCK & DISPLAY AUDIT ---" -ForegroundColor Cyan
+    Write-Host "--- DOCK & DISPLAY AUDIT ---" -ForegroundColor Cyan
     
     Write-Host "`n== GPU Driver ==" -ForegroundColor Yellow
     Get-PnpDevice -Class Display | ForEach-Object {
@@ -71,9 +71,9 @@ function Get-AerosDock {
     } | Format-Table -Auto | Out-Host
 }
 
-function Get-AerosBattery {
+function Get-Battery {
     <# .SYNOPSIS Lists Laptop Batteries and UPS status. #>
-    Write-Host "--- AEROS BATTERY/UPS AUDIT ---" -ForegroundColor Cyan
+    Write-Host "--- BATTERY/UPS AUDIT ---" -ForegroundColor Cyan
     $ac = [pscustomobject]@{ OnAC=$true; Pct=0 }
     try {
         Add-Type -AssemblyName System.Windows.Forms; $ps = [System.Windows.Forms.SystemInformation]::PowerStatus
@@ -90,15 +90,13 @@ function Get-AerosBattery {
     } else { Write-Host "No Battery/UPS detected via WMI." -ForegroundColor Gray }
 }
 
-function Start-AerosUPSLog {
+function Start-UPSLog {
     <# .SYNOPSIS Starts a blocking loop to log UPS transitions to CSV. #>
     param([int]$Interval=2, [string]$Csv="C:\ProgramData\UPS\ups_log.csv")
     Write-Host "--- UPS LOGGER (Ctrl+C to Stop) ---" -ForegroundColor Cyan
     Write-Host "Logging every $Interval seconds to: $Csv"
-    
     Add-Type -AssemblyName System.Windows.Forms
     if (!(Test-Path (Split-Path $Csv))) { New-Item -ItemType Directory -Path (Split-Path $Csv) -Force | Out-Null }
-    
     $last = $null
     while ($true) {
         $ps = [System.Windows.Forms.SystemInformation]::PowerStatus
@@ -117,10 +115,10 @@ function Start-AerosUPSLog {
 #  SECTION 2: FORENSICS & HEALTH
 # ==============================================================================
 
-function Get-AerosSystemHealth {
+function Get-SystemHealth {
     <# .SYNOPSIS The "Forensic4" Deep Audit (Storage, Boot, Crashes). #>
     param([int]$Days=14)
-    Write-Host "--- AEROS SYSTEM HEALTH AUDIT ---" -ForegroundColor Cyan
+    Write-Host "--- SYSTEM HEALTH AUDIT ---" -ForegroundColor Cyan
     $StartDate = (Get-Date).AddDays(-$Days)
 
     # 1. Identity
@@ -143,9 +141,9 @@ function Get-AerosSystemHealth {
     else { Write-Host "Storage logs clean." -ForegroundColor Green }
 }
 
-function Get-AerosPrinters {
+function Get-Printers {
     <# .SYNOPSIS WSDIP4 - Audits printers for WSD ports and Drivers. #>
-    Write-Host "--- AEROS PRINTER AUDIT ---" -ForegroundColor Cyan
+    Write-Host "--- PRINTER AUDIT ---" -ForegroundColor Cyan
     $printers = Get-Printer
     $printers | ForEach-Object {
         $type = if ($_.PortName -match "WSD") { "WSD (Bad)" } elseif ($_.PortName -match "IP_") { "TCP/IP (Good)" } else { "Local/Virt" }
@@ -157,9 +155,9 @@ function Get-AerosPrinters {
     else { Write-Host "[OK] No WSD ports detected." -ForegroundColor Green }
 }
 
-function Get-AerosOffice {
+function Get-Office {
     <# .SYNOPSIS Audits Outlook Versions, Accounts, and PST/OST files. #>
-    Write-Host "--- AEROS OFFICE/OUTLOOK AUDIT ---" -ForegroundColor Cyan
+    Write-Host "--- OFFICE/OUTLOOK AUDIT ---" -ForegroundColor Cyan
     
     # 1. Install Type
     $c2r = Get-ItemProperty 'HKLM:\SOFTWARE\Microsoft\Office\ClickToRun\Configuration' -ErrorAction SilentlyContinue
@@ -181,17 +179,15 @@ function Get-AerosOffice {
     }
 }
 
-function Get-AerosDrives {
-    <# .SYNOPSIS Scans registry for mapped drives (Persistent) and Live Session. #>
+function Get-Drives {
+    <# .SYNOPSIS Scans registry for mapped drives. #>
     param([switch]$IncludeLive=$true)
-    Write-Host "--- AEROS DRIVE MAP AUDIT ---" -ForegroundColor Cyan
-    
+    Write-Host "--- DRIVE MAP AUDIT ---" -ForegroundColor Cyan
     $results = @()
     $profiles = Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' | ForEach-Object {
         $sid = $_.PSChildName; $pip = (Get-ItemProperty $_.PSPath -EA SilentlyContinue).ProfileImagePath
         if ($pip) { [PSCustomObject]@{ SID=$sid; Path=[Environment]::ExpandEnvironmentVariables($pip); User=($pip -split '\\')[-1] } }
     }
-
     foreach ($p in $profiles) {
         $hive = "HKLM:\TempHive_$($p.SID)"; $ntuser = Join-Path $p.Path 'NTUSER.DAT'
         if (Test-Path $ntuser) {
@@ -206,20 +202,18 @@ function Get-AerosDrives {
             & reg.exe unload "HKLM\TempHive_$($p.SID)" *> $null
         }
     }
-
     if ($IncludeLive) {
         Get-CimInstance -ClassName Win32_MappedLogicalDisk | ForEach-Object {
             $results += [PSCustomObject]@{ User=$env:USERNAME; Drive=$_.DeviceID.TrimEnd(':'); Path=$_.ProviderName; Source="LiveSession" }
         }
     }
-    
     if ($results) { $results | Select-Object User,Drive,Path,Source | Format-Table -Auto | Out-Host } 
     else { Write-Host "No mapped drives found." -ForegroundColor Gray }
 }
 
-function Get-AerosUsers {
-    <# .SYNOPSIS Audit who has logged in and if they are Admin. #>
-    Write-Host "--- AEROS USER PROFILE AUDIT ---" -ForegroundColor Cyan
+function Get-Users {
+    <# .SYNOPSIS Audit who has logged in. #>
+    Write-Host "--- USER PROFILE AUDIT ---" -ForegroundColor Cyan
     Get-CimInstance Win32_UserProfile | Where-Object { $_.LocalPath -like 'C:\Users\*' -and -not $_.Special } | ForEach-Object {
         $uName = ($_.LocalPath -split '\\')[-1]
         [PSCustomObject]@{ User=$uName; Path=$_.LocalPath; SID=$_.SID; LastUse=$_.LastUseTime }
@@ -230,38 +224,31 @@ function Get-AerosUsers {
 #  SECTION 3: CONFIGURATION & MAINTENANCE
 # ==============================================================================
 
-function Get-AerosPowerAudit {
+function Get-PowerAudit {
     <# .SYNOPSIS Audits Sleep, Fast Startup, and S0 Modern Standby. #>
-    Write-Host "--- AEROS POWER AUDIT ---" -ForegroundColor Cyan
-    
+    Write-Host "--- POWER AUDIT ---" -ForegroundColor Cyan
     $p = 'HKLM:\SYSTEM\CurrentControlSet\Control\Power'
     $s = 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power'
-    
     $s0 = (Get-ItemProperty $p -Name PlatformAoAcOverride -ErrorAction SilentlyContinue).PlatformAoAcOverride
     $fs = (Get-ItemProperty $s -Name HiberbootEnabled -ErrorAction SilentlyContinue).HiberbootEnabled
-    
     Write-Host "Registry Settings:" -ForegroundColor Yellow
     Write-Host "  S0 Override (AoAc): $(if ($s0 -ne $null) { $s0 } else { 'Default' }) (0=Disabled/Good)"
     Write-Host "  Fast Startup:       $(if ($fs -ne $null) { $fs } else { 'Default' }) (0=Disabled/Good)"
-    
     Write-Host "`nAvailability:" -ForegroundColor Yellow
     powercfg /a | Select-String "Standby"
 }
 
-function Set-AerosPower {
-    <# .SYNOPSIS Enforces High Perf (Desktop) or Balanced (Laptop) + Disables Fast Startup. #>
+function Set-Power {
+    <# .SYNOPSIS Enforces High Perf (Desktop) or Balanced (Laptop). #>
     param([switch]$ForceReboot)
-    Write-Host "--- AEROS POWER ENFORCE ---" -ForegroundColor Cyan
+    Write-Host "--- POWER ENFORCE ---" -ForegroundColor Cyan
     
-    # 1. Disable Fast Startup
     Set-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager\Power' -Name HiberbootEnabled -Value 0 -Force
     Write-Host "[OK] Fast Startup Disabled." -ForegroundColor Green
     
-    # 2. Disable S0 (Modern Standby)
     New-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Power' -Name PlatformAoAcOverride -Value 0 -PropertyType DWord -Force | Out-Null
     Write-Host "[OK] S0 Modern Standby Disabled (Reg Key Set)." -ForegroundColor Green
     
-    # 3. Apply Plan
     $isLaptop = (Get-CimInstance Win32_SystemEnclosure).ChassisTypes -in 8,9,10,14
     if ($isLaptop) {
         powercfg /s 381b4222-f694-41f0-9685-ff5bb260df2e # Balanced
@@ -278,10 +265,10 @@ function Set-AerosPower {
     else { Write-Host "`nNOTE: Reboot required for S0/FastStartup changes to take effect." -ForegroundColor Yellow }
 }
 
-function Enable-AerosBitLocker {
-    <# .SYNOPSIS Enables BitLocker (UsedSpaceOnly) and escrows key to Registry. #>
+function Enable-BitLocker {
+    <# .SYNOPSIS Enables BitLocker (UsedSpaceOnly) and escrows key. #>
     param([string]$Drive='C:')
-    Write-Host "--- AEROS BITLOCKER ENFORCEMENT ---" -ForegroundColor Cyan
+    Write-Host "--- BITLOCKER ENFORCEMENT ---" -ForegroundColor Cyan
     $tpm = Get-Tpm; if (-not $tpm.TpmReady) { Write-Error "TPM Not Ready."; return }
     $RegKey = 'HKLM:\SOFTWARE\AerosIT\BitLocker\C'; if (-not (Test-Path $RegKey)) { New-Item -Path $RegKey -Force | Out-Null }
 
@@ -299,15 +286,13 @@ function Enable-AerosBitLocker {
     } else { Write-Host "BitLocker is already enabled." -ForegroundColor Green }
 }
 
-function New-AerosScanner {
-    <# .SYNOPSIS Creates 'scans' user, C:\Scans folder, and Share. #>
+function New-Scanner {
+    <# .SYNOPSIS Creates 'scans' user and share. #>
     param([string]$User="scans", [string]$Password="scans")
-    Write-Host "--- AEROS SCANNER SETUP ---" -ForegroundColor Cyan
-
+    Write-Host "--- SCANNER SETUP ---" -ForegroundColor Cyan
     if (Get-LocalUser -Name $User -ErrorAction SilentlyContinue) { Set-LocalUser -Name $User -Password (ConvertTo-SecureString $Password -AsPlainText -Force) }
     else { New-LocalUser -Name $User -Password (ConvertTo-SecureString $Password -AsPlainText -Force) -Description "SMB Scan Account" | Out-Null }
     
-    # Hide from Login
     $reg = "HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon\SpecialAccounts\UserList"
     if (!(Test-Path $reg)) { New-Item -Path $reg -Force | Out-Null }
     New-ItemProperty -Path $reg -Name $User -Value 0 -PropertyType DWORD -Force | Out-Null
@@ -325,7 +310,7 @@ function New-AerosScanner {
 # ==============================================================================
 
 function Uninstall-CyberCNS {
-    <# .SYNOPSIS Stops CyberCNS services and deletes folders. #>
+    <# .SYNOPSIS Removes CyberCNS. #>
     Write-Host "--- REMOVING CYBERCNS ---" -ForegroundColor Magenta
     $services = @("cybercnsagent", "cybercnsagentv2", "cybercnsagentmonitor")
     foreach ($s in $services) {
@@ -337,48 +322,69 @@ function Uninstall-CyberCNS {
     Write-Host "Files Deleted." -ForegroundColor Green
 }
 
-function Uninstall-AerosHeartbeat {
-    <# .SYNOPSIS Removes the 'Aeros Heartbeat' scheduled task and files. #>
-    Write-Host "--- REMOVING AEROS HEARTBEAT ---" -ForegroundColor Magenta
+function Uninstall-Heartbeat {
+    <# .SYNOPSIS Removes 'Aeros Heartbeat' task. #>
+    Write-Host "--- REMOVING HEARTBEAT ---" -ForegroundColor Magenta
     Unregister-ScheduledTask -TaskName "Aeros Heartbeat" -Confirm:$false -ErrorAction SilentlyContinue
-    
-    # Scan for "Heartbeat" tasks
     Get-ScheduledTask | Where-Object {$_.TaskName -match 'Heartbeat'} | Unregister-ScheduledTask -Confirm:$false -ErrorAction SilentlyContinue
-    
     Remove-Item "C:\Aeros\Heartbeat" -Recurse -Force -ErrorAction SilentlyContinue
-    Get-ChildItem "C:\Aeros" -Filter "*heartbeat*" -Recurse | Remove-Item -Force -ErrorAction SilentlyContinue
-    Write-Host "Heartbeat tasks and files removed." -ForegroundColor Green
+    Write-Host "Tasks and files removed." -ForegroundColor Green
 }
 
 # ==============================================================================
-#  MENU
+#  INTERACTIVE MENU
 # ==============================================================================
-function Show-AerosMenu {
-    Clear-Host
-    Write-Host "╔════════════════════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-    Write-Host "║                    AEROS IT TOOLBOX v2.0                           ║" -ForegroundColor Cyan
-    Write-Host "╠════════════════════════════════════════════════════════════════════╣" -ForegroundColor Cyan
-    Write-Host "║  [HARDWARE]                                                        ║" -ForegroundColor DarkGray
-    Write-Host "║   > Get-AerosRAM         (RAM Slots & Type)                        ║" -ForegroundColor White
-    Write-Host "║   > Get-AerosDock        (Docks & Monitors)                        ║" -ForegroundColor White
-    Write-Host "║   > Get-AerosBattery     (Battery Health & UPS)                    ║" -ForegroundColor White
-    Write-Host "║                                                                    ║" -ForegroundColor DarkGray
-    Write-Host "║  [FORENSICS]                                                       ║" -ForegroundColor DarkGray
-    Write-Host "║   > Get-AerosSystemHealth (Deep Audit: Storage, Boot, Crash)       ║" -ForegroundColor White
-    Write-Host "║   > Get-AerosPrinters    (Find WSD Ports & Drivers)                ║" -ForegroundColor White
-    Write-Host "║   > Get-AerosOffice      (Outlook Versions & PSTs)                 ║" -ForegroundColor White
-    Write-Host "║   > Get-AerosDrives      (Mapped Drives Audit)                     ║" -ForegroundColor White
-    Write-Host "║   > Get-AerosUsers       (User Profiles & Last Login)              ║" -ForegroundColor White
-    Write-Host "║                                                                    ║" -ForegroundColor DarkGray
-    Write-Host "║  [MAINTENANCE]                                                     ║" -ForegroundColor DarkGray
-    Write-Host "║   > Get-AerosPowerAudit  (Audit Sleep/S0/FastBoot)                 ║" -ForegroundColor White
-    Write-Host "║   > Set-AerosPower       (Enforce HighPerf & Disable S0)           ║" -ForegroundColor White
-    Write-Host "║   > New-AerosScanner     (Create SMB Scan User)                    ║" -ForegroundColor White
-    Write-Host "║   > Enable-AerosBitLocker (Enforce Encryption)                     ║" -ForegroundColor White
-    Write-Host "║                                                                    ║" -ForegroundColor DarkGray
-    Write-Host "║  [CLEANUP]                                                         ║" -ForegroundColor DarkGray
-    Write-Host "║   > Uninstall-CyberCNS   (Nuke Agent)                              ║" -ForegroundColor Red
-    Write-Host "║   > Uninstall-AerosHeartbeat (Remove Task)                         ║" -ForegroundColor Red
-    Write-Host "╚════════════════════════════════════════════════════════════════════╝" -ForegroundColor Cyan
-    Write-Host " Type any command above to start." -ForegroundColor Yellow
+function Start-Aeros {
+    while ($true) {
+        Clear-Host
+        Write-Host "+----------------------------------------+" -ForegroundColor Cyan
+        Write-Host "|          AEROS IT TOOLBOX v3.0         |" -ForegroundColor Cyan
+        Write-Host "+----------------------------------------+" -ForegroundColor Cyan
+        Write-Host "| HARDWARE                               |" -ForegroundColor Gray
+        Write-Host "|  1. Get-RAM       (RAM Slots & Type)   |"
+        Write-Host "|  2. Get-Dock      (Docks & Monitors)   |"
+        Write-Host "|  3. Get-Battery   (Health & UPS)       |"
+        Write-Host "|  4. Start-UPSLog  (Log Transitions)    |"
+        Write-Host "|                                        |"
+        Write-Host "| FORENSICS                              |" -ForegroundColor Gray
+        Write-Host "|  5. Get-SystemHealth (Storage/Boot)    |"
+        Write-Host "|  6. Get-Printers  (WSD & Drivers)      |"
+        Write-Host "|  7. Get-Office    (Outlook Versions)   |"
+        Write-Host "|  8. Get-Drives    (Mapped Drives)      |"
+        Write-Host "|  9. Get-Users     (Profiles Audit)     |"
+        Write-Host "|                                        |"
+        Write-Host "| MAINTENANCE                            |" -ForegroundColor Gray
+        Write-Host "| 10. Get-PowerAudit (Audit Config)      |"
+        Write-Host "| 11. Set-Power      (Enforce Perf)      |"
+        Write-Host "| 12. Enable-BitLocker (Enforce)         |"
+        Write-Host "| 13. New-Scanner    (Create SMB User)   |"
+        Write-Host "|                                        |"
+        Write-Host "| CLEANUP                                |" -ForegroundColor Gray
+        Write-Host "| 14. Uninstall-CyberCNS                 |"
+        Write-Host "| 15. Uninstall-Heartbeat                |"
+        Write-Host "+----------------------------------------+" -ForegroundColor Cyan
+        Write-Host "  Q. Quit" -ForegroundColor Yellow
+        
+        $sel = Read-Host "`nSelect an option"
+        
+        switch ($sel) {
+            '1'  { Get-RAM; pause }
+            '2'  { Get-Dock; pause }
+            '3'  { Get-Battery; pause }
+            '4'  { Start-UPSLog }
+            '5'  { Get-SystemHealth; pause }
+            '6'  { Get-Printers; pause }
+            '7'  { Get-Office; pause }
+            '8'  { Get-Drives; pause }
+            '9'  { Get-Users; pause }
+            '10' { Get-PowerAudit; pause }
+            '11' { Set-Power; pause }
+            '12' { Enable-BitLocker; pause }
+            '13' { New-Scanner; pause }
+            '14' { Uninstall-CyberCNS; pause }
+            '15' { Uninstall-Heartbeat; pause }
+            'Q'  { return }
+            'q'  { return }
+        }
+    }
 }
