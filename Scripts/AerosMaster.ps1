@@ -385,10 +385,11 @@ function Uninstall-CyberCNS {
 function Get-OfficeAudit {
     <# 
     .SYNOPSIS 
-        Advanced Office & Outlook Auditor (Ported from oochk.ps1).
-        - Detects C2R/MSI, Licenses, New Outlook.
-        - Mounts Registry Hives to find accounts (RMM Safe).
-        - Scans specific paths (including OneDrive) for PST/OST.
+        Advanced Office & Outlook Auditor (Exact port of oochk.ps1).
+        - Full Hive Mounting for Accounts.
+        - OneDrive & NST/OST/PST Path Discovery.
+        - "OwnerApp" logic (Classic vs New Outlook).
+        - Formatted Output (GB/MB).
     #>
     param(
         [switch]$AllUsers = $true,
@@ -397,7 +398,7 @@ function Get-OfficeAudit {
         [string]$Output = "$env:TEMP\OutlookDataFiles.csv"
     )
 
-    # --- INTERNAL HELPER FUNCTIONS (Preserved exactly from oochk.ps1) ---
+    # --- HELPER FUNCTIONS (Preserved Exact Logic) ---
 
     function Get-OutlookNameFromVersion {
         param([string]$VersionString)
@@ -463,12 +464,11 @@ function Get-OfficeAudit {
         $ids = ($p.ProductReleaseIds -split ',') | ForEach-Object { $_.Trim() } | Where-Object { $_ }
         $classification = Get-OfficeSkuClassification -Ids $ids
         
-        # Lifecycle Logic
         $key = 'M365'
         if ($ids -match '2024') { $key = 'Office2024' } elseif ($ids -match '2021') { $key = 'Office2021' } elseif ($ids -match '2019') { $key = 'Office2019' } elseif ($ids -match 'HomeBusiness|ProPlus|Standard') { $key = 'Office2016' }
         $lc = Get-OfficeLifecycleInfo -ProductKey $key
         
-        [pscustomobject]@{ InstallType='Click-to-Run'; Edition=$classification.FamilySummary; Platform=$officePlatform; Version=$p.ClientVersionToReport; UpdateChannel=$p.UpdateChannel; ProductReleaseIds=($ids -join ', '); SupportStatus=if($lc.EOS){"EOS: $($lc.EOS.ToString('yyyy-MM-dd'))"}else{"Supported"} }
+        [pscustomobject]@{ InstallType='Click-to-Run'; Edition=$classification.FamilySummary; Platform=$officePlatform; Version=$p.ClientVersionToReport; UpdateChannel=$p.UpdateChannel; CDNBaseUrl=$p.CDNBaseUrl; ProductReleaseIds=($ids -join ', '); MatchedSKUs=$classification.MatchedSKUs; LifecycleName=$lc.Name; LifecyclePolicy=$lc.Policy; SupportEnds=$lc.EOS; SupportStatus=if($lc.EOS){"EOS: $($lc.EOS.ToString('yyyy-MM-dd'))"}else{"Supported"}; LifecycleNotes=if(!$lc.EOS){"Subscription"}else{"Perpetual"} }
     }
 
     function Get-OfficeMsiInfo {
@@ -489,13 +489,19 @@ function Get-OfficeAudit {
         if (-not (Test-Path $ntuser)) { return $null }
         $mountKey = "HKU\RMM_AUDIT_$($Sid -replace '[^A-Za-z0-9]','_')"
         $mountRoot = "Registry::$mountKey"
-        try { & reg.exe load "`"$mountKey`"" "`"$ntuser`"" 2>$null; if (Test-Path $mountRoot) { return [pscustomobject]@{ Root=$mountRoot; Loaded=$true } } } catch {}
+        try { 
+            & reg.exe load "`"$mountKey`"" "`"$ntuser`"" 2>$null
+            if (Test-Path $mountRoot) { return [pscustomobject]@{ Root=$mountRoot; Loaded=$true } }
+        } catch {}
         return $null
     }
 
     function Unmount-UserHive {
         param($MountRoot, $Loaded)
-        if ($Loaded) { [GC]::Collect(); Start-Sleep -Milliseconds 100; $null = & reg.exe unload ($MountRoot -replace '^Registry::','') 2>$null }
+        if ($Loaded) { 
+            [GC]::Collect(); Start-Sleep -Milliseconds 100
+            $null = & reg.exe unload ($MountRoot -replace '^Registry::','') 2>$null 
+        }
     }
 
     function Get-OutlookAccountsFromMountedHive {
@@ -509,17 +515,11 @@ function Get-OfficeAudit {
                     $p = Get-ItemProperty -LiteralPath $_.PSPath -ErrorAction SilentlyContinue
                     $svc = $p.'Service Name'
                     $proto = if ($svc -eq 'MSEMS') { 'Exchange' } elseif ($svc -eq 'IMAP') { 'IMAP' } elseif ($svc -eq 'POP3') { 'POP3' } elseif ($svc -eq 'HTTP') { 'Outlook.com' } else { $null }
-                    
-                    # Fallback logic from oochk.ps1
-                    if (-not $proto) {
-                        if ($p.'001f6622') { $proto='Exchange' } elseif ($p.'IMAP Server') { $proto='IMAP' } elseif ($p.'POP3 Server') { $proto='POP3' }
-                    }
+                    if (-not $proto) { if ($p.'001f6622') { $proto='Exchange' } elseif ($p.'IMAP Server') { $proto='IMAP' } elseif ($p.'POP3 Server') { $proto='POP3' } }
                     if (-not $proto) { return }
-
                     $smtp = $null
                     foreach ($n in @('SMTP Address','Email','EmailAddress','001f39fe')) { if ($p.$n) { $smtp=$p.$n; break } }
                     if (-not $smtp -and $p.'Account Name' -like '*@*') { $smtp=$p.'Account Name' }
-                    
                     if ($smtp -and $smtp -ne 'Outlook Address Book') {
                         $rows += [pscustomobject]@{ EmailAddress=$smtp; Protocol=$proto; Server=if($p.'001f6622'){$p.'001f6622'}else{$p.'SMTP Server'} }
                     }
@@ -535,19 +535,23 @@ function Get-OfficeAudit {
         $roots += Join-Path $ProfileDir 'Documents\Outlook Files'
         $roots += Join-Path $ProfileDir 'AppData\Local\Microsoft\Outlook'
         $roots += Join-Path $ProfileDir 'AppData\Roaming\Microsoft\Outlook'
-        try { Get-ChildItem -LiteralPath $ProfileDir -Directory -ErrorAction SilentlyContinue | Where {$_.Name -like 'OneDrive*'} | ForEach { $roots += (Join-Path $_.FullName 'Documents\Outlook Files') } } catch {}
-        return $roots | Where { Test-Path $_ }
+        try { 
+            Get-ChildItem -LiteralPath $ProfileDir -Directory -ErrorAction SilentlyContinue | 
+            Where-Object {$_.Name -like 'OneDrive*'} | 
+            ForEach-Object { $roots += (Join-Path $_.FullName 'Documents\Outlook Files') } 
+        } catch {}
+        return $roots | Where-Object { Test-Path $_ }
     }
 
     function Get-OutlookDataFiles {
         param($AllUsers, $Extensions)
-        $profiles = if ($AllUsers) { Get-ChildItem 'C:\Users' -Directory | Where Name -notin 'Public','Default' } else { Get-Item $env:USERPROFILE }
+        $profiles = if ($AllUsers) { Get-ChildItem 'C:\Users' -Directory | Where-Object Name -notin 'Public','Default' } else { Get-Item $env:USERPROFILE }
         $found = @()
         foreach ($prof in $profiles) {
             $roots = Get-CandidateRootsForProfile -ProfileDir $prof.FullName
             foreach ($root in $roots) {
                 foreach ($ext in $Extensions) {
-                    Get-ChildItem $root -Filter "*.$ext" -Recurse -ErrorAction SilentlyContinue | ForEach {
+                    Get-ChildItem $root -Filter "*.$ext" -Recurse -ErrorAction SilentlyContinue | ForEach-Object {
                         $found += [PSCustomObject]@{ UserProfile=$prof.Name; Path=$_.FullName; Extension=$_.Extension; SizeBytes=$_.Length; LastWriteTime=$_.LastWriteTime }
                     }
                 }
@@ -560,8 +564,15 @@ function Get-OfficeAudit {
         param($SidMap)
         $perUser = @{}
         foreach ($p in $SidMap.Values) {
+            # Attempt to check if hive is already mounted (logged on)
             $hive = "Registry::HKU\$($p.SID)"
-            if (-not (Test-Path $hive)) { continue }
+            if (-not (Test-Path $hive)) { 
+                # If not loaded, we can skip or try to load. 
+                # For simplified single-pass logic (to match original script flow), we often skip unloadable hives for this toggle check 
+                # OR we rely on the main Loop to check hives.
+                # However, original script logic implies checking this.
+                continue 
+            }
             $hasClassic = (Test-Path "$hive\Software\Microsoft\Office\16.0\Outlook\Profiles")
             $newTog = (Get-ItemProperty "$hive\Software\Microsoft\Office\16.0\Outlook\Options\General" -Name UseNewOutlook -ErrorAction SilentlyContinue).UseNewOutlook
             $perUser[$p.UserName] = [pscustomobject]@{ HasClassic=$hasClassic; UseNewToggle=$newTog }
@@ -569,7 +580,7 @@ function Get-OfficeAudit {
         return $perUser
     }
 
-    # --- MAIN EXECUTION LOGIC (MATCHING OOCHK.PS1) ---
+    # --- MAIN EXECUTION ---
     
     Write-Host "--- OFFICE & OUTLOOK AUDIT ---" -ForegroundColor Cyan
     Write-Host "Workstation: $env:COMPUTERNAME" -ForegroundColor Green
@@ -578,8 +589,9 @@ function Get-OfficeAudit {
     $c2r = Get-OfficeC2RInfo
     $new = Test-OutlookNewGlobal
     if ($c2r) { 
-        Write-Host "Detected: $($c2r.Edition) ($($c2r.Platform))" -ForegroundColor Green
-        $c2r | Format-List Version, UpdateChannel, ProductReleaseIds, SupportStatus
+        Write-Host "Office/Outlook Install Summary`n" -ForegroundColor Yellow
+        $c2r | Format-List
+        if ($new.Present) { Write-Host "New Outlook (MSIX) is also present." -ForegroundColor Yellow }
     } elseif ($new.Present) {
         Write-Host "Detected: New Outlook (Store App)" -ForegroundColor Yellow
     } else {
@@ -587,9 +599,9 @@ function Get-OfficeAudit {
         if ($msi) { $msi | Format-Table -AutoSize } else { Write-Host "No Office detected." -ForegroundColor Red }
     }
 
-    # 2. Get Profile Map (For Hives and Files)
+    # 2. Map Profiles
     $sidMap = @{}
-    Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' | ForEach {
+    Get-ChildItem 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList' | ForEach-Object {
         $path = (Get-ItemProperty $_.PSPath).ProfileImagePath
         if ($path -and (Test-Path $path)) {
             $u = Split-Path $path -Leaf
@@ -599,33 +611,68 @@ function Get-OfficeAudit {
         }
     }
 
-    # 3. Email Accounts (Mount Hives)
-    Write-Host "`n[Email Accounts]" -ForegroundColor Yellow
+    # 3. Email Accounts (Hive Mount)
+    Write-Host "`nOutlook Email Accounts (Correlated by User)" -ForegroundColor Yellow
+    $footprints = @{} 
+    
     foreach ($entry in $sidMap.Values) {
         $mount = Mount-UserHive -ProfilePath $entry.ProfilePath -Sid $entry.SID -UserName $entry.UserName
         if ($mount) {
+            # Capture Toggle State while hive is mounted
+            $keyBase = "$($mount.Root)\Software\Microsoft\Office\16.0\Outlook"
+            $hasProfiles = (Test-Path "$keyBase\Profiles")
+            $newTog = (Get-ItemProperty "$keyBase\Options\General" -Name UseNewOutlook -ErrorAction SilentlyContinue).UseNewOutlook
+            $footprints[$entry.UserName] = [pscustomobject]@{ HasClassic=$hasProfiles; UseNewToggle=$newTog }
+
+            # Get Accounts
             $accts = Get-OutlookAccountsFromMountedHive -MountRoot $mount.Root
             if ($accts) {
-                foreach ($a in ($accts | Select -Unique EmailAddress, Protocol, Server)) {
-                    Write-Host "  User: $($entry.UserName) | Email: $($a.EmailAddress) ($($a.Protocol))" 
+                foreach ($a in ($accts | Select-Object -Unique EmailAddress, Protocol, Server)) {
+                    Write-Host "  $($entry.UserName) | $($a.EmailAddress) | $($a.Protocol)" -ForegroundColor Green
                 }
             }
             Unmount-UserHive -MountRoot $mount.Root -Loaded $mount.Loaded
         }
     }
 
-    # 4. Data Files & Correlation
-    Write-Host "`n[Data Files]" -ForegroundColor Yellow
-    # Get footprints (requires loaded hives, but hives are unloaded now, so we assume live user or just skip toggle check for simplicity in single-pass)
-    # Note: oochk.ps1 logic for "OwnerApp" (Classic vs New) relied on Hive being mounted OR active user. 
-    # For simplicity in this function, we will report file existence directly.
-    
+    # 4. Data Files & Formatting
+    Write-Host "`nOutlook Data Files (Correlated by User)" -ForegroundColor Yellow
     $files = Get-OutlookDataFiles -Extensions $Extensions -AllUsers:$AllUsers
-    if ($files) {
-        $files | Select-Object UserProfile, @{N='Size';E={"{0:N0} MB" -f ($_.SizeBytes/1MB)}}, LastWriteTime, Path | Format-Table -AutoSize
-        if ($Csv) { $files | Export-Csv -Path $Output -NoTypeInformation; Write-Host "Exported to $Output" -ForegroundColor Gray }
+    
+    $correlatedRows = @()
+    foreach ($item in $files) {
+        $user = $item.UserProfile
+        $fp = $footprints[$user]
+        
+        $owner = "unknown"
+        if ($fp) {
+            $hasClassic = $fp.HasClassic
+            $hasNew = ($fp.UseNewToggle -eq 1)
+            if ($hasClassic -and $hasNew) { $owner = "Both (Toggled New)" }
+            elseif ($hasClassic) { $owner = "Classic" }
+            elseif ($hasNew) { $owner = "New Outlook" }
+        }
+        
+        $sizeFormatted = ""
+        if ($item.SizeBytes -gt 1GB) { $sizeFormatted = "{0:N2} GB" -f ($item.SizeBytes / 1GB) }
+        elseif ($item.SizeBytes -gt 1MB) { $sizeFormatted = "{0:N2} MB" -f ($item.SizeBytes / 1MB) }
+        else { $sizeFormatted = "{0:N0} KB" -f ($item.SizeBytes / 1KB) }
+        $dateFormatted = $item.LastWriteTime.ToString('yyyy-MM-dd')
+
+        $correlatedRows += [PSCustomObject]@{
+            UserProfile = $user
+            OwnerApp    = $owner
+            Size        = $sizeFormatted
+            DateModified = $dateFormatted
+            Path        = $item.Path
+        }
+    }
+
+    if ($correlatedRows) {
+        $correlatedRows | Sort-Object DateModified -Descending | Format-Table UserProfile, OwnerApp, @{N="Size";E={$_.Size};Align="Right"}, @{N="Date Modified";E={$_.DateModified}}, Path -AutoSize -Wrap
+        if ($Csv) { $correlatedRows | Export-Csv -Path $Output -NoTypeInformation; Write-Host "`nExported to $Output" -ForegroundColor Gray }
     } else {
-        Write-Host "No PST/OST files found." -ForegroundColor Gray
+        Write-Host "No data files found." -ForegroundColor Gray
     }
 }
 
