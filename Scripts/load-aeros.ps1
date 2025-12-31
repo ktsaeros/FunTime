@@ -6,7 +6,7 @@
 
 # --- CONFIGURATION ---
 $Token = $null
-$TargetFile = "AerosTools.ps1" 
+$TargetFile = "AerosMaster.ps1" 
 $BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/Scripts/$TargetFile"
 
 # --- THE BULLETPROOF DOWNLOADER ---
