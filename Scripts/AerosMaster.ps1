@@ -415,7 +415,7 @@ function Start-Aeros {
         
         switch ($sel) {
             '1'  { Get-SystemHealth; pause }
-            '2'  { Get-RAM; pause }
+            '2'  { Get-RAMReport; pause }
             '3'  { Get-Drives; pause }
             '5'  { Get-Users; pause }
             '6'  { Get-Battery; pause }
