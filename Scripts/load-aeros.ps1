@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Aeros IT "FunTime" Loader (v3.0)
+    Aeros IT "FunTime" Loader (v3.0a)
     Usage: irm https://raw.githubusercontent.com/ktsaeros/FunTime/main/Scripts/load-aeros.ps1 | iex
 #>
 
