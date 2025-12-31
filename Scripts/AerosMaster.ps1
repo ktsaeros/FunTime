@@ -82,18 +82,51 @@ function Install-BasicApps {
 }
 
 function Install-ScreenConnect {
-    <# .SYNOPSIS Prompts for Company Name and installs SC. #>
-    $comp = Read-Host "Enter Client Company Name (e.g. 'Aeros Group')"
-    if (-not $comp) { Write-Warning "No company name provided."; return }
-    $encodedComp = $comp -replace ' ', '%20'
+    <# 
+    .SYNOPSIS 
+        Installs ScreenConnect. 
+        Usage: Install-ScreenConnect -Company "Acme Corp"
+    #>
+    param(
+        [Parameter(Mandatory=$false)]
+        [string]$Company
+    )
+
+    # 1. Logic for "Manual Mode" (No Prompt)
+    if (-not $Company) {
+        try {
+            # Try prompts if no parameter was passed
+            $Company = Read-Host "Enter Client Company Name (e.g. 'Aeros Group')"
+        } catch {
+            # If Read-Host crashes (non-interactive shell), catch it.
+        }
+    }
+
+    # 2. Validation
+    if (-not $Company) { 
+        Write-Warning "No company name provided."
+        Write-Warning "For remote shells, run this command manually:"
+        Write-Warning "   Install-ScreenConnect -Company 'My Client Name'"
+        return 
+    }
+    
+    # 3. Execution
+    # URL Encode spaces (Aeros Group -> Aeros%20Group)
+    $encodedComp = $Company -replace ' ', '%20'
     $url = "https://aerosgroup.screenconnect.com/Bin/ScreenConnect.ClientSetup.exe?e=Access&y=Guest&c=$encodedComp"
     $dest = "$env:TEMP\scsetup.exe"
-    Write-Host "Downloading ScreenConnect for '$comp'..." -ForegroundColor Cyan
+    
+    Write-Host "Downloading ScreenConnect for '$Company'..." -ForegroundColor Cyan
     try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         Invoke-WebRequest -Uri $url -OutFile $dest -ErrorAction Stop
+        
+        Write-Host "Installing..." -ForegroundColor Cyan
         Start-Process -FilePath $dest -ArgumentList "/quiet /norestart" -Wait
-        Write-Host "Success! Installed." -ForegroundColor Green
-    } catch { Write-Error "Failed: $($_.Exception.Message)" }
+        Write-Host "Success! Agent installed." -ForegroundColor Green
+    } catch {
+        Write-Error "Failed: $($_.Exception.Message)"
+    }
 }
 
 function Dell-CommandUpdate {
