@@ -103,7 +103,7 @@ foreach ($a in $agents) {
         Write-Host "$($svc.DisplayName): $($svc.Status)" -ForegroundColor $color
     } else {
         # FIXED LINE BELOW
-        Write-Host "$($a): NOT INSTALLED" -ForegroundColor Gray
+        Write-Host ("{0}: NOT INSTALLED" -f $a) -ForegroundColor Gray
     }
 }
 
