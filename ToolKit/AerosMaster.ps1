@@ -78,6 +78,7 @@ function Start-Aeros {
         
         Write-Host "`n [MAINTENANCE & FIXES]" -ForegroundColor Yellow
         Write-Host "  10. Create Scanner User (SMB)      11. Fix AccountEdge Lock" -ForegroundColor White
+        Write-Host "  12. Dell Update (DCU)" -ForegroundColor White
         
         Write-Host "`n [SECURITY]" -ForegroundColor Yellow
         Write-Host "  20. Enforce BitLocker (Escrow Key)" -ForegroundColor White
@@ -95,6 +96,7 @@ function Start-Aeros {
             '6'  { Get-RMMLog; pause }
             '10' { New-Scanner; pause }
             '11' { Fix-AccountEdge; pause }
+            '12' { Invoke-AerosScript "Dell-Update.ps1"; pause }
             '20' { Enable-BitLocker; pause }
             'Q'  { return }
             'q'  { return }
