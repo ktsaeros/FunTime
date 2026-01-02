@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    AEROS FORENSIC MASTER REPORT (v1.0)
+    AEROS FORENSIC MASTER REPORT (v1.1)
     Merged from: Forensic4, Power3, NetworkCheckSlim, Battery.
-    Provides a "State of the Union" snapshot for a workstation.
+    - FIXED: Variable string interpolation bug ($a: -> $($a):)
 #>
 
 $ErrorActionPreference = 'SilentlyContinue'
@@ -102,7 +102,8 @@ foreach ($a in $agents) {
         $color = if ($svc.Status -eq 'Running') {'Green'} else {'Red'}
         Write-Host "$($svc.DisplayName): $($svc.Status)" -ForegroundColor $color
     } else {
-        Write-Host "$a: NOT INSTALLED" -ForegroundColor Gray
+        # FIXED LINE BELOW
+        Write-Host "$($a): NOT INSTALLED" -ForegroundColor Gray
     }
 }
 
