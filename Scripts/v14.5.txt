@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unraid Mission Control</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+    <style>
+        /* [Keeping previous CSS variables for consistency] */
+        :root {
+            --bg-color: #1a1b1e;
+            --card-bg: #25262b;
+            --text-primary: #e9ecef;
+            --text-secondary: #909296;
+            --accent-blue: #339af0;
+            --accent-orange: #ff922b;
+            --accent-green: #51cf66;
+            --accent-purple: #cc5de8;
+            --accent-red: #ff6b6b;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .dashboard-container { max-width: 1400px; margin: 0 auto; }
+        
+        /* Grid Layout */
+        .grid-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            height: fit-content;
+        }
+        .card.wide { grid-column: span 2; }
+        @media (max-width: 800px) { .card.wide { grid-column: span 1; } }
+
+        .card-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding-bottom: 12px; border-bottom: 1px solid #373a40; margin-bottom: 12px; user-select: none;
+        }
+        .header-left { display: flex; align-items: center; gap: 10px; cursor: grab; flex-grow: 1;}
+        .header-controls { display: flex; gap: 10px; align-items: center; }
+        .card-title { font-size: 1.1rem; font-weight: 600; color: #fff; margin: 0; }
+        .control-btn { cursor: pointer; color: var(--text-secondary); font-size: 0.9rem; padding: 4px; }
+        
+        .card-content { overflow: hidden; transition: max-height 0.3s ease-out, opacity 0.3s ease-out; max-height: 2000px; opacity: 1; }
+        .collapsed + .card-content { max-height: 0; opacity: 0; margin: 0; padding: 0; }
+
+        /* Badges */
+        .stat-badge { padding: 3px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; }
+        .bg-blue { background-color: rgba(51, 154, 240, 0.15); color: var(--accent-blue); }
+        .bg-green { background-color: rgba(81, 207, 102, 0.15); color: var(--accent-green); }
+        .bg-orange { background-color: rgba(255, 146, 43, 0.15); color: var(--accent-orange); }
+        .bg-purple { background-color: rgba(204, 93, 232, 0.15); color: var(--accent-purple); }
+        .bg-red { background-color: rgba(255, 107, 107, 0.15); color: var(--accent-red); }
+
+        /* Lists */
+        .item-list { list-style: none; padding: 0; margin: 0; }
+        .item-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #2c2e33; }
+        .item-row:last-child { border-bottom: none; }
+        
+        .item-main { font-weight: 600; font-size: 0.95rem; display: block; margin-bottom: 6px; color: #fff; }
+        .item-sub { font-size: 0.8rem; color: var(--text-secondary); display: block; }
+
+        .progress-bar { height: 4px; background-color: #373a40; border-radius: 2px; margin-top: 5px; overflow: hidden; width: 100%; }
+        .progress-fill { height: 100%; background-color: var(--accent-green); width: 100%; transition: width 0.5s ease; }
+        
+        /* Specific SABnzbd Colors */
+        .progress-fill.sab { background-color: var(--accent-yellow); }
+
+        /* Tautulli Styles */
+        .session-info { display: flex; align-items: center; gap: 15px; width: 100%; }
+        .session-details { flex-grow: 1; min-width: 0; }
+        .media-title { font-size: 1.1rem; font-weight: 600; color: #fff; display: block; margin-bottom: 4px; }
+        .media-user { font-size: 0.85rem; color: var(--text-secondary); display: block; margin-bottom: 6px; }
+        .tech-line { font-size: 0.75rem; color: #6c757d; font-family: monospace; display: block; margin-top: 3px;}
+        .session-meta { text-align: right; font-size: 0.8rem; min-width: 180px; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+
+        .reminder { max-width: 1200px; margin: 0 auto 20px auto; background: #fff3bf; color: #5c4600; padding: 8px; border-radius: 8px; text-align: center; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <div class="reminder">
+        🚧 <strong>To-Do:</strong> Enable MaxMind GeoLite2 in Tautulli next week for real map locations.
+    </div>
+
+    <div id="main-dashboard" class="dashboard-container">
+        
+        <div class="card wide" id="card-live">
+            <div class="card-header">
+                <div class="header-left">
+                    <h2 class="card-title">▶ Now Playing</h2>
+                    <div style="display: flex; gap: 10px; margin-left: 15px;">
+                        <span id="bandwidth-stat" class="stat-badge bg-blue">0 Mbps</span>
+                        <span id="stream-count" class="stat-badge bg-green">0 Active</span>
+                    </div>
+                </div>
+                <div class="header-controls">
+                    <span class="control-btn" onclick="toggleWidth(this)">↔</span>
+                    <span class="control-btn chevron" onclick="toggleCard(this)">▼</span>
+                </div>
+            </div>
+            <div class="card-content">
+                <div id="tautulli-list" class="item-list"><div class="item-sub">Loading streams...</div></div>
+            </div>
+        </div>
+
+        <div class="grid-row" id="sortable-grid">
+            
+            <div class="card" id="card-history">
+                <div class="card-header">
+                    <div class="header-left"><h2 class="card-title">📜 History</h2></div>
+                    <div class="header-controls">
+                        <span class="control-btn" onclick="toggleWidth(this)">↔</span>
+                        <span class="control-btn chevron" onclick="toggleCard(this)">▼</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="history-list" class="item-list"></div>
+                </div>
+            </div>
+
+            <div class="card" id="card-qbit">
+                <div class="card-header">
+                    <div class="header-left">
+                        <h2 class="card-title">🌊 qBittorrent</h2>
+                        <span id="qbit-speed" class="stat-badge bg-blue" style="margin-left:10px;">0 KB/s</span>
+                    </div>
+                    <div class="header-controls">
+                        <span class="control-btn" onclick="toggleWidth(this)">↔</span>
+                        <span class="control-btn chevron" onclick="toggleCard(this)">▼</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="qbit-list" class="item-list"></div>
+                </div>
+            </div>
+
+            <div class="card" id="card-sab">
+                <div class="card-header">
+                    <div class="header-left">
+                        <h2 class="card-title">🟠 SABnzbd</h2>
+                        <span id="sab-speed" class="stat-badge bg-orange" style="margin-left:10px;">0 KB/s</span>
+                    </div>
+                    <div class="header-controls">
+                        <span class="control-btn" onclick="toggleWidth(this)">↔</span>
+                        <span class="control-btn chevron" onclick="toggleCard(this)">▼</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="sab-list" class="item-list"></div>
+                </div>
+            </div>
+
+            <div class="card" id="card-downloads">
+                <div class="card-header">
+                    <div class="header-left">
+                        <h2 class="card-title">📥 Pipeline (Arr)</h2>
+                        <span id="queue-count" class="stat-badge bg-blue" style="margin-left:10px;">0 Active</span>
+                    </div>
+                    <div class="header-controls">
+                        <span class="control-btn" onclick="toggleWidth(this)">↔</span>
+                        <span class="control-btn chevron" onclick="toggleCard(this)">▼</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="queue-list" class="item-list"></div>
+                </div>
+            </div>
+
+            <div class="card" id="card-missing">
+                <div class="card-header">
+                    <div class="header-left"><h2 class="card-title">🔍 Missing</h2></div>
+                    <div class="header-controls">
+                        <span class="control-btn" onclick="toggleWidth(this)">↔</span>
+                        <span class="control-btn chevron" onclick="toggleCard(this)">▼</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="missing-list" class="item-list"></div>
+                </div>
+            </div>
+
+            <div class="card" id="card-backups">
+                <div class="card-header">
+                    <div class="header-left"><h2 class="card-title">💾 Backups</h2></div>
+                    <div class="header-controls">
+                        <span class="control-btn" onclick="toggleWidth(this)">↔</span>
+                        <span class="control-btn chevron" onclick="toggleCard(this)">▼</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="backup-list" class="item-list"></div>
+                </div>
+            </div>
+
+            <div class="card" id="card-calendar">
+                <div class="card-header">
+                    <div class="header-left"><h2 class="card-title">📅 Coming Soon (30d)</h2></div>
+                    <div class="header-controls">
+                        <span class="control-btn" onclick="toggleWidth(this)">↔</span>
+                        <span class="control-btn chevron" onclick="toggleCard(this)">▼</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <ul id="calendar-list" class="item-list"></ul>
+                </div>
+            </div>
+
+            <div class="card" id="card-requests">
+                <div class="card-header">
+                    <div class="header-left">
+                        <h2 class="card-title">✨ Requests</h2>
+                        <span id="request-total" class="stat-badge bg-purple" style="margin-left:10px;">0</span>
+                    </div>
+                    <div class="header-controls">
+                        <span class="control-btn" onclick="toggleWidth(this)">↔</span>
+                        <span class="control-btn chevron" onclick="toggleCard(this)">▼</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div id="overseerr-list" class="item-list"></div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+<script>
+        // === INTERACTION LOGIC (Toggle/Drag) ===
+        function toggleCard(btn) { btn.closest('.card-header').classList.toggle('collapsed'); }
+        function toggleWidth(btn) { btn.closest('.card').classList.toggle('wide'); saveLayout(); }
+        
+        const grid = document.getElementById('sortable-grid');
+        Sortable.create(grid, { animation: 150, handle: '.header-left', onEnd: saveLayout });
+
+        function saveLayout() {
+            const order = Array.from(grid.children).map(c => c.id);
+            localStorage.setItem('grid-order', JSON.stringify(order));
+            const widths = {};
+            document.querySelectorAll('.card').forEach(c => { if(c.classList.contains('wide')) widths[c.id] = true; });
+            localStorage.setItem('card-widths', JSON.stringify(widths));
+        }
+
+        function loadLayout() {
+            const widths = JSON.parse(localStorage.getItem('card-widths') || '{}');
+            Object.keys(widths).forEach(id => { const el = document.getElementById(id); if(el) el.classList.add('wide'); });
+            const order = JSON.parse(localStorage.getItem('grid-order') || '[]');
+            order.forEach(id => { const el = document.getElementById(id); if(el) grid.appendChild(el); });
+        }
+        loadLayout();
+
+        // === PLAYER CLEANER ===
+        function cleanPlayer(p, d, product) {
+            if (!p) p = "Unknown";
+            if (product && product !== "Plex Media Server") return product;
+            if (p.includes("kantsu") || p.includes("tizen")) return "Samsung TV";
+            if (p.includes(".localdomain")) return "Plex for Mac"; 
+            if (p === "Safari") return "Safari";
+            if (d === "OSX") d = "macOS";
+            if (d && d !== "Unknown" && d !== p) return `${p} (${d})`;
+            return p;
+        }
+
+        // === FETCHERS ===
+
+        async function updateSAB() {
+            try {
+                const response = await fetch('sabnzbd_stats.json');
+                const data = await response.json();
+                
+                // Speed Badge
+                const speed = parseFloat(data.stats.speed) || 0;
+                document.getElementById('sab-speed').textContent = `${(speed/1024).toFixed(1)} MB/s`;
+
+                // List Items
+                const container = document.getElementById('sab-list'); // <--- THIS WAS MISSING
+                if (!data.downloads || data.downloads.length === 0) {
+                    container.innerHTML = '<div class="item-sub" style="padding:10px">No active downloads</div>';
+                } else {
+                    container.innerHTML = '';
+                    data.downloads.forEach(d => {
+                        const div = document.createElement('div');
+                        div.style.marginBottom = "10px";
+                        div.innerHTML = `
+                            <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
+                                <span class="item-main" style="font-size:0.85rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:70%; margin-bottom:0;">${d.name}</span>
+                                <span class="item-sub">${d.percentage}% • ${d.time_left}</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill sab" style="width:${d.percentage}%"></div></div>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+            } catch(e){ console.error("SAB error", e); }
+        }
+
+        async function updateQBit() {
+            try {
+                const response = await fetch('qbittorrent_stats.json');
+                const data = await response.json();
+                document.getElementById('qbit-speed').textContent = `${(data.global.dl_speed/1048576).toFixed(1)} MB/s`;
+                
+                const c = document.getElementById('qbit-list'); // <--- THIS WAS MISSING
+                
+                if(data.torrents.length===0) c.innerHTML='<div class="item-sub" style="padding:10px">No active transfers</div>';
+                else {
+                    c.innerHTML='';
+                    data.torrents.forEach(t=>{
+                        const progress = (t.progress * 100).toFixed(1);
+                        const speed = (t.dl_speed / 1024).toFixed(0) + ' KB/s';
+                        c.innerHTML+=`
+                        <div style="margin-bottom:10px;">
+                            <div style="display:flex;justify-content:space-between;margin-bottom:2px;">
+                                <span class="item-main" style="font-size:0.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:70%;margin-bottom:0;">${t.name}</span>
+                                <span class="item-sub">${speed}</span>
+                            </div>
+                            <div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>
+                        </div>`;
+                    });
+                }
+            } catch(e){ console.error("QBit error", e); }
+        }
+
+        async function updateTautulli() {
+            try {
+                const response = await fetch('tautulli_live.json');
+                const data = await response.json();
+                const bw = (data.stats.bandwidth_kbps / 1000).toFixed(1);
+                document.getElementById('bandwidth-stat').textContent = `${bw} Mbps`;
+                document.getElementById('stream-count').textContent = `${data.stats.count} Active`;
+
+                const container = document.getElementById('tautulli-list');
+                if (data.sessions.length === 0) {
+                    container.innerHTML = '<div class="media-user" style="padding:10px">No active streams</div>';
+                } else {
+                    container.innerHTML = '';
+                    data.sessions.forEach(s => {
+                        const playerDisplay = cleanPlayer(s.player, s.device, s.product);
+                        const bitrate = s.bitrate ? ` • ${(s.bitrate/1000).toFixed(1)} Mbps` : '';
+                        
+                        const getDec = (d, res, codec, sRes, sCodec) => {
+                            if(d === "direct_play") return { txt: "DIRECT", cls: "txt-green", detail: `${res || '?'} ${codec || ''}` };
+                            if(d === "copy") return { txt: "STREAM", cls: "txt-info", detail: `${res || '?'} ${codec || ''}` };
+                            return { txt: "TRANSCODE", cls: "txt-warn", detail: `${res} ${codec} → ${sRes} ${sCodec}` };
+                        };
+
+                        const vid = getDec(s.video_decision, s.video_res, s.video_codec, s.stream_video_res, s.stream_video_codec);
+                        const aud = getDec(s.audio_decision, '', s.audio_codec, '', s.stream_audio_codec);
+                        const isTranscode = vid.cls === "txt-warn" || aud.cls === "txt-warn";
+
+                        const div = document.createElement('div');
+                        div.className = 'item-row';
+                        div.innerHTML = `
+                            <div class="session-info">
+                                <div class="session-details">
+                                    <span class="media-title">${s.title}</span>
+                                    <span class="media-user">${s.user} • ${playerDisplay}</span>
+                                    <span class="tech-line">Video: <span class="${vid.cls}">${vid.txt}</span> (${vid.detail})${bitrate}</span>
+                                    <span class="tech-line">Audio: <span class="${aud.cls}">${aud.txt}</span> (${aud.detail})</span>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill ${isTranscode ? 'transcode' : ''}" style="width: ${s.progress}%"></div>
+                                    </div>
+                                </div>
+                                <div class="session-meta">
+                                    <div style="font-family: monospace; color: var(--text-secondary); margin-bottom: 2px;">${s.ip}</div>
+                                    <div style="color: var(--text-secondary); font-size: 0.75rem;">${s.location}</div>
+                                </div>
+                            </div>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        async function updateBackups() {
+            try {
+                const response = await fetch('backup_stats.json');
+                const data = await response.json();
+                const container = document.getElementById('backup-list');
+                container.innerHTML = '';
+                Object.keys(data).forEach(key => {
+                    if (key === 'updated') return;
+                    const item = data[key];
+                    const badge = item.status === 'OK' ? 'bg-green' : 'bg-red';
+                    
+                    container.innerHTML += `
+                        <div class="item-row">
+                            <div style="flex-grow:1;">
+                                <span class="item-main">${key}</span>
+                                <span class="item-sub" style="display:block; margin-top:4px;">${item.date} • ${item.size}</span>
+                            </div>
+                            <span class="stat-badge ${badge}">${item.status}</span>
+                        </div>`;
+                });
+            } catch (e) {}
+        }
+
+        async function updateHistory() {
+            try {
+                const response = await fetch('tautulli_history.json');
+                const data = await response.json();
+                const container = document.getElementById('history-list');
+                container.innerHTML = '';
+                data.history.forEach(h => {
+                    const d = new Date(h.date * 1000);
+                    const ds = d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                    
+                    container.innerHTML += `
+                        <div class="item-row">
+                            <div style="flex-grow:1;">
+                                <span class="item-main">${h.title}</span>
+                                <span class="item-sub">${h.user} <span style="color:#5c5f66">|</span> ${cleanPlayer(h.player)}</span>
+                            </div>
+                            <span class="item-sub" style="margin-left:10px; text-align:right;">${ds}</span>
+                        </div>`;
+                });
+            } catch (e) {}
+        }
+
+        async function updateOverseerr() {
+            try {
+                const response = await fetch('overseerr_stats.json');
+                const data = await response.json();
+                const c = document.getElementById('overseerr-list');
+                document.getElementById('request-total').textContent = `${data.total} Total`;
+                const statusMap = {1:'Pending',2:'Approved',3:'Declined',4:'Available',5:'Processing'};
+                const colorMap = {1:'bg-orange',2:'bg-green',4:'bg-blue',5:'bg-purple'};
+                if(data.requests.length===0) c.innerHTML='<div class="item-sub">No recent requests</div>';
+                else {
+                    c.innerHTML='';
+                    data.requests.forEach(r=>{
+                        const s=statusMap[r.status]||'Unknown'; const b=colorMap[r.status]||'bg-red';
+                        const u=r.requestedBy?r.requestedBy.displayName:(r.user||'Unknown');
+                        c.innerHTML+=`<div class="item-row"><div><span class="item-main">${r.title}</span><span class="item-sub">Req: ${u}</span></div><span class="stat-badge ${b}">${s}</span></div>`;
+                    });
+                }
+            } catch(e){}
+        }
+
+        async function updateArr() {
+            try {
+                const response = await fetch('arr_stats.json');
+                const data = await response.json();
+                
+                // Missing
+                document.getElementById('sonarr-missing-count').textContent = data.missing.sonarr.count;
+                document.getElementById('radarr-missing-count').textContent = data.missing.radarr.count;
+                
+                const qLen = data.queue.sonarr.length + data.queue.radarr.length;
+                document.getElementById('queue-count').textContent = qLen;
+                const qCont = document.getElementById('queue-list');
+                if(qLen === 0) qCont.innerHTML = '<div class="item-sub">Queue clear</div>';
+                else {
+                    qCont.innerHTML = '';
+                    [...data.queue.sonarr, ...data.queue.radarr].forEach(i => {
+                        qCont.innerHTML += `<div style="margin-bottom:10px;"><div style="display:flex; justify-content:space-between;"><span class="item-main" style="font-size:0.85rem">${i.title}</span><span class="item-sub">${(i.size/1024/1024/1024).toFixed(1)}GB</span></div><div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div></div>`;
+                    });
+                }
+
+                const cCont = document.getElementById('calendar-list'); cCont.innerHTML = '';
+                const evts = [...data.calendar.sonarr.map(e=>({...e,t:'TV'})), ...data.calendar.radarr.map(e=>({...e,t:'Mov'}))].sort((a,b)=>new Date(a.airDate)-new Date(b.airDate));
+                if(evts.length===0) cCont.innerHTML='<div class="item-sub">Nothing coming soon</div>';
+                else {
+                    evts.forEach(e => {
+                        const date = new Date(e.airDate).toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'});
+                        const title = e.t === 'TV' ? `${e.title} - ${e.episode}` : e.title;
+                        const badgeClass = e.t === 'TV' ? 'bg-blue' : 'bg-orange';
+                        
+                        cCont.innerHTML += `
+                            <div class="item-row">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="item-main" style="margin-bottom:0; font-size:0.9rem;">${title}</span>
+                                    <span class="stat-badge ${badgeClass}" style="font-size:0.65rem; padding:2px 6px;">${e.t}</span>
+                                </div>
+                                <span class="item-sub">${date}</span>
+                            </div>`;
+                    });
+                }
+                
+                const sList = document.getElementById('sonarr-missing-list'); sList.innerHTML = '';
+                if(data.missing.sonarr.items) data.missing.sonarr.items.forEach(i => sList.innerHTML += `<div class="item-row"><span class="item-sub">${i.title} - ${i.episode}</span><span class="stat-badge bg-red">MISSING</span></div>`);
+                const rList = document.getElementById('radarr-missing-list'); rList.innerHTML = '';
+                if(data.missing.radarr.items) data.missing.radarr.items.forEach(i => rList.innerHTML += `<div class="item-row"><span class="item-sub">${i.title}</span><span class="stat-badge bg-red">MISSING</span></div>`);
+
+            } catch (e) {}
+        }
+
+        // Init
+        updateSAB(); updateQBit(); updateTautulli(); updateOverseerr(); updateBackups(); updateHistory(); updateArr();
+        
+        // Intervals
+        setInterval(updateSAB, 2000);
+        setInterval(updateQBit, 2000);
+        setInterval(updateTautulli, 5000);
+        setInterval(updateArr, 60000);
+        setInterval(updateOverseerr, 60000);
+        setInterval(updateBackups, 60000);
+        setInterval(updateHistory, 300000);
+    </script>
+    </body>
+</html>
