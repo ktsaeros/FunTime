@@ -77,6 +77,9 @@ function Enable-BitLocker { Invoke-AerosScript "btlon.ps1" }
 function Gen-Password     { Invoke-AerosScript "Generate-Passwords.ps1" }
 function Set-Policies     { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 
+function Get-MonitorInfo   { Invoke-AerosTool "Get-MonitorInventory.ps1" }
+function Start-ImageRepair { Invoke-AerosTool "Repair-WindowsHealth.ps1" }
+
 function Start-Aeros {
     while ($true) {
         Clear-Host
@@ -90,6 +93,7 @@ function Start-Aeros {
         Write-Host "  3.  Outlook/Office Audit           7.  Get Mapped Drives (All Users)" -ForegroundColor White
         Write-Host "  4.  User Profile Audit             8.  Get Folder/File Sizes" -ForegroundColor White
         Write-Host "  41. Network SpeedTest (Ookla)      9.  ** MASTER FORENSIC REPORT **" -ForegroundColor Green
+        Write-Host "  42. Monitor Inventory (Serials)    19. Auto-Repair Windows (SFC/DISM)" -ForegroundColor White
         
         Write-Host "`n [MAINTENANCE & INSTALL]" -ForegroundColor Yellow
         Write-Host "  10. Create Scanner User (SMB)      14. Install ScreenConnect" -ForegroundColor White
@@ -132,7 +136,9 @@ function Start-Aeros {
             '21' { Set-Policies; pause }
             '22' { Gen-Password; pause }
             '23' { Get-Incidents; pause }
-            
+            '42' { Get-MonitorInfo; pause }
+            '19' { Start-ImageRepair; pause }
+
             'Q'  { return }
             'q'  { return }
         }
