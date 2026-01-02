@@ -1,34 +1,24 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid v2.6 - Clean URL)
-    - REMOVED: Cache buster (?v=...) as it was causing 404s.
-    - ADDED: Error details to catch block.
+    AEROS MASTER TOOLKIT (Hybrid v2.8)
+    Added: EDR Kick, Incident Time Machine
 #>
 
 function Invoke-AerosScript {
     param([string]$ScriptName)
-    
-    # EXACT URL Structure that passed your manual test
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName"
+    $TargetUrl = "$RepoRoot/$ScriptName" # No cache buster to avoid 404s
 
     Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
-    
     try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $WebClient = New-Object System.Net.WebClient
         $Code = $WebClient.DownloadString($TargetUrl)
-        
-        # Execute in child scope
         & { Invoke-Expression $Code }
     }
     catch {
-        # This will now show you the REAL error (404, 403, etc) instead of just "Failed"
         Write-Error "Failed to launch $ScriptName."
-        Write-Host "   [Error] $($_.Exception.Message)" -ForegroundColor Red
-        if ($_.Exception.InnerException) {
-            Write-Host "   [Inner] $($_.Exception.InnerException.Message)" -ForegroundColor Red
-        }
+        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
@@ -41,14 +31,16 @@ function Get-Battery      { Invoke-AerosScript "battery.ps1" }
 function Get-RMMLog       { Invoke-AerosScript "rmmlog.ps1" }
 function Get-Drives       { Invoke-AerosScript "map.ps1" }
 function Get-Storage      { Invoke-AerosScript "Get-StorageUsage.ps1" }
-function Get-ForensicMaster { Invoke-AerosScript "Forensic-Master.ps1" } # NEW
+function Get-ForensicMaster { Invoke-AerosScript "Forensic-Master.ps1" }
 
 function New-Scanner      { Invoke-AerosScript "scanner.ps1" }
 function Fix-AccountEdge  { Invoke-AerosScript "Fix-AccountEdge.ps1" }
 function Install-Apps     { Invoke-AerosScript "Install-AerosApps.ps1" }
 function Install-SC       { Invoke-AerosScript "getSC.ps1" }
 function Dell-Update      { Invoke-AerosScript "Dell-Update.ps1" }
-function Install-PS7      { Invoke-AerosScript "Install-PS7.ps1" }       # NEW
+function Install-PS7      { Invoke-AerosScript "Install-PS7.ps1" }
+function Kick-EDR         { Invoke-AerosScript "edrkick.ps1" }         # NEW
+function Get-Incidents    { Invoke-AerosScript "get-incidents.ps1" }   # NEW
 
 function Enable-BitLocker { Invoke-AerosScript "btlon.ps1" }
 function Gen-Password     { Invoke-AerosScript "Generate-Passwords.ps1" }
@@ -58,7 +50,7 @@ function Start-Aeros {
     while ($true) {
         Clear-Host
         Write-Host "╔═══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v2.7)          ║" -ForegroundColor Cyan
+        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v2.8)          ║" -ForegroundColor Cyan
         Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
         
         Write-Host " [DIAGNOSTICS]" -ForegroundColor Yellow
@@ -69,13 +61,14 @@ function Start-Aeros {
         Write-Host "                                     9.  ** MASTER FORENSIC REPORT **" -ForegroundColor Green
         
         Write-Host "`n [MAINTENANCE & INSTALL]" -ForegroundColor Yellow
-        Write-Host "  10. Create Scanner User (SMB)      13. Install Apps (Basic/Power)" -ForegroundColor White
-        Write-Host "  11. Fix AccountEdge Lock           14. Install ScreenConnect" -ForegroundColor White
-        Write-Host "  12. Dell Update (DCU)              15. Install PowerShell 7" -ForegroundColor White
+        Write-Host "  10. Create Scanner User (SMB)      14. Install ScreenConnect" -ForegroundColor White
+        Write-Host "  11. Fix AccountEdge Lock           15. Install PowerShell 7" -ForegroundColor White
+        Write-Host "  12. Dell Update (DCU)              16. Kick RMM/EDR Agent" -ForegroundColor White
+        Write-Host "  13. Install Apps (Basic/Power)"
         
-        Write-Host "`n [SECURITY]" -ForegroundColor Yellow
+        Write-Host "`n [SECURITY & LOGS]" -ForegroundColor Yellow
         Write-Host "  20. Enforce BitLocker (Escrow)     22. Password Generator (10x)" -ForegroundColor White
-        Write-Host "  21. Password Expiry Policies"
+        Write-Host "  21. Password Expiry Policies       23. Incident Time Machine" -ForegroundColor White
         
         Write-Host "`n Q. Quit" -ForegroundColor DarkCyan
         
@@ -98,10 +91,12 @@ function Start-Aeros {
             '13' { Install-Apps; pause }
             '14' { Install-SC; pause }
             '15' { Install-PS7; pause }
+            '16' { Kick-EDR; pause }
 
             '20' { Enable-BitLocker; pause }
             '21' { Set-Policies; pause }
             '22' { Gen-Password; pause }
+            '23' { Get-Incidents; pause }
             
             'Q'  { return }
             'q'  { return }
