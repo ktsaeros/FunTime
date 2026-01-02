@@ -1,87 +1,68 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid Launcher v2.2 - Debug Edition)
-    - Added: URL Debugging (Prints the URL it's trying to fetch)
-    - Added: Cache Busting (Forces fresh download)
+    AEROS MASTER TOOLKIT (Hybrid v2.4)
+    Full suite: Diagnostics, Maintenance, Apps, Security.
 #>
 
-# ==============================================================================
-#  CORE LAUNCHER ENGINE
-# ==============================================================================
-
 function Invoke-AerosScript {
-    param(
-        [Parameter(Mandatory=$true)]
-        [string]$ScriptName
-    )
-
-    # --- CONFIGURATION: REPO ROOT ---
-    # Ensure this matches your GitHub folder structure EXACTLY.
+    param([string]$ScriptName)
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    
-    # Add a random number to force a fresh download (Bypass Cache)
     $CacheBust = Get-Random
     $TargetUrl = "$RepoRoot/$ScriptName?v=$CacheBust"
 
     Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
-    # DEBUG LINE: Shows you exactly where it is looking
-    Write-Host "   [Debug] URL: $TargetUrl" -ForegroundColor DarkGray
-
     try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $WebClient = New-Object System.Net.WebClient
         $Code = $WebClient.DownloadString($TargetUrl)
-
         & { Invoke-Expression $Code }
     }
     catch {
         Write-Error "Failed to launch $ScriptName."
-        Write-Error "Error: $($_.Exception.Message)"
-        Write-Warning "Check the [Debug] URL above. Does that file exist in your browser?"
     }
 }
 
-# ==============================================================================
-#  TOOL WRAPPERS
-# ==============================================================================
-
-# --- Diagnostics ---
+# --- Tool Mapping ---
 function Get-SystemHealth { Invoke-AerosScript "forensic4.ps1" }
 function Get-RAMReport    { Invoke-AerosScript "RAM.ps1" }
 function Get-OfficeAudit  { Invoke-AerosScript "oochk.ps1" }
 function Get-Users        { Invoke-AerosScript "users.ps1" }
 function Get-Battery      { Invoke-AerosScript "battery.ps1" }
 function Get-RMMLog       { Invoke-AerosScript "rmmlog.ps1" }
+function Get-Drives       { Invoke-AerosScript "map.ps1" }
+function Get-Storage      { Invoke-AerosScript "Get-StorageUsage.ps1" }
 
-# --- Maintenance ---
 function New-Scanner      { Invoke-AerosScript "scanner.ps1" }
 function Fix-AccountEdge  { Invoke-AerosScript "Fix-AccountEdge.ps1" }
+function Install-Apps     { Invoke-AerosScript "Install-AerosApps.ps1" }
+function Install-SC       { Invoke-AerosScript "getSC.ps1" }
+function Dell-Update      { Invoke-AerosScript "Dell-Update.ps1" }
 
-# --- Security ---
 function Enable-BitLocker { Invoke-AerosScript "btlon.ps1" }
-
-# ==============================================================================
-#  MAIN MENU
-# ==============================================================================
+function Gen-Password     { Invoke-AerosScript "Generate-Passwords.ps1" }
+function Set-Policies     { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 
 function Start-Aeros {
     while ($true) {
         Clear-Host
         Write-Host "╔═══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid)               ║" -ForegroundColor Cyan
+        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v2.4)          ║" -ForegroundColor Cyan
         Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
         
         Write-Host " [DIAGNOSTICS]" -ForegroundColor Yellow
-        Write-Host "  1.  System Health (Forensic4)      4.  User Profile Audit" -ForegroundColor White
-        Write-Host "  2.  RAM Analysis                   5.  Battery & UPS Check" -ForegroundColor White
-        Write-Host "  3.  Outlook/Office Audit           6.  Tail RMM Logs (Live)" -ForegroundColor White
+        Write-Host "  1.  System Health (Forensic4)      5.  Battery & UPS Check" -ForegroundColor White
+        Write-Host "  2.  RAM Analysis                   6.  Tail RMM Logs (Live)" -ForegroundColor White
+        Write-Host "  3.  Outlook/Office Audit           7.  Get Mapped Drives (All Users)" -ForegroundColor White
+        Write-Host "  4.  User Profile Audit             8.  Get Folder/File Sizes" -ForegroundColor White
         
-        Write-Host "`n [MAINTENANCE & FIXES]" -ForegroundColor Yellow
-        Write-Host "  10. Create Scanner User (SMB)      11. Fix AccountEdge Lock" -ForegroundColor White
-        Write-Host "  12. Dell Update (DCU)" -ForegroundColor White
+        Write-Host "`n [MAINTENANCE & INSTALL]" -ForegroundColor Yellow
+        Write-Host "  10. Create Scanner User (SMB)      13. Install Apps (Basic/Power)" -ForegroundColor White
+        Write-Host "  11. Fix AccountEdge Lock           14. Install ScreenConnect" -ForegroundColor White
+        Write-Host "  12. Dell Update (DCU)"
         
         Write-Host "`n [SECURITY]" -ForegroundColor Yellow
-        Write-Host "  20. Enforce BitLocker (Escrow Key)" -ForegroundColor White
+        Write-Host "  20. Enforce BitLocker (Escrow)     22. Password Generator (10x)" -ForegroundColor White
+        Write-Host "  21. Password Expiry Policies"
         
         Write-Host "`n Q. Quit" -ForegroundColor DarkCyan
         
@@ -94,10 +75,19 @@ function Start-Aeros {
             '4'  { Get-Users; pause }
             '5'  { Get-Battery; pause }
             '6'  { Get-RMMLog; pause }
+            '7'  { Get-Drives; pause }
+            '8'  { Get-Storage; pause }
+
             '10' { New-Scanner; pause }
             '11' { Fix-AccountEdge; pause }
-            '12' { Invoke-AerosScript "Dell-Update.ps1"; pause }
+            '12' { Dell-Update; pause }
+            '13' { Install-Apps; pause }
+            '14' { Install-SC; pause }
+
             '20' { Enable-BitLocker; pause }
+            '21' { Set-Policies; pause }
+            '22' { Gen-Password; pause }
+            
             'Q'  { return }
             'q'  { return }
         }
