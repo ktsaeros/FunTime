@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid Launcher v2.0)
+    AEROS MASTER TOOLKIT (Hybrid Launcher v2.1)
     Central menu that fetches and runs your specialized tools from the ToolKit folder.
 #>
 
@@ -18,8 +18,8 @@ function Invoke-AerosScript {
         [string]$ScriptName
     )
 
-    # PATH: Points to the same folder where this Master script lives
-    $BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/Scripts/ToolKit"
+    # FIXED PATH: Points directly to the ToolKit folder at the repo root
+    $BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
     $TargetUrl = "$BaseUrl/$ScriptName"
 
     Write-Host "   [Launcher] Fetching $ScriptName..." -ForegroundColor Cyan
