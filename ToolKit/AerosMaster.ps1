@@ -1,24 +1,34 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid v2.4)
-    Full suite: Diagnostics, Maintenance, Apps, Security.
+    AEROS MASTER TOOLKIT (Hybrid v2.6 - Clean URL)
+    - REMOVED: Cache buster (?v=...) as it was causing 404s.
+    - ADDED: Error details to catch block.
 #>
 
 function Invoke-AerosScript {
     param([string]$ScriptName)
+    
+    # EXACT URL Structure that passed your manual test
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $CacheBust = Get-Random
-    $TargetUrl = "$RepoRoot/$ScriptName?v=$CacheBust"
+    $TargetUrl = "$RepoRoot/$ScriptName"
 
     Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
+    
     try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $WebClient = New-Object System.Net.WebClient
         $Code = $WebClient.DownloadString($TargetUrl)
+        
+        # Execute in child scope
         & { Invoke-Expression $Code }
     }
     catch {
+        # This will now show you the REAL error (404, 403, etc) instead of just "Failed"
         Write-Error "Failed to launch $ScriptName."
+        Write-Host "   [Error] $($_.Exception.Message)" -ForegroundColor Red
+        if ($_.Exception.InnerException) {
+            Write-Host "   [Inner] $($_.Exception.InnerException.Message)" -ForegroundColor Red
+        }
     }
 }
 
@@ -46,7 +56,7 @@ function Start-Aeros {
     while ($true) {
         Clear-Host
         Write-Host "╔═══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v2.4)          ║" -ForegroundColor Cyan
+        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v2.6)          ║" -ForegroundColor Cyan
         Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
         
         Write-Host " [DIAGNOSTICS]" -ForegroundColor Yellow
