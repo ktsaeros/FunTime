@@ -1,19 +1,20 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid v2.9)
-    Added: Power Enforcer, UPS Agent, Speedtest
+    AEROS MASTER TOOLKIT (Hybrid v3.1)
+    Updated: Re-organized numbering, TLS 1.2, Cache Busting
 #>
 
 # --- Loaders ---
 function Invoke-AerosScript {
     param([string]$ScriptName)
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName" 
+    $TargetUrl = "$RepoRoot/$ScriptName?nocache=$(Get-Random)" 
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
     try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $WebClient = New-Object System.Net.WebClient
+        $WebClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT; PowerShell)")
         $Code = $WebClient.DownloadString($TargetUrl)
         & { Invoke-Expression $Code }
     }
@@ -26,13 +27,14 @@ function Invoke-AerosScript {
 function Invoke-AerosTool {
     param([string]$ScriptName, [string]$Arguments)
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName"
+    $TargetUrl = "$RepoRoot/$ScriptName?nocache=$(Get-Random)"
     $TempPath  = "$env:TEMP\$ScriptName"
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     Write-Host "   [Tool] Downloading: $ScriptName..." -ForegroundColor Cyan
     try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $WebClient = New-Object System.Net.WebClient
+        $WebClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT; PowerShell)")
         $WebClient.DownloadFile($TargetUrl, $TempPath)
         
         Write-Host "   [Tool] Executing with args: $Arguments" -ForegroundColor Gray
@@ -48,99 +50,120 @@ function Invoke-AerosTool {
 }
 
 # --- Tool Mapping ---
-function Get-SystemHealth { Invoke-AerosScript "forensic4.ps1" }
-function Get-RAMReport    { Invoke-AerosScript "RAM.ps1" }
-function Get-OfficeAudit  { Invoke-AerosScript "oochk.ps1" }
-function Get-Users        { Invoke-AerosScript "users.ps1" }
-function Get-Battery      { Invoke-AerosScript "battery.ps1" }
-function Get-RMMLog       { Invoke-AerosScript "rmmlog.ps1" }
-function Get-Drives       { Invoke-AerosScript "map.ps1" }
-function Get-Storage      { Invoke-AerosScript "Get-StorageUsage.ps1" }
+
+# [1-19] Diagnostics & Reporting
+function Get-SystemHealth   { Invoke-AerosScript "forensic4.ps1" }
+function Get-RAMReport      { Invoke-AerosScript "RAM.ps1" }
+function Get-OfficeAudit    { Invoke-AerosScript "oochk.ps1" }
+function Get-MonitorInfo    { Invoke-AerosTool "Get-MonitorInventory.ps1" "" }
+function Get-Battery        { Invoke-AerosScript "battery.ps1" }
+function Get-RMMLog         { Invoke-AerosScript "rmmlog.ps1" }
+function Get-Drives         { Invoke-AerosScript "map.ps1" }
+function Get-Storage        { Invoke-AerosScript "Get-StorageUsage.ps1" }
+function Get-DiskInv        { Invoke-AerosTool "Get-DiskInventory.ps1" "" }
+function Get-OSAge          { Invoke-AerosTool "Get-OSAge.ps1" "" }
+function Invoke-SpeedTest   { Invoke-AerosTool "speedtest.ps1" "" }
+function Verify-BelMonitor  { Invoke-AerosTool "Verify-BelMonitor.ps1" "" }
 function Get-ForensicMaster { Invoke-AerosScript "Forensic-Master.ps1" }
+function Audit-UserMap      { 
+    $u = Read-Host "Enter Username"
+    Invoke-AerosTool "Audit-UserDrives.ps1" "-TargetUser $u" 
+}
+function Invoke-UpsCheck    { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
 
-function New-Scanner      { Invoke-AerosScript "scanner.ps1" }
-function Fix-AccountEdge  { Invoke-AerosScript "Fix-AccountEdge.ps1" }
-function Install-Apps     { Invoke-AerosScript "Install-AerosApps.ps1" }
-function Install-SC       { Invoke-AerosScript "getSC.ps1" }
-function Dell-Update      { Invoke-AerosScript "Dell-Update.ps1" }
-function Install-PS7      { Invoke-AerosScript "Install-PS7.ps1" }
-function Kick-EDR         { Invoke-AerosScript "edrkick.ps1" }         
-function Get-Incidents    { Invoke-AerosScript "get-incidents.ps1" }   
-
-# --- NEW TOOLS ---
+# [20-39] Maintenance & Install
+function New-Scanner        { Invoke-AerosScript "scanner.ps1" }
+function Fix-AccountEdge    { Invoke-AerosScript "Fix-AccountEdge.ps1" }
+function Dell-Update        { Invoke-AerosScript "Dell-Update.ps1" }
+function Install-Apps       { Invoke-AerosScript "Install-AerosApps.ps1" }
+function Install-SC         { Invoke-AerosScript "getSC.ps1" }
+function Install-PS7        { Invoke-AerosScript "Install-PS7.ps1" }
+function Kick-EDR           { Invoke-AerosScript "edrkick.ps1" }
 function Invoke-PowerEnforce { Invoke-AerosTool "power-enforce.ps1" "-PowerButtonAction 1" }
-function Invoke-SpeedTest    { Invoke-AerosTool "speedtest.ps1" "" }
-function Invoke-UpsCheck     { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
-function Install-UpsLogger   { Invoke-AerosTool "upslog.ps1" "-Install -IntervalSeconds 10" }
+function Install-UpsLogger  { Invoke-AerosTool "upslog.ps1" "-Install -IntervalSeconds 10" }
+function Start-ImageRepair  { Invoke-AerosTool "Repair-WindowsHealth.ps1" "" }
+function Clean-CDrive       { Invoke-AerosTool "cclean.ps1" "" }
+function Remove-DellCmd     { Invoke-AerosTool "Remove-DellCommand.ps1" "" }
+function Clean-OfficeMRU    { Invoke-AerosTool "Clean-OfficeMRU.ps1" "" }
 
-function Enable-BitLocker { Invoke-AerosScript "btlon.ps1" }
-function Gen-Password     { Invoke-AerosScript "Generate-Passwords.ps1" }
-function Set-Policies     { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
+# [40-50] Security & Logs
+function Enable-BitLocker   { Invoke-AerosScript "btlon.ps1" }
+function Set-Policies       { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
+function Gen-Password       { Invoke-AerosScript "Generate-Passwords.ps1" }
+function Get-Incidents      { Invoke-AerosScript "get-incidents.ps1" }
 
-function Get-MonitorInfo   { Invoke-AerosTool "Get-MonitorInventory.ps1" "" }
-function Start-ImageRepair { Invoke-AerosTool "Repair-WindowsHealth.ps1" "" }
-function Clean-CDrive      { Invoke-AerosTool "cclean.ps1" "" }
 
 function Start-Aeros {
     while ($true) {
         Clear-Host
         Write-Host "╔═══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v2.9)          ║" -ForegroundColor Cyan
+        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v3.1)          ║" -ForegroundColor Cyan
         Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
         
-        Write-Host " [DIAGNOSTICS]" -ForegroundColor Yellow
-        Write-Host "  1.  System Health (Forensic4)      5.  Battery & UPS Check" -ForegroundColor White
-        Write-Host "  2.  RAM Analysis                   6.  Tail RMM Logs (Live)" -ForegroundColor White
-        Write-Host "  3.  Outlook/Office Audit           7.  Get Mapped Drives (All Users)" -ForegroundColor White
-        Write-Host "  4.  User Profile Audit             8.  Get Folder/File Sizes" -ForegroundColor White
-        Write-Host "  41. Network SpeedTest (Ookla)      9.  ** MASTER FORENSIC REPORT **" -ForegroundColor Green
-        Write-Host "  42. Monitor Inventory (Serials)    19. Auto-Repair Windows (SFC/DISM)" -ForegroundColor White
+        Write-Host " [DIAGNOSTICS & AUDIT]" -ForegroundColor Yellow
+        Write-Host "  1.  System Health (Forensic4)      9.  Network SpeedTest (Ookla)" -ForegroundColor White
+        Write-Host "  2.  RAM Analysis                   10. Monitor Inventory (Serials)" -ForegroundColor White
+        Write-Host "  3.  Outlook/Office Audit           11. Disk/Storage Inventory" -ForegroundColor White
+        Write-Host "  4.  Battery & UPS Check            12. OS Install Date Check" -ForegroundColor White
+        Write-Host "  5.  Tail RMM Logs (Live)           13. Audit Offline Mapped Drives" -ForegroundColor White
+        Write-Host "  6.  Get Mapped Drives (Active)     14. Verify BelMonitor/GWN Post" -ForegroundColor White
+        Write-Host "  7.  Get Folder/File Sizes          15. ** MASTER FORENSIC REPORT **" -ForegroundColor Green
         
         Write-Host "`n [MAINTENANCE & INSTALL]" -ForegroundColor Yellow
-        Write-Host "  10. Create Scanner User (SMB)      14. Install ScreenConnect" -ForegroundColor White
-        Write-Host "  11. Fix AccountEdge Lock           15. Install PowerShell 7" -ForegroundColor White
-        Write-Host "  12. Dell Update (DCU)              16. Kick RMM/EDR Agent" -ForegroundColor White
-        Write-Host "  13. Install Apps (Basic/Power)     17. Power Policy Enforcer (One-Off)" -ForegroundColor White
-        Write-Host "  24. Clean up C:\ Drive             18. Install UPS Logger (Service)" -ForegroundColor White
+        Write-Host "  20. Create Scanner User (SMB)      27. Power Policy Enforcer (One-Off)" -ForegroundColor White
+        Write-Host "  21. Fix AccountEdge Lock           28. Install UPS Logger (Service)" -ForegroundColor White
+        Write-Host "  22. Dell Update (DCU)              29. Auto-Repair Windows (SFC/DISM)" -ForegroundColor White
+        Write-Host "  23. Install Apps (Basic/Power)     30. Clean up C:\ Drive (Smart)" -ForegroundColor White
+        Write-Host "  24. Install ScreenConnect          31. Remove Dell Command Update" -ForegroundColor Red
+        Write-Host "  25. Install PowerShell 7           32. Clean Office MRU/CloudRecents" -ForegroundColor Gray
+        Write-Host "  26. Kick RMM/EDR Agent"
 
         Write-Host "`n [SECURITY & LOGS]" -ForegroundColor Yellow
-        Write-Host "  20. Enforce BitLocker (Escrow)     22. Password Generator (10x)" -ForegroundColor White
-        Write-Host "  21. Password Expiry Policies       23. Incident Time Machine" -ForegroundColor White
+        Write-Host "  40. Enforce BitLocker (Escrow)     42. Password Generator (10x)" -ForegroundColor White
+        Write-Host "  41. Password Expiry Policies       43. Incident Time Machine" -ForegroundColor White
         
         Write-Host "`n Q. Quit" -ForegroundColor DarkCyan
         
         $sel = Read-Host "`n Command"
         
         switch ($sel) {
+            # Diagnostics
             '1'  { Get-SystemHealth; pause }
             '2'  { Get-RAMReport; pause }
             '3'  { Get-OfficeAudit; pause }
-            '4'  { Get-Users; pause }
-            '5'  { Get-Battery; Invoke-UpsCheck; pause } # Added UPS Check here
-            '6'  { Get-RMMLog; pause }
-            '7'  { Get-Drives; pause }
-            '8'  { Get-Storage; pause }
-            '9'  { Get-ForensicMaster; pause }
-            '41' { Invoke-SpeedTest; pause }
+            '4'  { Get-Battery; Invoke-UpsCheck; pause }
+            '5'  { Get-RMMLog; pause }
+            '6'  { Get-Drives; pause }
+            '7'  { Get-Storage; pause }
+            '9'  { Invoke-SpeedTest; pause }
+            '10' { Get-MonitorInfo; pause }
+            '11' { Get-DiskInv; pause }
+            '12' { Get-OSAge; pause }
+            '13' { Audit-UserMap; pause }
+            '14' { Verify-BelMonitor; pause }
+            '15' { Get-ForensicMaster; pause }
 
-            '10' { New-Scanner; pause }
-            '11' { Fix-AccountEdge; pause }
-            '12' { Dell-Update; pause }
-            '13' { Install-Apps; pause }
-            '14' { Install-SC; pause }
-            '15' { Install-PS7; pause }
-            '16' { Kick-EDR; pause }
-            '17' { Invoke-PowerEnforce; pause }
-            '18' { Install-UpsLogger; pause }
+            # Maintenance
+            '20' { New-Scanner; pause }
+            '21' { Fix-AccountEdge; pause }
+            '22' { Dell-Update; pause }
+            '23' { Install-Apps; pause }
+            '24' { Install-SC; pause }
+            '25' { Install-PS7; pause }
+            '26' { Kick-EDR; pause }
+            '27' { Invoke-PowerEnforce; pause }
+            '28' { Install-UpsLogger; pause }
+            '29' { Start-ImageRepair; pause }
+            '30' { Clean-CDrive; pause }
+            '31' { Remove-DellCmd; pause }
+            '32' { Clean-OfficeMRU; pause }
 
-            '20' { Enable-BitLocker; pause }
-            '21' { Set-Policies; pause }
-            '22' { Gen-Password; pause }
-            '23' { Get-Incidents; pause }
-            '42' { Get-MonitorInfo; pause }
-            '19' { Start-ImageRepair; pause }
-            '24' { Clean-CDrive; pause }
-
+            # Security
+            '40' { Enable-BitLocker; pause }
+            '41' { Set-Policies; pause }
+            '42' { Gen-Password; pause }
+            '43' { Get-Incidents; pause }
+            
             'Q'  { return }
             'q'  { return }
         }
