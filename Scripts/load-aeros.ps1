@@ -7,7 +7,7 @@
 # --- CONFIGURATION ---
 $Token = $null
 $TargetFile = "AerosMaster.ps1" 
-$BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/Scripts/$TargetFile"
+$BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit/$TargetFile"
 
 # --- THE BULLETPROOF DOWNLOADER ---
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12

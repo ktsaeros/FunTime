@@ -19,7 +19,7 @@ function Invoke-AerosScript {
         [string]$ScriptName
     )
 
-    $BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/Scripts"
+    $BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
     $TargetUrl = "$BaseUrl/$ScriptName"
 
     Write-Host "   [Launcher] Fetching $ScriptName..." -ForegroundColor Cyan
