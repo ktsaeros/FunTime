@@ -77,10 +77,9 @@ function Enable-BitLocker { Invoke-AerosScript "btlon.ps1" }
 function Gen-Password     { Invoke-AerosScript "Generate-Passwords.ps1" }
 function Set-Policies     { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 
-function Get-MonitorInfo   { Invoke-AerosTool "Get-MonitorInventory.ps1" }
-function Start-ImageRepair { Invoke-AerosTool "Repair-WindowsHealth.ps1" }
-
-function Clean-CDrive     { Invoke-AerosTool "cclean.ps1" "" }
+function Get-MonitorInfo   { Invoke-AerosTool "Get-MonitorInventory.ps1" "" }
+function Start-ImageRepair { Invoke-AerosTool "Repair-WindowsHealth.ps1" "" }
+function Clean-CDrive      { Invoke-AerosTool "cclean.ps1" "" }
 
 function Start-Aeros {
     while ($true) {
