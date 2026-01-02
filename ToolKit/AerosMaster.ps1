@@ -80,6 +80,8 @@ function Set-Policies     { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 function Get-MonitorInfo   { Invoke-AerosTool "Get-MonitorInventory.ps1" }
 function Start-ImageRepair { Invoke-AerosTool "Repair-WindowsHealth.ps1" }
 
+function Clean-CDrive     { Invoke-AerosTool "cclean.ps1" "" }
+
 function Start-Aeros {
     while ($true) {
         Clear-Host
@@ -100,7 +102,7 @@ function Start-Aeros {
         Write-Host "  11. Fix AccountEdge Lock           15. Install PowerShell 7" -ForegroundColor White
         Write-Host "  12. Dell Update (DCU)              16. Kick RMM/EDR Agent" -ForegroundColor White
         Write-Host "  13. Install Apps (Basic/Power)     17. Power Policy Enforcer (One-Off)" -ForegroundColor White
-        Write-Host "                                     18. Install UPS Logger (Service)" -ForegroundColor White
+        Write-Host "  24. Clean up C:\ Drive             18. Install UPS Logger (Service)" -ForegroundColor White
 
         Write-Host "`n [SECURITY & LOGS]" -ForegroundColor Yellow
         Write-Host "  20. Enforce BitLocker (Escrow)     22. Password Generator (10x)" -ForegroundColor White
@@ -138,6 +140,7 @@ function Start-Aeros {
             '23' { Get-Incidents; pause }
             '42' { Get-MonitorInfo; pause }
             '19' { Start-ImageRepair; pause }
+            '24' { Clean-CDrive; pause }
 
             'Q'  { return }
             'q'  { return }
