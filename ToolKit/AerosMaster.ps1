@@ -1,7 +1,8 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid Launcher v2.1)
-    Central menu that fetches and runs your specialized tools from the ToolKit folder.
+    AEROS MASTER TOOLKIT (Hybrid Launcher v2.2 - Debug Edition)
+    - Added: URL Debugging (Prints the URL it's trying to fetch)
+    - Added: Cache Busting (Forces fresh download)
 #>
 
 # ==============================================================================
@@ -9,39 +10,39 @@
 # ==============================================================================
 
 function Invoke-AerosScript {
-    <# 
-    .SYNOPSIS
-        Downloads a script from the ToolKit folder and runs it in an isolated scope.
-    #>
     param(
         [Parameter(Mandatory=$true)]
         [string]$ScriptName
     )
 
-    # FIXED PATH: Points directly to the ToolKit folder at the repo root
-    $BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$BaseUrl/$ScriptName"
+    # --- CONFIGURATION: REPO ROOT ---
+    # Ensure this matches your GitHub folder structure EXACTLY.
+    $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
+    
+    # Add a random number to force a fresh download (Bypass Cache)
+    $CacheBust = Get-Random
+    $TargetUrl = "$RepoRoot/$ScriptName?v=$CacheBust"
 
-    Write-Host "   [Launcher] Fetching $ScriptName..." -ForegroundColor Cyan
+    Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
+    # DEBUG LINE: Shows you exactly where it is looking
+    Write-Host "   [Debug] URL: $TargetUrl" -ForegroundColor DarkGray
 
     try {
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $WebClient = New-Object System.Net.WebClient
         $Code = $WebClient.DownloadString($TargetUrl)
 
-        # Run in child scope to keep Master clean
-        & {
-            Invoke-Expression $Code
-        }
+        & { Invoke-Expression $Code }
     }
     catch {
         Write-Error "Failed to launch $ScriptName."
         Write-Error "Error: $($_.Exception.Message)"
+        Write-Warning "Check the [Debug] URL above. Does that file exist in your browser?"
     }
 }
 
 # ==============================================================================
-#  TOOL WRAPPERS (Map Menu Options to Files)
+#  TOOL WRAPPERS
 # ==============================================================================
 
 # --- Diagnostics ---
@@ -86,28 +87,19 @@ function Start-Aeros {
         $sel = Read-Host "`n Command"
         
         switch ($sel) {
-            # Diagnostics
             '1'  { Get-SystemHealth; pause }
             '2'  { Get-RAMReport; pause }
             '3'  { Get-OfficeAudit; pause }
             '4'  { Get-Users; pause }
             '5'  { Get-Battery; pause }
             '6'  { Get-RMMLog; pause }
-
-            # Maintenance
             '10' { New-Scanner; pause }
             '11' { Fix-AccountEdge; pause }
-
-            # Security
             '20' { Enable-BitLocker; pause }
-            
             'Q'  { return }
             'q'  { return }
         }
     }
 }
 
-# Auto-start if running in a console
-if ($Host.Name -notmatch "ISE|Visual Studio Code") {
-    Start-Aeros
-}
+if ($Host.Name -notmatch "ISE|Visual Studio Code") { Start-Aeros }
