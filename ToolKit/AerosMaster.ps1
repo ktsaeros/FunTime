@@ -1,13 +1,14 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid v2.8)
-    Added: EDR Kick, Incident Time Machine
+    AEROS MASTER TOOLKIT (Hybrid v2.9)
+    Added: Power Enforcer, UPS Agent, Speedtest
 #>
 
+# --- Loaders ---
 function Invoke-AerosScript {
     param([string]$ScriptName)
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName" # No cache buster to avoid 404s
+    $TargetUrl = "$RepoRoot/$ScriptName" 
 
     Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
     try {
@@ -18,6 +19,30 @@ function Invoke-AerosScript {
     }
     catch {
         Write-Error "Failed to launch $ScriptName."
+        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+    }
+}
+
+function Invoke-AerosTool {
+    param([string]$ScriptName, [string]$Arguments)
+    $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
+    $TargetUrl = "$RepoRoot/$ScriptName"
+    $TempPath  = "$env:TEMP\$ScriptName"
+
+    Write-Host "   [Tool] Downloading: $ScriptName..." -ForegroundColor Cyan
+    try {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $WebClient = New-Object System.Net.WebClient
+        $WebClient.DownloadFile($TargetUrl, $TempPath)
+        
+        Write-Host "   [Tool] Executing with args: $Arguments" -ForegroundColor Gray
+        $Cmd = "$TempPath $Arguments"
+        Invoke-Expression "& $Cmd"
+        
+        Remove-Item $TempPath -ErrorAction SilentlyContinue
+    }
+    catch {
+        Write-Error "Failed to run tool."
         Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
@@ -39,8 +64,14 @@ function Install-Apps     { Invoke-AerosScript "Install-AerosApps.ps1" }
 function Install-SC       { Invoke-AerosScript "getSC.ps1" }
 function Dell-Update      { Invoke-AerosScript "Dell-Update.ps1" }
 function Install-PS7      { Invoke-AerosScript "Install-PS7.ps1" }
-function Kick-EDR         { Invoke-AerosScript "edrkick.ps1" }         # NEW
-function Get-Incidents    { Invoke-AerosScript "get-incidents.ps1" }   # NEW
+function Kick-EDR         { Invoke-AerosScript "edrkick.ps1" }         
+function Get-Incidents    { Invoke-AerosScript "get-incidents.ps1" }   
+
+# --- NEW TOOLS ---
+function Invoke-PowerEnforce { Invoke-AerosTool "power-enforce.ps1" "-PowerButtonAction 1" }
+function Invoke-SpeedTest    { Invoke-AerosTool "speedtest.ps1" "" }
+function Invoke-UpsCheck     { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
+function Install-UpsLogger   { Invoke-AerosTool "upslog.ps1" "-Install -IntervalSeconds 10" }
 
 function Enable-BitLocker { Invoke-AerosScript "btlon.ps1" }
 function Gen-Password     { Invoke-AerosScript "Generate-Passwords.ps1" }
@@ -50,7 +81,7 @@ function Start-Aeros {
     while ($true) {
         Clear-Host
         Write-Host "╔═══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v2.8)          ║" -ForegroundColor Cyan
+        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v2.9)          ║" -ForegroundColor Cyan
         Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
         
         Write-Host " [DIAGNOSTICS]" -ForegroundColor Yellow
@@ -58,14 +89,15 @@ function Start-Aeros {
         Write-Host "  2.  RAM Analysis                   6.  Tail RMM Logs (Live)" -ForegroundColor White
         Write-Host "  3.  Outlook/Office Audit           7.  Get Mapped Drives (All Users)" -ForegroundColor White
         Write-Host "  4.  User Profile Audit             8.  Get Folder/File Sizes" -ForegroundColor White
-        Write-Host "                                     9.  ** MASTER FORENSIC REPORT **" -ForegroundColor Green
+        Write-Host "  41. Network SpeedTest (Ookla)      9.  ** MASTER FORENSIC REPORT **" -ForegroundColor Green
         
         Write-Host "`n [MAINTENANCE & INSTALL]" -ForegroundColor Yellow
         Write-Host "  10. Create Scanner User (SMB)      14. Install ScreenConnect" -ForegroundColor White
         Write-Host "  11. Fix AccountEdge Lock           15. Install PowerShell 7" -ForegroundColor White
         Write-Host "  12. Dell Update (DCU)              16. Kick RMM/EDR Agent" -ForegroundColor White
-        Write-Host "  13. Install Apps (Basic/Power)"
-        
+        Write-Host "  13. Install Apps (Basic/Power)     17. Power Policy Enforcer (One-Off)" -ForegroundColor White
+        Write-Host "                                     18. Install UPS Logger (Service)" -ForegroundColor White
+
         Write-Host "`n [SECURITY & LOGS]" -ForegroundColor Yellow
         Write-Host "  20. Enforce BitLocker (Escrow)     22. Password Generator (10x)" -ForegroundColor White
         Write-Host "  21. Password Expiry Policies       23. Incident Time Machine" -ForegroundColor White
@@ -79,11 +111,12 @@ function Start-Aeros {
             '2'  { Get-RAMReport; pause }
             '3'  { Get-OfficeAudit; pause }
             '4'  { Get-Users; pause }
-            '5'  { Get-Battery; pause }
+            '5'  { Get-Battery; Invoke-UpsCheck; pause } # Added UPS Check here
             '6'  { Get-RMMLog; pause }
             '7'  { Get-Drives; pause }
             '8'  { Get-Storage; pause }
             '9'  { Get-ForensicMaster; pause }
+            '41' { Invoke-SpeedTest; pause }
 
             '10' { New-Scanner; pause }
             '11' { Fix-AccountEdge; pause }
@@ -92,6 +125,8 @@ function Start-Aeros {
             '14' { Install-SC; pause }
             '15' { Install-PS7; pause }
             '16' { Kick-EDR; pause }
+            '17' { Invoke-PowerEnforce; pause }
+            '18' { Install-UpsLogger; pause }
 
             '20' { Enable-BitLocker; pause }
             '21' { Set-Policies; pause }
