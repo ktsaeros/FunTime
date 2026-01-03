@@ -8,34 +8,38 @@
 function Invoke-AerosScript {
     param([string]$ScriptName)
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName?nocache=$(Get-Random)" 
+    $TargetUrl = "$RepoRoot/$ScriptName" # Temporarily removed ?nocache to rule out edge-case 404s
+    
+    # Enforce TLS 1.2
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
+    
     try {
-        $WebClient = New-Object System.Net.WebClient
-        $WebClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT; PowerShell)")
-        $Code = $WebClient.DownloadString($TargetUrl)
+        # Switch to Native PowerShell (IRM) - Matches your successful bootstrapper
+        $Code = Invoke-RestMethod -Uri $TargetUrl -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache"; "User-Agent" = "Mozilla/5.0" }
         & { Invoke-Expression $Code }
     }
     catch {
         Write-Error "Failed to launch $ScriptName."
-        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "   [Debug] URL: $TargetUrl" -ForegroundColor Red
+        Write-Host "   [Debug] Err: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
 function Invoke-AerosTool {
     param([string]$ScriptName, [string]$Arguments)
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName?nocache=$(Get-Random)"
+    $TargetUrl = "$RepoRoot/$ScriptName"
     $TempPath  = "$env:TEMP\$ScriptName"
+    
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
     Write-Host "   [Tool] Downloading: $ScriptName..." -ForegroundColor Cyan
+    
     try {
-        $WebClient = New-Object System.Net.WebClient
-        $WebClient.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT; PowerShell)")
-        $WebClient.DownloadFile($TargetUrl, $TempPath)
+        # Switch to Native PowerShell (IWR)
+        Invoke-WebRequest -Uri $TargetUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache"; "User-Agent" = "Mozilla/5.0" }
         
         Write-Host "   [Tool] Executing with args: $Arguments" -ForegroundColor Gray
         $Cmd = "$TempPath $Arguments"
@@ -45,7 +49,8 @@ function Invoke-AerosTool {
     }
     catch {
         Write-Error "Failed to run tool."
-        Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "   [Debug] URL: $TargetUrl" -ForegroundColor Red
+        Write-Host "   [Debug] Err: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
