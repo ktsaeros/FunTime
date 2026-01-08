@@ -8,12 +8,23 @@ $rawUrl = "https://github.com/ktsaeros/FunTime/raw/main/Apps/usbmmidd_v2.zip"
 
 function Ensure-Persistence {
     Write-Host "   [Display] Ensuring startup persistence..." -ForegroundColor Cyan
+    
+    # 1. Remove existing service if it exists to ensure a clean path
     if (Get-Service "usbmmidd" -ErrorAction SilentlyContinue) {
+        Write-Host "   [Display] Refreshing existing service..." -ForegroundColor Gray
         & sc.exe delete usbmmidd | Out-Null
         Start-Sleep -Seconds 1
     }
-    # Command executes on boot; enables display 1 automatically
-    & sc.exe create usbmmidd binPath= "C:\usbmmidd\deviceinstaller64.exe enableidd 1" start= auto | Out-Null
+
+    # 2. Create the service with the mandatory spaces after 'binPath=' and 'start='
+    # Note the space: binPath= "..." and start= auto
+    $createResult = & sc.exe create usbmmidd binPath= "C:\usbmmidd\deviceinstaller64.exe enableidd 1" start= auto 2>&1
+
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "   [ERROR] Service creation failed: $createResult" -ForegroundColor Red
+    } else {
+        Write-Host "   [SUCCESS] Persistence service created." -ForegroundColor Green
+    }
 }
 
 function Ensure-ToolsInstalled {
