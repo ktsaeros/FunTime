@@ -121,7 +121,7 @@ function Start-Aeros {
         Write-Host "  23. Install Apps (Basic/Power)     30. Clean up C:\ Drive (Smart)" -ForegroundColor White
         Write-Host "  24. Install ScreenConnect          31. Remove Dell Command Update" -ForegroundColor Red
         Write-Host "  25. Install PowerShell 7           32. Clean Office MRU/CloudRecents" -ForegroundColor Gray
-        Write-Host "  26. Kick RMM/EDR Agent"            33. Virtual Display Manager" -ForegroundColor White
+        Write-Host "  26. Kick RMM/EDR Agent            33. Virtual Display Manager" -ForegroundColor White
 
         Write-Host "`n [SECURITY & LOGS]" -ForegroundColor Yellow
         Write-Host "  40. Enforce BitLocker (Escrow)     42. Password Generator (10x)" -ForegroundColor White
