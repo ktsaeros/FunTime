@@ -73,19 +73,35 @@ function Show-DisplayMenu {
     
     switch ($vSel) {
         '1' {
+            $alreadyInstalled = Test-Path "$destFolder\deviceinstaller64.exe"
             Ensure-ToolsInstalled
             Set-Location $destFolder
-            .\deviceinstaller64.exe enableidd 0; .\deviceinstaller64.exe enableidd 1
+            # Wipe existing to ensure 1:1 state
+            .\deviceinstaller64.exe enableidd 0; .\deviceinstaller64.exe enableidd 0
+            
+            # If it was NOT already there, 'install' already gave us 1 monitor.
+            # If it WAS already there, we need to manually enable 1 since we just ran enableidd 0.
+            if ($alreadyInstalled) {
+                .\deviceinstaller64.exe enableidd 1
+            }
+            
             Write-Host "   [Done] Primary Virtual Display Active." -ForegroundColor Green; pause
             Show-DisplayMenu
         }
         '2' {
+            $alreadyInstalled = Test-Path "$destFolder\deviceinstaller64.exe"
             Ensure-ToolsInstalled
             Set-Location $destFolder
-            .\deviceinstaller64.exe enableidd 1
+            
+            # If we just installed it fresh, the 'install' command already added one monitor.
+            # We only need to run enableidd 1 if the driver was ALREADY there.
+            if ($alreadyInstalled) {
+                .\deviceinstaller64.exe enableidd 1
+            }
             Write-Host "   [Done] Monitor Added." -ForegroundColor Green; pause
             Show-DisplayMenu
-        }
+            }
+        
         '3' {
             if (Test-Path "$destFolder\deviceinstaller64.exe") {
                 Set-Location $destFolder
