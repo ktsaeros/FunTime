@@ -25,6 +25,16 @@ function Ensure-Persistence {
     } else {
         Write-Host "   [SUCCESS] Persistence service created." -ForegroundColor Green
     }
+
+    # 3. Manual trigger to verify and activate immediately
+    Write-Host "   [Display] Triggering service to activate monitor now..." -ForegroundColor Gray
+    try {
+        # We use -ErrorAction SilentlyContinue because we expect the 1053 timeout
+        Start-Service usbmmidd -ErrorAction SilentlyContinue 
+        Write-Host "   [SUCCESS] Monitor activation command sent." -ForegroundColor Green
+    } catch {
+        Write-Host "   [DEBUG] Service trigger failed, but path is confirmed." -ForegroundColor Gray
+    }
 }
 
 function Ensure-ToolsInstalled {
