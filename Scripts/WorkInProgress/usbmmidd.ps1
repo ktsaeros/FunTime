@@ -1,47 +1,70 @@
-# Requires -RunAsAdministrator
+<#
+.SYNOPSIS
+    Professional Virtual Display Manager for Aeros Group.
+    Modes: Headless (1 screen), Extend (Add 1), RemoveScreen (Minus 1), Uninstall (Full Reset)
+#>
+param(
+    [Parameter(Mandatory=$true)]
+    [ValidateSet("Headless", "Extend", "RemoveScreen", "Uninstall")]
+    [string]$Mode
+)
 
-$url = "https://www.amyuni.com/downloads/usbmmidd_v2.zip"
-$zipPath = "$env:TEMP\usbmmidd_v2.zip"
 $destFolder = "C:\usbmmidd"
+$rawUrl = "https://github.com/ktsaeros/FunTime/raw/main/Apps/usbmmidd_v2.zip"
 
-# 1. Check for Admin rights
-if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Error "This script must be run as an Administrator."
-    return
+function Ensure-DriverInstalled {
+    if (-not (Test-Path $destFolder)) {
+        Write-Host "Driver not found. Installing base driver..." -ForegroundColor Yellow
+        Invoke-WebRequest -Uri $rawUrl -OutFile "$env:TEMP\usbmmidd.zip"
+        Expand-Archive -Path "$env:TEMP\usbmmidd.zip" -DestinationPath "C:\" -Force
+        if (Test-Path "C:\usbmmidd_v2") { Rename-Item "C:\usbmmidd_v2" "usbmmidd" }
+        Set-Location $destFolder
+        .\deviceinstaller64.exe install usbmmIdd.inf usbmmidd
+        Start-Sleep -Seconds 2
+    }
 }
 
-# 2. Download the file
-Write-Host "Downloading usbmmidd..." -ForegroundColor Cyan
-Invoke-WebRequest -Uri $url -OutFile $zipPath
+switch ($Mode) {
+    "Headless" {
+        Write-Host "--- Mode: Primary Virtual Display ---" -ForegroundColor Cyan
+        Ensure-DriverInstalled
+        Set-Location $destFolder
+        .\deviceinstaller64.exe enableidd 1
+        
+        if (Get-Service "usbmmidd" -ErrorAction SilentlyContinue) { & sc.exe delete usbmmidd | Out-Null }
+        & sc.exe create usbmmidd binPath= "C:\usbmmidd\deviceinstaller64.exe enableidd 1" start= auto
+        
+        Write-Host "SUCCESS: Display active. Use QRes to set 1080p if needed." -ForegroundColor Green
+    }
 
-# 3. Unzip and rename
-if (Test-Path $destFolder) {
-    Write-Host "Destination $destFolder already exists. Cleaning up..." -ForegroundColor Yellow
-    Remove-Item $destFolder -Recurse -Force
+    "Extend" {
+        Write-Host "--- Mode: Adding One Screen ---" -ForegroundColor Cyan
+        Ensure-DriverInstalled
+        Set-Location $destFolder
+        # Just one execution adds exactly one more monitor
+        .\deviceinstaller64.exe enableidd 1
+        Write-Host "SUCCESS: One additional virtual monitor added." -ForegroundColor Green
+    }
+
+    "RemoveScreen" {
+        Write-Host "--- Mode: Removing One Screen ---" -ForegroundColor Yellow
+        if (Test-Path $destFolder) {
+            Set-Location $destFolder
+            # 'enableidd 0' toggles the most recently added monitor OFF
+            .\deviceinstaller64.exe enableidd 0
+            Write-Host "SUCCESS: Removed the last added virtual monitor." -ForegroundColor Green
+        }
+    }
+
+    "Uninstall" {
+        Write-Host "--- Mode: Full System Cleanup ---" -ForegroundColor Red
+        if (Get-Service "usbmmidd" -ErrorAction SilentlyContinue) { & sc.exe delete usbmmidd | Out-Null }
+        if (Test-Path $destFolder) {
+            Set-Location $destFolder
+            .\deviceinstaller64.exe remove usbmmidd
+            Set-Location C:\
+            Remove-Item $destFolder -Recurse -Force
+        }
+        Write-Host "System fully cleaned." -ForegroundColor Green
+    }
 }
-
-Write-Host "Extracting to $destFolder..." -ForegroundColor Cyan
-Expand-Archive -Path $zipPath -DestinationPath "C:\"
-# The zip typically extracts to a folder named 'usbmmidd_v2'
-if (Test-Path "C:\usbmmidd_v2") {
-    Rename-Item -Path "C:\usbmmidd_v2" -NewName "usbmmidd"
-}
-
-# 4. Install the driver
-Set-Location $destFolder
-Write-Host "Installing usbmmidd driver..." -ForegroundColor Cyan
-.\deviceinstaller64.exe install usbmmIdd.inf usbmmidd
-
-# 5. Enable the virtual display
-Write-Host "Enabling virtual display..." -ForegroundColor Cyan
-.\deviceinstaller64.exe enableidd 1
-
-# 6. Create the Windows Service
-Write-Host "Creating 'usbmmidd' service for persistent startup..." -ForegroundColor Cyan
-# Using sc.exe directly as requested. Note the space after 'binPath=' is mandatory for sc.exe
-& sc.exe create usbmmidd binPath= "C:\usbmmidd\deviceinstaller64.exe enableidd 1" start= auto
-
-# 7. Start the service (optional, ensures it's running now)
-Start-Service usbmmidd
-
-Write-Host "Setup complete. Virtual monitor should now be active." -ForegroundColor Green
