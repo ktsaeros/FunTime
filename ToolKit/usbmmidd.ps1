@@ -1,5 +1,5 @@
 <#
-    Aeros Group Virtual Display Manager (Stable Rollback v9.1.a)
+    Aeros Group Virtual Display Manager (Stable Rollback v9.1.a.b)
     Path: /Funtime/ToolKit/usbmmidd.ps1
 #>
 
