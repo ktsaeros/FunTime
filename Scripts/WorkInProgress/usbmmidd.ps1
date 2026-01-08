@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
-    Professional Virtual Display Manager for Aeros Group.
-    Modes: Headless (1 screen), Extend (Add 1), RemoveScreen (Minus 1), Uninstall (Full Reset)
+    Aeros Group Virtual Display Manager v9
+    Ensures persistence regardless of which mode is run first.
 #>
 param(
     [Parameter(Mandatory=$true)]
@@ -12,52 +12,65 @@ param(
 $destFolder = "C:\usbmmidd"
 $rawUrl = "https://github.com/ktsaeros/FunTime/raw/main/Apps/usbmmidd_v2.zip"
 
-function Ensure-DriverInstalled {
-    if (-not (Test-Path $destFolder)) {
-        Write-Host "Driver not found. Installing base driver..." -ForegroundColor Yellow
+function Ensure-Persistence {
+    Write-Host "Ensuring startup persistence..." -ForegroundColor Cyan
+    # Always refresh the service to ensure it points to the correct path
+    if (Get-Service "usbmmidd" -ErrorAction SilentlyContinue) {
+        & sc.exe delete usbmmidd | Out-Null
+        Start-Sleep -Seconds 1
+    }
+    & sc.exe create usbmmidd binPath= "C:\usbmmidd\deviceinstaller64.exe enableidd 1" start= auto | Out-Null
+}
+
+function Ensure-ToolsInstalled {
+    if (Test-Path "C:\usbmmidd_v2") { Remove-Item "C:\usbmmidd_v2" -Recurse -Force }
+    if (-not (Test-Path $destFolder)) { New-Item -Path $destFolder -ItemType Directory -Force }
+
+    if (-not (Test-Path "$destFolder\deviceinstaller64.exe")) {
+        Write-Host "Installing usbmmidd..." -ForegroundColor Yellow
         Invoke-WebRequest -Uri $rawUrl -OutFile "$env:TEMP\usbmmidd.zip"
         Expand-Archive -Path "$env:TEMP\usbmmidd.zip" -DestinationPath "C:\" -Force
-        if (Test-Path "C:\usbmmidd_v2") { Rename-Item "C:\usbmmidd_v2" "usbmmidd" }
+        
+        if (Test-Path "C:\usbmmidd_v2") {
+            Move-Item -Path "C:\usbmmidd_v2\*" -Destination $destFolder -Force
+            Remove-Item "C:\usbmmidd_v2" -Recurse -Force
+        }
+        
         Set-Location $destFolder
         .\deviceinstaller64.exe install usbmmIdd.inf usbmmidd
         Start-Sleep -Seconds 2
     }
+    # Ensure service is created on EVERY install/run
+    Ensure-Persistence
+}
+
+if (-not ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Write-Error "Admin Required."; return
 }
 
 switch ($Mode) {
     "Headless" {
         Write-Host "--- Mode: Primary Virtual Display ---" -ForegroundColor Cyan
-        Ensure-DriverInstalled
+        Ensure-ToolsInstalled
         Set-Location $destFolder
-        .\deviceinstaller64.exe enableidd 1
-        
-        if (Get-Service "usbmmidd" -ErrorAction SilentlyContinue) { & sc.exe delete usbmmidd | Out-Null }
-        & sc.exe create usbmmidd binPath= "C:\usbmmidd\deviceinstaller64.exe enableidd 1" start= auto
-        
-        Write-Host "SUCCESS: Display active. Use QRes to set 1080p if needed." -ForegroundColor Green
+        .\deviceinstaller64.exe enableidd 0; .\deviceinstaller64.exe enableidd 1
+        Write-Host "Primary Monitor Active & Persistent." -ForegroundColor Green
     }
-
     "Extend" {
-        Write-Host "--- Mode: Adding One Screen ---" -ForegroundColor Cyan
-        Ensure-DriverInstalled
+        Write-Host "--- Mode: Adding Monitor ---" -ForegroundColor Cyan
+        Ensure-ToolsInstalled
         Set-Location $destFolder
-        # Just one execution adds exactly one more monitor
         .\deviceinstaller64.exe enableidd 1
-        Write-Host "SUCCESS: One additional virtual monitor added." -ForegroundColor Green
+        Write-Host "Monitor Added & Persistent." -ForegroundColor Green
     }
-
     "RemoveScreen" {
-        Write-Host "--- Mode: Removing One Screen ---" -ForegroundColor Yellow
-        if (Test-Path $destFolder) {
+        if (Test-Path "$destFolder\deviceinstaller64.exe") {
             Set-Location $destFolder
-            # 'enableidd 0' toggles the most recently added monitor OFF
             .\deviceinstaller64.exe enableidd 0
-            Write-Host "SUCCESS: Removed the last added virtual monitor." -ForegroundColor Green
         }
     }
-
     "Uninstall" {
-        Write-Host "--- Mode: Full System Cleanup ---" -ForegroundColor Red
+        Write-Host "--- Mode: Full Uninstall ---" -ForegroundColor Red
         if (Get-Service "usbmmidd" -ErrorAction SilentlyContinue) { & sc.exe delete usbmmidd | Out-Null }
         if (Test-Path $destFolder) {
             Set-Location $destFolder
@@ -65,6 +78,6 @@ switch ($Mode) {
             Set-Location C:\
             Remove-Item $destFolder -Recurse -Force
         }
-        Write-Host "System fully cleaned." -ForegroundColor Green
+        Write-Host "Fully Uninstalled." -ForegroundColor Green
     }
 }

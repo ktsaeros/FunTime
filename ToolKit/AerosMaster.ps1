@@ -96,7 +96,7 @@ function Enable-BitLocker   { Invoke-AerosScript "btlon.ps1" }
 function Set-Policies       { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 function Gen-Password       { Invoke-AerosScript "Generate-Passwords.ps1" }
 function Get-Incidents      { Invoke-AerosScript "get-incidents.ps1" }
-
+function Invoke-VirtualDisplay { Invoke-AerosScript "usbmmidd.ps1" }
 
 function Start-Aeros {
     while ($true) {
@@ -121,7 +121,7 @@ function Start-Aeros {
         Write-Host "  23. Install Apps (Basic/Power)     30. Clean up C:\ Drive (Smart)" -ForegroundColor White
         Write-Host "  24. Install ScreenConnect          31. Remove Dell Command Update" -ForegroundColor Red
         Write-Host "  25. Install PowerShell 7           32. Clean Office MRU/CloudRecents" -ForegroundColor Gray
-        Write-Host "  26. Kick RMM/EDR Agent"
+        Write-Host "  26. Kick RMM/EDR Agent"            33. Virtual Display Manager" -ForegroundColor White
 
         Write-Host "`n [SECURITY & LOGS]" -ForegroundColor Yellow
         Write-Host "  40. Enforce BitLocker (Escrow)     42. Password Generator (10x)" -ForegroundColor White
@@ -162,6 +162,7 @@ function Start-Aeros {
             '30' { Clean-CDrive; pause }
             '31' { Remove-DellCmd; pause }
             '32' { Clean-OfficeMRU; pause }
+            '33' { Invoke-VirtualDisplay; pause }
 
             # Security
             '40' { Enable-BitLocker; pause }
