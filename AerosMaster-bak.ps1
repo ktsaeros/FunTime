@@ -1,24 +1,29 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid v3.1.1)
-    Fixed: String termination errors and ampersand parsing issues.
+    AEROS MASTER TOOLKIT (Hybrid v3.1)
+    Updated: Re-organized numbering, TLS 1.2, Cache Busting
 #>
 
 # --- Loaders ---
 function Invoke-AerosScript {
     param([string]$ScriptName)
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName"
+    $TargetUrl = "$RepoRoot/$ScriptName" # Temporarily removed ?nocache to rule out edge-case 404s
     
+    # Enforce TLS 1.2
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
     Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
     
     try {
+        # Switch to Native PowerShell (IRM) - Matches your successful bootstrapper
         $Code = Invoke-RestMethod -Uri $TargetUrl -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache"; "User-Agent" = "Mozilla/5.0" }
         & { Invoke-Expression $Code }
     }
     catch {
         Write-Error "Failed to launch $ScriptName."
+        Write-Host "   [Debug] URL: $TargetUrl" -ForegroundColor Red
+        Write-Host "   [Debug] Err: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
@@ -29,20 +34,29 @@ function Invoke-AerosTool {
     $TempPath  = "$env:TEMP\$ScriptName"
     
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
     Write-Host "   [Tool] Downloading: $ScriptName..." -ForegroundColor Cyan
     
     try {
-        Invoke-WebRequest -Uri $TargetUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" }
+        # Switch to Native PowerShell (IWR)
+        Invoke-WebRequest -Uri $TargetUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache"; "User-Agent" = "Mozilla/5.0" }
+        
+        Write-Host "   [Tool] Executing with args: $Arguments" -ForegroundColor Gray
         $Cmd = "$TempPath $Arguments"
         Invoke-Expression "& $Cmd"
+        
         Remove-Item $TempPath -ErrorAction SilentlyContinue
     }
     catch {
         Write-Error "Failed to run tool."
+        Write-Host "   [Debug] URL: $TargetUrl" -ForegroundColor Red
+        Write-Host "   [Debug] Err: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
 # --- Tool Mapping ---
+
+# [1-19] Diagnostics & Reporting
 function Get-SystemHealth   { Invoke-AerosScript "forensic4.ps1" }
 function Get-RAMReport      { Invoke-AerosScript "RAM.ps1" }
 function Get-OfficeAudit    { Invoke-AerosScript "oochk.ps1" }
@@ -62,7 +76,7 @@ function Audit-UserMap      {
 }
 function Invoke-UpsCheck    { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
 
-# Maintenance & Displays
+# [20-39] Maintenance & Install
 function New-Scanner        { Invoke-AerosScript "scanner.ps1" }
 function Fix-AccountEdge    { Invoke-AerosScript "Fix-AccountEdge.ps1" }
 function Dell-Update        { Invoke-AerosScript "Dell-Update.ps1" }
@@ -76,49 +90,49 @@ function Start-ImageRepair  { Invoke-AerosTool "Repair-WindowsHealth.ps1" "" }
 function Clean-CDrive       { Invoke-AerosTool "cclean.ps1" "" }
 function Remove-DellCmd     { Invoke-AerosTool "Remove-DellCommand.ps1" "" }
 function Clean-OfficeMRU    { Invoke-AerosTool "Clean-OfficeMRU.ps1" "" }
-function Invoke-VirtualDisp  { Invoke-AerosScript "usbmmidd.ps1" }
 
-# Security
+# [40-50] Security & Logs
 function Enable-BitLocker   { Invoke-AerosScript "btlon.ps1" }
 function Set-Policies       { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 function Gen-Password       { Invoke-AerosScript "Generate-Passwords.ps1" }
 function Get-Incidents      { Invoke-AerosScript "get-incidents.ps1" }
+function Invoke-VirtualDisplay { Invoke-AerosScript "usbmmidd.ps1" }
 
 function Start-Aeros {
     while ($true) {
         Clear-Host
         Write-Host "╔═══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v3.1.1)        ║" -ForegroundColor Cyan
+        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v3.1)          ║" -ForegroundColor Cyan
         Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
         
         Write-Host " [DIAGNOSTICS & AUDIT]" -ForegroundColor Yellow
-        Write-Host "  1.  System Health (Forensic4)      9.  Network SpeedTest (Ookla)"
-        Write-Host "  2.  RAM Analysis                   10. Monitor Inventory (Serials)"
-        Write-Host "  3.  Outlook/Office Audit           11. Disk/Storage Inventory"
-        Write-Host "  4.  Battery & UPS Check            12. OS Install Date Check"
-        Write-Host "  5.  Tail RMM Logs (Live)           13. Audit Offline Mapped Drives"
-        Write-Host "  6.  Get Mapped Drives (Active)     14. Verify BelMonitor/GWN Post"
+        Write-Host "  1.  System Health (Forensic4)      9.  Network SpeedTest (Ookla)" -ForegroundColor White
+        Write-Host "  2.  RAM Analysis                   10. Monitor Inventory (Serials)" -ForegroundColor White
+        Write-Host "  3.  Outlook/Office Audit           11. Disk/Storage Inventory" -ForegroundColor White
+        Write-Host "  4.  Battery & UPS Check            12. OS Install Date Check" -ForegroundColor White
+        Write-Host "  5.  Tail RMM Logs (Live)           13. Audit Offline Mapped Drives" -ForegroundColor White
+        Write-Host "  6.  Get Mapped Drives (Active)     14. Verify BelMonitor/GWN Post" -ForegroundColor White
         Write-Host "  7.  Get Folder/File Sizes          15. ** MASTER FORENSIC REPORT **" -ForegroundColor Green
         
         Write-Host "`n [MAINTENANCE & INSTALL]" -ForegroundColor Yellow
-        Write-Host "  20. Create Scanner User (SMB)      27. Power Policy Enforcer"
-        Write-Host "  21. Fix AccountEdge Lock           28. Install UPS Logger"
-        Write-Host "  22. Dell Update (DCU)              29. Auto-Repair Windows"
-        Write-Host "  23. Install Apps (Basic/Power)     30. Clean up C:\ Drive"
-        Write-Host "  24. Install ScreenConnect          31. Remove Dell Command Update"
-        Write-Host "  25. Install PowerShell 7           32. Clean Office MRU"
-        Write-Host "  26. Kick RMM/EDR Agent             33. Virtual Display Manager" -ForegroundColor Green
+        Write-Host "  20. Create Scanner User (SMB)      27. Power Policy Enforcer (One-Off)" -ForegroundColor White
+        Write-Host "  21. Fix AccountEdge Lock           28. Install UPS Logger (Service)" -ForegroundColor White
+        Write-Host "  22. Dell Update (DCU)              29. Auto-Repair Windows (SFC/DISM)" -ForegroundColor White
+        Write-Host "  23. Install Apps (Basic/Power)     30. Clean up C:\ Drive (Smart)" -ForegroundColor White
+        Write-Host "  24. Install ScreenConnect          31. Remove Dell Command Update" -ForegroundColor Red
+        Write-Host "  25. Install PowerShell 7           32. Clean Office MRU/CloudRecents" -ForegroundColor Gray
+        Write-Host "  26. Kick RMM/EDR Agent            33. Virtual Display Manager" -ForegroundColor White
 
-        # Using a safer string here to avoid & parsing issues
-        Write-Host "`n [SECURITY AND LOGS]" -ForegroundColor Yellow
-        Write-Host "  40. Enforce BitLocker (Escrow)     42. Password Generator"
-        Write-Host "  41. Password Expiry Policies       43. Incident Time Machine"
+        Write-Host "`n [SECURITY & LOGS]" -ForegroundColor Yellow
+        Write-Host "  40. Enforce BitLocker (Escrow)     42. Password Generator (10x)" -ForegroundColor White
+        Write-Host "  41. Password Expiry Policies       43. Incident Time Machine" -ForegroundColor White
         
         Write-Host "`n Q. Quit" -ForegroundColor DarkCyan
         
         $sel = Read-Host "`n Command"
         
         switch ($sel) {
+            # Diagnostics
             '1'  { Get-SystemHealth; pause }
             '2'  { Get-RAMReport; pause }
             '3'  { Get-OfficeAudit; pause }
@@ -133,6 +147,8 @@ function Start-Aeros {
             '13' { Audit-UserMap; pause }
             '14' { Verify-BelMonitor; pause }
             '15' { Get-ForensicMaster; pause }
+
+            # Maintenance
             '20' { New-Scanner; pause }
             '21' { Fix-AccountEdge; pause }
             '22' { Dell-Update; pause }
@@ -146,16 +162,18 @@ function Start-Aeros {
             '30' { Clean-CDrive; pause }
             '31' { Remove-DellCmd; pause }
             '32' { Clean-OfficeMRU; pause }
-            '33' { Invoke-VirtualDisp; pause }
+            '33' { Invoke-VirtualDisplay; pause }
+
+            # Security
             '40' { Enable-BitLocker; pause }
             '41' { Set-Policies; pause }
             '42' { Gen-Password; pause }
             '43' { Get-Incidents; pause }
+            
             'Q'  { return }
             'q'  { return }
         }
     }
 }
 
-# Execution
 if ($Host.Name -notmatch "ISE|Visual Studio Code") { Start-Aeros }
