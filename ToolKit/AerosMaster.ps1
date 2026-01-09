@@ -80,7 +80,7 @@ function Invoke-XfrHelpr    { Invoke-}
 function Enable-BitLocker   { Invoke-AerosScript "btlon.ps1" }
 function Set-Policies       { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 function Gen-Password       { Invoke-AerosScript "Generate-Passwords.ps1" }
-function Get-Incidents      { Invoke-AerosScript "get-incidents.ps1" }
+function Get-Incidents { Invoke-AerosTool "get-incidents.ps1" "" }
 
 function Invoke-TransferWizard {
     Clear-Host
