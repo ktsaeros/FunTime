@@ -2,7 +2,7 @@
 .SYNOPSIS
     Generates 10 "Database Safe" passphrases using your custom dictionary.
     Format: Word(4-6) + 2DigitNum(NonSeq) + Symbol + Word(4-6)
-    Example: Blue42#Tank
+    Example: Blue42#Tank Beep Boop
 #>
 
 Function Get-AerosWord {
@@ -62,3 +62,4 @@ $global:AerosWordList = $null
     Write-Host "$pw" -ForegroundColor Yellow
 }
 Write-Host "`nDone." -ForegroundColor Green
+

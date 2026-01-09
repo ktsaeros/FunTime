@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid v3.1.1)
+    AEROS MASTER TOOLKIT (Hybrid v3.1.1.b)
     Fixed: String termination errors and ampersand parsing issues.
 #>
 

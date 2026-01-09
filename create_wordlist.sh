@@ -31,3 +31,4 @@ perl -pe 's/(\w)/\u$1/' > "$FILE"
 COUNT=$(wc -l < "$FILE" | xargs)
 
 echo -e "\033[0;32mSuccess! Created $FILE with $COUNT high-quality words.\033[0m"
+
