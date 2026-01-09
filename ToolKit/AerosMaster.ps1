@@ -88,21 +88,59 @@ function Invoke-TransferWizard {
     Write-Host " 1. Sender Mode (Fix Perms & Move)"
     Write-Host " 2. Receiver Mode (Start Download Job)"
     Write-Host " 3. Check Job Status"
+    Write-Host " Q. Cancel"
     
     $sel = Read-Host " Select Option"
     
+    # --- SENDER MODE ---
     if ($sel -eq '1') {
-        $src = Read-Host " Enter Source Path (e.g. C:\Users\User\Downloads\file.exe)"
-        if (-not $src) { return }
-        # Note: We wrap path in quotes to handle spaces
-        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Sender -SourcePath '$src'"
+        Write-Host "`n --- SENDER CONFIG ---" -ForegroundColor Yellow
+        
+        # 1. Source Path (Mandatory)
+        $src = Read-Host " Source Path [Required] (e.g. C:\Users\Missy\Downloads\Setup.exe)"
+        if (-not $src) { Write-Host " [!] Cancelled." -ForegroundColor Red; return }
+
+        # 2. Destination Path (Optional - Default Provided)
+        $defDest = "C:\Users\Public\Documents\Intuit\QuickBooks"
+        $dest = Read-Host " Destination Path [Default: $defDest]"
+        if (-not $dest) { $dest = $defDest }
+        
+        # Launch Tool
+        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Sender -SourcePath '$src' -DestPath '$dest'"
     }
+
+    # --- RECEIVER MODE ---
     elseif ($sel -eq '2') {
-        $hostName = Read-Host " Remote Hostname"
-        $fName    = Read-Host " Filename to Pull"
-        if (-not $hostName -or -not $fName) { return }
-        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Receiver -RemoteHost '$hostName' -RemoteFile '$fName'"
+        Write-Host "`n --- RECEIVER CONFIG ---" -ForegroundColor Yellow
+        
+        # 1. Remote Host (Mandatory)
+        $rHost = Read-Host " Remote Computer Name [Required] (e.g. FRONTDESK)"
+        if (-not $rHost) { Write-Host " [!] Cancelled." -ForegroundColor Red; return }
+
+        # 2. Share Name (Optional - Default Provided)
+        $defShare = "QuickBooks"
+        $rShare = Read-Host " Remote Share Name [Default: $defShare]"
+        if (-not $rShare) { $rShare = $defShare }
+
+        # 3. Filename (Mandatory)
+        $rFile = Read-Host " File Name to Pull [Required] (e.g. Setup.exe)"
+        if (-not $rFile) { Write-Host " [!] Cancelled." -ForegroundColor Red; return }
+
+        # 4. Remote User (Optional - Default Provided)
+        $defUser = "transfer"
+        $rUser = Read-Host " Remote User [Default: $defUser]"
+        if (-not $rUser) { $rUser = $defUser }
+        
+        # 5. Remote Password (Mandatory)
+        # We read this as plain text so we can pass it to the tool argument string
+        $rPass = Read-Host " Remote Password [Required]" 
+        if (-not $rPass) { Write-Host " [!] Password required." -ForegroundColor Red; return }
+
+        # Launch Tool (Passes all captured variables to the script)
+        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Receiver -RemoteHost '$rHost' -RemoteShare '$rShare' -RemoteFile '$rFile' -RemoteUser '$rUser' -RemotePass '$rPass'"
     }
+
+    # --- STATUS MODE ---
     elseif ($sel -eq '3') {
         Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Status"
     }

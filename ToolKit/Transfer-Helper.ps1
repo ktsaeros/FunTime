@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
-    Aeros Workgroup Transfer Helper (Toolbox Edition v2)
-    Now accepts raw passwords to bypass interactive login prompts in RMM.
+    Aeros Workgroup Transfer Helper (Toolbox Edition v2.1)
+    Silent execution engine. Logic driven by AerosMaster parameters.
 #>
 
 param(
@@ -16,7 +16,7 @@ param(
     [string]$RemoteShare = "QuickBooks",
     [string]$RemoteFile,
     [string]$RemoteUser = "transfer",
-    [string]$RemotePass   # <--- NEW: Accepts password as string
+    [string]$RemotePass
 )
 
 # Fix Output Encoding
@@ -33,26 +33,21 @@ if ($Mode -eq "Sender") {
     Write-Host " [MODE: SENDER]" -ForegroundColor Yellow
     
     if (-not $SourcePath) { Write-Host " [!] Error: No SourcePath provided." -ForegroundColor Red; return }
-    
-    # Validation
-    if (-not (Test-Path $SourcePath)) { 
-        Write-Host " [!] Source file not found: $SourcePath" -ForegroundColor Red
-        return 
-    }
+    if (-not (Test-Path $SourcePath)) { Write-Host " [!] Source file not found: $SourcePath" -ForegroundColor Red; return }
 
-    # 1. Ensure Dest Exists
+    # Ensure Dest Exists
     if (-not (Test-Path $DestPath)) {
         New-Item -Path $DestPath -ItemType Directory -Force | Out-Null
     }
 
-    # 2. Move File
+    # Move File
     $fileName = Split-Path $SourcePath -Leaf
     $finalPath = Join-Path $DestPath $fileName
     
     Write-Host " Moving: $fileName" -ForegroundColor Gray
     Move-Item -Path $SourcePath -Destination $DestPath -Force
 
-    # 3. Fix Permissions
+    # Fix Permissions
     Write-Host " Fixing Permissions..." -ForegroundColor Gray
     $expr = "icacls `"$finalPath`" /grant Everyone:F /T"
     Invoke-Expression $expr | Out-Null
@@ -66,13 +61,11 @@ if ($Mode -eq "Receiver") {
     
     if (-not $RemoteHost -or -not $RemoteFile) { Write-Host " [!] Error: Missing RemoteHost or Filename." -ForegroundColor Red; return }
 
-    # Handle Credentials (RMM Safe)
     try {
         if ($RemotePass) {
             $secPass = ConvertTo-SecureString $RemotePass -AsPlainText -Force
             $cred = New-Object System.Management.Automation.PSCredential ("$RemoteHost\$RemoteUser", $secPass)
         } else {
-            # Fallback to interactive (will likely fail in RMM but good for local testing)
             $cred = Get-Credential "$RemoteHost\$RemoteUser"
         }
     } catch {
