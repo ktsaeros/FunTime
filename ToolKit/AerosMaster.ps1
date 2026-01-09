@@ -84,8 +84,8 @@ function Get-Incidents      { Invoke-AerosScript "get-incidents.ps1" }
 
 function Invoke-TransferWizard {
     Clear-Host
-    Write-Host " [AEROS TRANSFER WIZARD]" -ForegroundColor Cyan
-    Write-Host " 1. Sender Mode (Fix Perms & Move)"
+    Write-Host " [AEROS TRANSFER WIZARD v3]" -ForegroundColor Cyan
+    Write-Host " 1. Sender Mode (Auto-Create Share & User)"
     Write-Host " 2. Receiver Mode (Start Download Job)"
     Write-Host " 3. Check Job Status"
     Write-Host " Q. Cancel"
@@ -97,56 +97,58 @@ function Invoke-TransferWizard {
     if ($sel -eq '1') {
         Write-Host "`n --- SENDER CONFIG ---" -ForegroundColor Yellow
         
-        # Explicitly print prompt before asking for input
-        Write-Host " Enter Source Path [Required]:" -ForegroundColor Cyan
-        Write-Host " (e.g. C:\Users\Missy\Downloads\Setup.exe)" -ForegroundColor Gray
+        Write-Host " Source File Path [Required]:" -ForegroundColor Cyan
         $src = Read-Host
-        
-        if (-not $src) { Write-Host " [!] Cancelled." -ForegroundColor Red; return }
+        if (-not $src) { return }
 
-        $defDest = "C:\Users\Public\Documents\Intuit\QuickBooks"
-        Write-Host "`n Enter Destination Path [Press Enter for Default]:" -ForegroundColor Cyan
-        Write-Host " ($defDest)" -ForegroundColor Gray
+        # Share Name (Default: Transfer)
+        Write-Host " Share Name to Create/Use [Default: Transfer]:" -ForegroundColor Cyan
+        $share = Read-Host
+        if (-not $share) { $share = "Transfer" }
+
+        # User Name (Default: transfer)
+        Write-Host " Transfer User to Create/Use [Default: transfer]:" -ForegroundColor Cyan
+        $user = Read-Host
+        if (-not $user) { $user = "transfer" }
+
+        # Folder Path (Default: C:\Transfer)
+        Write-Host " Local Folder Path [Default: C:\$share]:" -ForegroundColor Cyan
         $dest = Read-Host
+        if (-not $dest) { $dest = "C:\$share" }
         
-        if (-not $dest) { $dest = $defDest }
-        
-        # Launch Tool
-        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Sender -SourcePath '$src' -DestPath '$dest'"
+        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Sender -SourcePath '$src' -DestPath '$dest' -ShareName '$share' -TransferUser '$user'"
     }
 
     # --- RECEIVER MODE ---
     elseif ($sel -eq '2') {
         Write-Host "`n --- RECEIVER CONFIG ---" -ForegroundColor Yellow
         
-        Write-Host " Enter Remote Computer Name [Required]:" -ForegroundColor Cyan
-        Write-Host " (e.g. FRONTDESK)" -ForegroundColor Gray
+        Write-Host " Remote Computer Name [Required]:" -ForegroundColor Cyan
         $rHost = Read-Host
-        if (-not $rHost) { Write-Host " [!] Cancelled." -ForegroundColor Red; return }
+        if (-not $rHost) { return }
 
-        $defShare = "QuickBooks"
-        Write-Host "`n Enter Remote Share Name [Press Enter for Default]:" -ForegroundColor Cyan
-        Write-Host " ($defShare)" -ForegroundColor Gray
+        Write-Host " Remote Share Name [Default: Transfer]:" -ForegroundColor Cyan
         $rShare = Read-Host
-        if (-not $rShare) { $rShare = $defShare }
+        if (-not $rShare) { $rShare = "Transfer" }
 
-        Write-Host "`n Enter File Name to Pull [Required]:" -ForegroundColor Cyan
-        Write-Host " (e.g. Setup.exe)" -ForegroundColor Gray
+        Write-Host " File Name to Pull [Required]:" -ForegroundColor Cyan
         $rFile = Read-Host
-        if (-not $rFile) { Write-Host " [!] Cancelled." -ForegroundColor Red; return }
+        if (-not $rFile) { return }
 
-        $defUser = "transfer"
-        Write-Host "`n Enter Remote User [Press Enter for Default]:" -ForegroundColor Cyan
-        Write-Host " ($defUser)" -ForegroundColor Gray
+        Write-Host " Remote User [Default: transfer]:" -ForegroundColor Cyan
         $rUser = Read-Host
-        if (-not $rUser) { $rUser = $defUser }
+        if (-not $rUser) { $rUser = "transfer" }
         
-        Write-Host "`n Enter Remote Password [Required]:" -ForegroundColor Cyan
+        # New: Local Destination (Fixes the C:\Windows\System32 issue)
+        Write-Host " Local Download Destination [Default: C:\Users\Public\Downloads]:" -ForegroundColor Cyan
+        $lDest = Read-Host
+        if (-not $lDest) { $lDest = "C:\Users\Public\Downloads" }
+        
+        Write-Host " Remote Password [Required]:" -ForegroundColor Cyan
         $rPass = Read-Host 
-        if (-not $rPass) { Write-Host " [!] Password required." -ForegroundColor Red; return }
+        if (-not $rPass) { return }
 
-        # Launch Tool
-        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Receiver -RemoteHost '$rHost' -RemoteShare '$rShare' -RemoteFile '$rFile' -RemoteUser '$rUser' -RemotePass '$rPass'"
+        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Receiver -RemoteHost '$rHost' -RemoteShare '$rShare' -RemoteFile '$rFile' -RemoteUser '$rUser' -RemotePass '$rPass' -LocalDestPath '$lDest'"
     }
 
     # --- STATUS MODE ---
