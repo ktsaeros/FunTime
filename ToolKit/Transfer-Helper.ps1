@@ -1,7 +1,7 @@
 <#
 .SYNOPSIS
-    Aeros Workgroup Transfer Helper (Toolbox Edition)
-    Accepts parameters to handle permissions and transfers silently.
+    Aeros Workgroup Transfer Helper (Toolbox Edition v2)
+    Now accepts raw passwords to bypass interactive login prompts in RMM.
 #>
 
 param(
@@ -15,10 +15,13 @@ param(
     [string]$RemoteHost,
     [string]$RemoteShare = "QuickBooks",
     [string]$RemoteFile,
-    [string]$RemoteUser = "transfer"
+    [string]$RemoteUser = "transfer",
+    [string]$RemotePass   # <--- NEW: Accepts password as string
 )
 
-# ASCII Headers (Safe for all RMMs)
+# Fix Output Encoding
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+
 function Show-Header {
     Write-Host "+-------------------------------------------------------+" -ForegroundColor Cyan
     Write-Host "|         AEROS WORKGROUP FILE TRANSFER WIZARD          |" -ForegroundColor Cyan
@@ -30,7 +33,12 @@ if ($Mode -eq "Sender") {
     Write-Host " [MODE: SENDER]" -ForegroundColor Yellow
     
     if (-not $SourcePath) { Write-Host " [!] Error: No SourcePath provided." -ForegroundColor Red; return }
-    if (-not (Test-Path $SourcePath)) { Write-Host " [!] Source file not found: $SourcePath" -ForegroundColor Red; return }
+    
+    # Validation
+    if (-not (Test-Path $SourcePath)) { 
+        Write-Host " [!] Source file not found: $SourcePath" -ForegroundColor Red
+        return 
+    }
 
     # 1. Ensure Dest Exists
     if (-not (Test-Path $DestPath)) {
@@ -58,25 +66,30 @@ if ($Mode -eq "Receiver") {
     
     if (-not $RemoteHost -or -not $RemoteFile) { Write-Host " [!] Error: Missing RemoteHost or Filename." -ForegroundColor Red; return }
 
-    Write-Host " Target: \\$RemoteHost\$RemoteShare\$RemoteFile" -ForegroundColor Gray
-    
-    # Credentials (Interactive request if running via Tool)
-    # We assume the user has set the password or we prompt here if secure string isn't passed
-    # For simplicity in RMM, we rely on the session prompts or passed args.
-    
+    # Handle Credentials (RMM Safe)
     try {
-        $cred = Get-Credential "$RemoteHost\$RemoteUser"
+        if ($RemotePass) {
+            $secPass = ConvertTo-SecureString $RemotePass -AsPlainText -Force
+            $cred = New-Object System.Management.Automation.PSCredential ("$RemoteHost\$RemoteUser", $secPass)
+        } else {
+            # Fallback to interactive (will likely fail in RMM but good for local testing)
+            $cred = Get-Credential "$RemoteHost\$RemoteUser"
+        }
     } catch {
-        Write-Host " [!] Could not grab credentials. Aborting." -ForegroundColor Red
+        Write-Host " [!] Credential Error: $($_.Exception.Message)" -ForegroundColor Red
         return
     }
 
-    Write-Host " Starting Background Job..." -ForegroundColor Cyan
+    Write-Host " Starting Background Job for: $RemoteFile" -ForegroundColor Cyan
     $jobName = "Transfer_$($RemoteFile.Substring(0, [math]::Min(10, $RemoteFile.Length)))"
 
     $job = Start-Job -Name $jobName -ScriptBlock {
         param($c, $rHost, $rShare, $fName)
         $dest = "$env:USERPROFILE\Downloads\"
+        
+        # Robust Drive Mapping
+        if (Test-Path "Q:") { Remove-PSDrive "Q" -Force -ErrorAction SilentlyContinue }
+        
         New-PSDrive -Name "Q" -PSProvider FileSystem -Root "\\$rHost\$rShare" -Credential $c -Persist | Out-Null
         $log = robocopy "Q:\" $dest $fName /Z /NP /R:5 /W:5
         Remove-PSDrive "Q"
