@@ -61,7 +61,7 @@ function Audit-UserMap      {
     Invoke-AerosTool "Audit-UserDrives.ps1" "-TargetUser $u" 
 }
 function Invoke-UpsCheck    { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
-function Get-Users          { Invoke-AerosTool "users.ps1" }
+function Get-UserAudit          { Invoke-AerosTool "users.ps1" }
 
 # Maintenance & Displays
 function New-Scanner        { Invoke-AerosScript "scanner.ps1" }
@@ -128,7 +128,7 @@ function Start-Aeros {
             '5'  { Get-RMMLog; pause }
             '6'  { Get-Drives; pause }
             '7'  { Get-Storage; pause }
-            '8'  { Get-Users;   pauser }
+            '8'  { Get-Users;   pause }
             '9'  { Invoke-SpeedTest; pause }
             '10' { Get-MonitorInfo; pause }
             '11' { Get-DiskInv; pause }
