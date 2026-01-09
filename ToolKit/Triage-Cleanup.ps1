@@ -80,9 +80,13 @@ switch ($choice) {
         if ($purgeDL -eq 'y') { Get-ChildItem "C:\Users\*\Downloads\*" -Recurse | Remove-Item -Force -Recurse }
     }
     "3" { 
-        Write-Host " !!! RUNNING MAX CLEAN !!!" -ForegroundColor Red
-        Invoke-AerosTool "cclean.ps1" "-ClearTemp -ClearWUCache -DeepComponentCleanup -RemoveOptionalFeatures -DisableHibernate -EmptyRecycleBin -ShrinkShadowStorage"
+       Write-Host " !!! RUNNING MAX CLEAN !!!" -ForegroundColor Red
+        # 1. Force nuke every user's Recycle Bin on the drive
+        Write-Host " [!] Purging ALL User Recycle Bins..." -ForegroundColor Yellow
         Remove-Item -Path "C:\`$Recycle.Bin\*" -Recurse -Force -ErrorAction SilentlyContinue
+
+        # 2. Run the rest of the deep clean
+        Invoke-AerosTool "cclean.ps1" "-ClearTemp -ClearWUCache -DeepComponentCleanup -RemoveOptionalFeatures -DisableHibernate -ShrinkShadowStorage"
     }
     Default { return }
 }
