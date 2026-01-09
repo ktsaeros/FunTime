@@ -120,7 +120,7 @@ function Start-Aeros {
         Write-Host "  2.  RAM Analysis                   11. OS Install Date Check"
         Write-Host "  3.  Outlook/Office Audit           12. Verify BelMonitor/GWN Post"
         Write-Host "  4.  Battery & UPS Check            13. ** MASTER FORENSIC REPORT **"
-        Write-Host "  5.  Tail RMM Logs (Live)           "
+        Write-Host "  5.  Tail RMM Logs (Live)           16. Transfer-Wizard"
         Write-Host "  6.  Master Storage & User Audit    "
         Write-Host "  7.  Disk/Storage Inventory         " -ForegroundColor Green
         Write-Host "  9.  Network SpeedTest (Ookla)"  -ForegroundColor Green
