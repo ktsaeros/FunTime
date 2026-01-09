@@ -90,19 +90,25 @@ function Invoke-TransferWizard {
     Write-Host " 3. Check Job Status"
     Write-Host " Q. Cancel"
     
-    $sel = Read-Host " Select Option"
+    Write-Host "`n Select Option:" -NoNewline
+    $sel = Read-Host
     
     # --- SENDER MODE ---
     if ($sel -eq '1') {
         Write-Host "`n --- SENDER CONFIG ---" -ForegroundColor Yellow
         
-        # 1. Source Path (Mandatory)
-        $src = Read-Host " Source Path [Required] (e.g. C:\Users\Missy\Downloads\Setup.exe)"
+        # Explicitly print prompt before asking for input
+        Write-Host " Enter Source Path [Required]:" -ForegroundColor Cyan
+        Write-Host " (e.g. C:\Users\Missy\Downloads\Setup.exe)" -ForegroundColor Gray
+        $src = Read-Host
+        
         if (-not $src) { Write-Host " [!] Cancelled." -ForegroundColor Red; return }
 
-        # 2. Destination Path (Optional - Default Provided)
         $defDest = "C:\Users\Public\Documents\Intuit\QuickBooks"
-        $dest = Read-Host " Destination Path [Default: $defDest]"
+        Write-Host "`n Enter Destination Path [Press Enter for Default]:" -ForegroundColor Cyan
+        Write-Host " ($defDest)" -ForegroundColor Gray
+        $dest = Read-Host
+        
         if (-not $dest) { $dest = $defDest }
         
         # Launch Tool
@@ -113,30 +119,33 @@ function Invoke-TransferWizard {
     elseif ($sel -eq '2') {
         Write-Host "`n --- RECEIVER CONFIG ---" -ForegroundColor Yellow
         
-        # 1. Remote Host (Mandatory)
-        $rHost = Read-Host " Remote Computer Name [Required] (e.g. FRONTDESK)"
+        Write-Host " Enter Remote Computer Name [Required]:" -ForegroundColor Cyan
+        Write-Host " (e.g. FRONTDESK)" -ForegroundColor Gray
+        $rHost = Read-Host
         if (-not $rHost) { Write-Host " [!] Cancelled." -ForegroundColor Red; return }
 
-        # 2. Share Name (Optional - Default Provided)
         $defShare = "QuickBooks"
-        $rShare = Read-Host " Remote Share Name [Default: $defShare]"
+        Write-Host "`n Enter Remote Share Name [Press Enter for Default]:" -ForegroundColor Cyan
+        Write-Host " ($defShare)" -ForegroundColor Gray
+        $rShare = Read-Host
         if (-not $rShare) { $rShare = $defShare }
 
-        # 3. Filename (Mandatory)
-        $rFile = Read-Host " File Name to Pull [Required] (e.g. Setup.exe)"
+        Write-Host "`n Enter File Name to Pull [Required]:" -ForegroundColor Cyan
+        Write-Host " (e.g. Setup.exe)" -ForegroundColor Gray
+        $rFile = Read-Host
         if (-not $rFile) { Write-Host " [!] Cancelled." -ForegroundColor Red; return }
 
-        # 4. Remote User (Optional - Default Provided)
         $defUser = "transfer"
-        $rUser = Read-Host " Remote User [Default: $defUser]"
+        Write-Host "`n Enter Remote User [Press Enter for Default]:" -ForegroundColor Cyan
+        Write-Host " ($defUser)" -ForegroundColor Gray
+        $rUser = Read-Host
         if (-not $rUser) { $rUser = $defUser }
         
-        # 5. Remote Password (Mandatory)
-        # We read this as plain text so we can pass it to the tool argument string
-        $rPass = Read-Host " Remote Password [Required]" 
+        Write-Host "`n Enter Remote Password [Required]:" -ForegroundColor Cyan
+        $rPass = Read-Host 
         if (-not $rPass) { Write-Host " [!] Password required." -ForegroundColor Red; return }
 
-        # Launch Tool (Passes all captured variables to the script)
+        # Launch Tool
         Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Receiver -RemoteHost '$rHost' -RemoteShare '$rShare' -RemoteFile '$rFile' -RemoteUser '$rUser' -RemotePass '$rPass'"
     }
 
