@@ -74,12 +74,39 @@ function Clean-CDrive       { Invoke-AerosTool "cclean.ps1" "" }
 function Remove-DellCmd     { Invoke-AerosTool "Remove-DellCommand.ps1" "" }
 function Clean-OfficeMRU    { Invoke-AerosTool "Clean-OfficeMRU.ps1" "" }
 function Invoke-VirtualDisp  { Invoke-AerosScript "usbmmidd.ps1" }
+function Invoke-XfrHelpr    { Invoke-}
 
 # Security
 function Enable-BitLocker   { Invoke-AerosScript "btlon.ps1" }
 function Set-Policies       { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 function Gen-Password       { Invoke-AerosScript "Generate-Passwords.ps1" }
 function Get-Incidents      { Invoke-AerosScript "get-incidents.ps1" }
+
+function Invoke-TransferWizard {
+    Clear-Host
+    Write-Host " [AEROS TRANSFER WIZARD]" -ForegroundColor Cyan
+    Write-Host " 1. Sender Mode (Fix Perms & Move)"
+    Write-Host " 2. Receiver Mode (Start Download Job)"
+    Write-Host " 3. Check Job Status"
+    
+    $sel = Read-Host " Select Option"
+    
+    if ($sel -eq '1') {
+        $src = Read-Host " Enter Source Path (e.g. C:\Users\User\Downloads\file.exe)"
+        if (-not $src) { return }
+        # Note: We wrap path in quotes to handle spaces
+        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Sender -SourcePath '$src'"
+    }
+    elseif ($sel -eq '2') {
+        $hostName = Read-Host " Remote Hostname"
+        $fName    = Read-Host " Filename to Pull"
+        if (-not $hostName -or -not $fName) { return }
+        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Receiver -RemoteHost '$hostName' -RemoteFile '$fName'"
+    }
+    elseif ($sel -eq '3') {
+        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Status"
+    }
+}
 
 function Start-Aeros {
     while ($true) {
@@ -137,6 +164,7 @@ function Start-Aeros {
              '11' { Get-OSAge; pause }          # Moved from 12
              '12' { Verify-BelMonitor; pause }  # Moved from 14
              '13' { Get-ForensicMaster; pause } # Moved from 15
+             '16' { Invoke-TransferWizard; pause }  # <--- NEW ENTRY
 
              # --- MAINTENANCE & INSTALL (Unchanged) ---
              '20' { New-Scanner; pause }
