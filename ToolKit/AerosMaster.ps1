@@ -82,7 +82,7 @@ function Set-Policies       { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 function Gen-Password       { Invoke-AerosScript "Generate-Passwords.ps1" }
 function Get-Incidents      { Invoke-AerosScript "get-incidents.ps1" }
 
-ffunction Invoke-TransferWizard {
+function Invoke-TransferWizard {
     Clear-Host
     Write-Host " [AEROS ZIP-AND-SHIP WIZARD v4]" -ForegroundColor Cyan
     Write-Host " 1. Sender (Zip, Create User/Share)"
