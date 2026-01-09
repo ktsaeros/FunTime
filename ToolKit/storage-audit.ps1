@@ -1,8 +1,8 @@
 <#
 .SYNOPSIS
-    Aeros Master Storage Audit (Unified v5.4)
-    Fixes: Added UTF-8 Output Encoding to fix "garbage" border characters.
-    Safety: Uses single quotes to prevent Master Loader parsing errors.
+    Aeros Master Storage Audit (Unified v5.5)
+    Fixes: Reverted to native sizing to fix 0GB RMM bug.
+    Feature: Sorts user list by Size (Largest on Top).
 #>
 
 # --- FORCE UTF-8 OUTPUT FOR FANCY BORDERS ---
@@ -21,13 +21,17 @@ Write-Host '║           AEROS CONSOLIDATED STORAGE AUDIT            ║' -Fore
 Write-Host '╚═══════════════════════════════════════════════════════╝' -ForegroundColor Cyan
 Write-Host " Host: $($env:COMPUTERNAME) | Domain: $domainName | Last Boot: $bootTime" -ForegroundColor Gray
 
-# Faster folder sizing using .NET COM object
+# Robust folder sizing (Slower but works in RMM/SYSTEM context)
 function Get-FolderSizeGB ($path) {
     if (-not (Test-Path $path)) { return 0 }
     try {
-        $objFSO = New-Object -ComObject Scripting.FileSystemObject
-        $size = $objFSO.GetFolder($path).Size
-        return [math]::Round($size / 1GB, 2)
+        # Using Get-ChildItem is slower than COM but works 100% of the time in System context
+        $measure = Get-ChildItem -LiteralPath $path -Recurse -File -Force -ErrorAction SilentlyContinue | Measure-Object -Property Length -Sum
+        if ($measure.Sum) {
+            return [math]::Round($measure.Sum / 1GB, 2)
+        } else {
+            return 0
+        }
     } catch { return 0 }
 }
 
@@ -79,6 +83,8 @@ foreach ($prof in $profiles) {
         }
     }
 }
+
+# SORTING APPLIED HERE: Descending by Size_GB
 $results | Sort-Object Size_GB -Descending | Format-Table -AutoSize
 
 # --- SECTION 2: DEEP MAPPED DRIVE AUDIT ---
@@ -109,22 +115,30 @@ if ($driveResults) { $driveResults | Format-Table -AutoSize } else { Write-Host 
 Write-Host "`n--- [SECTION 3: LOCAL NETWORK SHARES AND PERMISSIONS] ---" -ForegroundColor Cyan
 $shares = Get-SmbShare | Where-Object { $_.Name -notmatch '(\$|Users)' }
 
-$shareReport = foreach ($s in $shares) {
-    $exists = Test-Path $s.Path
+if ($shares) {
+    $shareReport = foreach ($s in $shares) {
+        $exists = Test-Path $s.Path
+        
+        # Use -f format operator to avoid complex interpolation quotes
+        try {
+            $permObjects = Get-SmbShareAccess -Name $s.Name -ErrorAction SilentlyContinue
+            $permString = if ($permObjects) {
+                ($permObjects | ForEach-Object { '{0} ({1})' -f $_.AccountName, $_.AccessRight }) -join ' | '
+            } else {
+                'None / Inherited'
+            }
+        } catch {
+             $permString = "Error reading permissions"
+        }
     
-    # Use -f format operator to avoid complex interpolation quotes
-    $permObjects = Get-SmbShareAccess -Name $s.Name
-    $permString = if ($permObjects) {
-        ($permObjects | ForEach-Object { '{0} ({1})' -f $_.AccountName, $_.AccessRight }) -join ' | '
-    } else {
-        'None / Inherited'
+        [pscustomobject]@{
+            ShareName   = $s.Name
+            Status      = if ($exists) { 'OK' } else { '[!] ORPHANED' }
+            Path        = $s.Path
+            Permissions = $permString
+        }
     }
-
-    [pscustomobject]@{
-        ShareName   = $s.Name
-        Status      = if ($exists) { 'OK' } else { '[!] ORPHANED' }
-        Path        = $s.Path
-        Permissions = $permString
-    }
+    $shareReport | Format-List ShareName, Status, Path, Permissions
+} else {
+    Write-Host "   No custom shares found (ignoring default IPC$/Admin$)." -ForegroundColor Gray
 }
-$shareReport | Format-List ShareName, Status, Path, Permissions
