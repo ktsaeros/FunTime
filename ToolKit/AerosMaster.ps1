@@ -84,8 +84,8 @@ function Get-Incidents      { Invoke-AerosScript "get-incidents.ps1" }
 
 function Invoke-TransferWizard {
     Clear-Host
-    Write-Host " [AEROS TRANSFER WIZARD v3]" -ForegroundColor Cyan
-    Write-Host " 1. Sender Mode (Auto-Create Share & User)"
+    Write-Host " [AEROS TRANSFER WIZARD v3.2]" -ForegroundColor Cyan
+    Write-Host " 1. Sender Mode (Audit Shares/Users & Setup)"
     Write-Host " 2. Receiver Mode (Start Download Job)"
     Write-Host " 3. Check Job Status"
     Write-Host " Q. Cancel"
@@ -101,21 +101,53 @@ function Invoke-TransferWizard {
         $src = Read-Host
         if (-not $src) { return }
 
-        # Share Name (Default: Transfer)
-        Write-Host " Share Name to Create/Use [Default: Transfer]:" -ForegroundColor Cyan
+        # --- 1. AUDIT SHARES & PERMISSIONS ---
+        Write-Host "`n [Existing Shares & Access]" -ForegroundColor Gray
+        try {
+            $shares = Get-SmbShare | Where-Object { $_.Special -eq $false } 
+            $shareReport = foreach ($s in $shares) {
+                # Get ACLs safely
+                try {
+                    $acl = Get-SmbShareAccess -Name $s.Name -ErrorAction Stop | Select-Object -ExpandProperty AccountName
+                    $permString = $acl -join ", "
+                } catch {
+                    $permString = "(Access Check Failed)"
+                }
+                [PSCustomObject]@{
+                    Name = $s.Name
+                    Path = $s.Path
+                    WhoCanAccess = $permString
+                }
+            }
+            $shareReport | Format-Table -AutoSize | Out-String | Write-Host
+        } catch {
+            Write-Host " (Could not audit shares)" -ForegroundColor DarkGray
+        }
+
+        Write-Host " Share Name [Type existing from above OR new name to Create]:" -ForegroundColor Cyan
+        Write-Host " (Default: Transfer)" -ForegroundColor Gray
         $share = Read-Host
         if (-not $share) { $share = "Transfer" }
 
-        # User Name (Default: transfer)
-        Write-Host " Transfer User to Create/Use [Default: transfer]:" -ForegroundColor Cyan
+        # --- 2. AUDIT LOCAL USERS ---
+        Write-Host "`n [Valid Local Users]" -ForegroundColor Gray
+        try {
+            # List only enabled users who can actually login
+            Get-LocalUser | Where-Object { $_.Enabled -eq $true } | Select-Object Name, Description, LastLogon | Format-Table -AutoSize | Out-String | Write-Host
+        } catch {
+             Write-Host " (Could not list users)" -ForegroundColor DarkGray
+        }
+
+        Write-Host " Transfer User [Type existing from above OR new name to Create]:" -ForegroundColor Cyan
+        Write-Host " (Default: transfer)" -ForegroundColor Gray
         $user = Read-Host
         if (-not $user) { $user = "transfer" }
 
-        # Folder Path (Default: C:\Transfer)
         Write-Host " Local Folder Path [Default: C:\$share]:" -ForegroundColor Cyan
         $dest = Read-Host
         if (-not $dest) { $dest = "C:\$share" }
         
+        # Launch Tool
         Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Sender -SourcePath '$src' -DestPath '$dest' -ShareName '$share' -TransferUser '$user'"
     }
 
@@ -139,7 +171,6 @@ function Invoke-TransferWizard {
         $rUser = Read-Host
         if (-not $rUser) { $rUser = "transfer" }
         
-        # New: Local Destination (Fixes the C:\Windows\System32 issue)
         Write-Host " Local Download Destination [Default: C:\Users\Public\Downloads]:" -ForegroundColor Cyan
         $lDest = Read-Host
         if (-not $lDest) { $lDest = "C:\Users\Public\Downloads" }
