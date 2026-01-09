@@ -55,6 +55,7 @@ function Invoke-SpeedTest   { Invoke-AerosTool "speedtest.ps1" "" }
 function Verify-BelMonitor  { Invoke-AerosTool "Verify-BelMonitor.ps1" "" }
 function Get-ForensicMaster { Invoke-AerosScript "Forensic-Master.ps1" }
 function Invoke-UpsCheck    { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
+function Clean-CDrive { Invoke-AerosScript "Triage-Cleanup.ps1" }
 
 # Unified Storage & User Audit
 function Get-StorageAudit   { Invoke-AerosScript "storage-audit.ps1" }
@@ -70,7 +71,6 @@ function Kick-EDR           { Invoke-AerosScript "edrkick.ps1" }
 function Invoke-PowerEnforce { Invoke-AerosTool "power-enforce.ps1" "-PowerButtonAction 1" }
 function Install-UpsLogger  { Invoke-AerosTool "upslog.ps1" "-Install -IntervalSeconds 10" }
 function Start-ImageRepair  { Invoke-AerosTool "Repair-WindowsHealth.ps1" "" }
-function Clean-CDrive       { Invoke-AerosTool "cclean.ps1" "" }
 function Remove-DellCmd     { Invoke-AerosTool "Remove-DellCommand.ps1" "" }
 function Clean-OfficeMRU    { Invoke-AerosTool "Clean-OfficeMRU.ps1" "" }
 function Invoke-VirtualDisp  { Invoke-AerosScript "usbmmidd.ps1" }
