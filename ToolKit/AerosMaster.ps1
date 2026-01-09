@@ -49,19 +49,15 @@ function Get-OfficeAudit    { Invoke-AerosScript "oochk.ps1" }
 function Get-MonitorInfo    { Invoke-AerosTool "Get-MonitorInventory.ps1" "" }
 function Get-Battery        { Invoke-AerosScript "battery.ps1" }
 function Get-RMMLog         { Invoke-AerosScript "rmmlog.ps1" }
-function Get-Drives         { Invoke-AerosScript "map.ps1" }
-function Get-Storage        { Invoke-AerosScript "Get-StorageUsage.ps1" }
 function Get-DiskInv        { Invoke-AerosTool "Get-DiskInventory.ps1" "" }
 function Get-OSAge          { Invoke-AerosTool "Get-OSAge.ps1" "" }
 function Invoke-SpeedTest   { Invoke-AerosTool "speedtest.ps1" "" }
 function Verify-BelMonitor  { Invoke-AerosTool "Verify-BelMonitor.ps1" "" }
 function Get-ForensicMaster { Invoke-AerosScript "Forensic-Master.ps1" }
-function Audit-UserMap      { 
-    $u = Read-Host "Enter Username"
-    Invoke-AerosTool "Audit-UserDrives.ps1" "-TargetUser $u" 
-}
 function Invoke-UpsCheck    { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
-function Get-UserAudit          { Invoke-AerosTool "users.ps1" }
+
+# Unified Storage & User Audit
+function Get-StorageAudit   { Invoke-AerosScript "storage-audit.ps1" }
 
 # Maintenance & Displays
 function New-Scanner        { Invoke-AerosScript "scanner.ps1" }
@@ -93,14 +89,14 @@ function Start-Aeros {
         Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
         
         Write-Host " [DIAGNOSTICS & AUDIT]" -ForegroundColor Yellow
-        Write-Host "  1.  System Health (Forensic4)      9.  Network SpeedTest (Ookla)"
-        Write-Host "  2.  RAM Analysis                   10. Monitor Inventory (Serials)"
-        Write-Host "  3.  Outlook/Office Audit           11. Disk/Storage Inventory"
-        Write-Host "  4.  Battery & UPS Check            12. OS Install Date Check"
-        Write-Host "  5.  Tail RMM Logs (Live)           13. Audit Offline Mapped Drives"
-        Write-Host "  6.  Get Mapped Drives (Active)     14. Verify BelMonitor/GWN Post"
-        Write-Host "  7.  Get Folder/File Sizes          15. ** MASTER FORENSIC REPORT **" -ForegroundColor Green
-        Write-Host "  8.  List Users"  -ForegroundColor Green
+        Write-Host "  1.  System Health (Forensic4)      10. Monitor Inventory (Serials)"
+        Write-Host "  2.  RAM Analysis                   11. OS Install Date Check"
+        Write-Host "  3.  Outlook/Office Audit           12. Verify BelMonitor/GWN Post"
+        Write-Host "  4.  Battery & UPS Check            13. ** MASTER FORENSIC REPORT **"
+        Write-Host "  5.  Tail RMM Logs (Live)           "
+        Write-Host "  6.  Master Storage & User Audit    "
+        Write-Host "  7.  Disk/Storage Inventory         " -ForegroundColor Green
+        Write-Host "  9.  Network SpeedTest (Ookla)"  -ForegroundColor Green
         
         Write-Host "`n [MAINTENANCE & INSTALL]" -ForegroundColor Yellow
         Write-Host "  20. Create Scanner User (SMB)      27. Power Policy Enforcer"
@@ -121,44 +117,54 @@ function Start-Aeros {
         $sel = Read-Host "`n Command"
         
         switch ($sel) {
-            '1'  { Get-SystemHealth; pause }
-            '2'  { Get-RAMReport; pause }
-            '3'  { Get-OfficeAudit; pause }
-            '4'  { Get-Battery; Invoke-UpsCheck; pause }
-            '5'  { Get-RMMLog; pause }
-            '6'  { Get-Drives; pause }
-            '7'  { Get-Storage; pause }
-            '8'  { Get-Users;   pause }
-            '9'  { Invoke-SpeedTest; pause }
-            '10' { Get-MonitorInfo; pause }
-            '11' { Get-DiskInv; pause }
-            '12' { Get-OSAge; pause }
-            '13' { Audit-UserMap; pause }
-            '14' { Verify-BelMonitor; pause }
-            '15' { Get-ForensicMaster; pause }
-            '20' { New-Scanner; pause }
-            '21' { Fix-AccountEdge; pause }
-            '22' { Dell-Update; pause }
-            '23' { Install-Apps; pause }
-            '24' { Install-SC; pause }
-            '25' { Install-PS7; pause }
-            '26' { Kick-EDR; pause }
-            '27' { Invoke-PowerEnforce; pause }
-            '28' { Install-UpsLogger; pause }
-            '29' { Start-ImageRepair; pause }
-            '30' { Clean-CDrive; pause }
-            '31' { Remove-DellCmd; pause }
-            '32' { Clean-OfficeMRU; pause }
-            '33' { Invoke-VirtualDisp; pause }
-            '40' { Enable-BitLocker; pause }
-            '41' { Set-Policies; pause }
-            '42' { Gen-Password; pause }
-            '43' { Get-Incidents; pause }
-            'Q'  { return }
-            'q'  { return }
+             # --- DIAGNOSTICS & AUDIT ---
+             '1'  { Get-SystemHealth; pause }
+             '2'  { Get-RAMReport; pause }
+             '3'  { Get-OfficeAudit; pause }
+             '4'  { Get-Battery; Invoke-UpsCheck; pause }
+             '5'  { Get-RMMLog; pause }
+    
+             # NEW Unified Tool (Replaces old #6, #8, #13)
+             '6'  { Get-StorageAudit; pause }
+
+             # Shifted Items
+             '7'  { Get-DiskInv; pause }        # Physical Disk Inventory (Moved from 11)
+    
+             # (User skipped #8 in menu)
+    
+             '9'  { Invoke-SpeedTest; pause }
+             '10' { Get-MonitorInfo; pause }
+             '11' { Get-OSAge; pause }          # Moved from 12
+             '12' { Verify-BelMonitor; pause }  # Moved from 14
+             '13' { Get-ForensicMaster; pause } # Moved from 15
+
+             # --- MAINTENANCE & INSTALL (Unchanged) ---
+             '20' { New-Scanner; pause }
+             '21' { Fix-AccountEdge; pause }
+             '22' { Dell-Update; pause }
+             '23' { Install-Apps; pause }
+             '24' { Install-SC; pause }
+             '25' { Install-PS7; pause }
+             '26' { Kick-EDR; pause }
+             '27' { Invoke-PowerEnforce; pause }
+             '28' { Install-UpsLogger; pause }
+             '29' { Start-ImageRepair; pause }
+             '30' { Clean-CDrive; pause }
+             '31' { Remove-DellCmd; pause }
+             '32' { Clean-OfficeMRU; pause }
+             '33' { Invoke-VirtualDisp; pause }
+
+              # --- SECURITY (Unchanged) ---
+              '40' { Enable-BitLocker; pause }
+               '41' { Set-Policies; pause }
+              '42' { Gen-Password; pause }
+               '43' { Get-Incidents; pause }
+
+               'Q'  { return }
+               'q'  { return }
+            }
         }
     }
-}
 
 # Execution
 if ($Host.Name -notmatch "ISE|Visual Studio Code") { Start-Aeros }
