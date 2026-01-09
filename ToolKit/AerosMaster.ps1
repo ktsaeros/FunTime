@@ -82,109 +82,56 @@ function Set-Policies       { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 function Gen-Password       { Invoke-AerosScript "Generate-Passwords.ps1" }
 function Get-Incidents      { Invoke-AerosScript "get-incidents.ps1" }
 
-function Invoke-TransferWizard {
+ffunction Invoke-TransferWizard {
     Clear-Host
-    Write-Host " [AEROS TRANSFER WIZARD v3.2]" -ForegroundColor Cyan
-    Write-Host " 1. Sender Mode (Audit Shares/Users & Setup)"
-    Write-Host " 2. Receiver Mode (Start Download Job)"
+    Write-Host " [AEROS ZIP-AND-SHIP WIZARD v4]" -ForegroundColor Cyan
+    Write-Host " 1. Sender (Zip, Create User/Share)"
+    Write-Host " 2. Receiver (Pull Zip from Remote)"
     Write-Host " 3. Check Job Status"
-    Write-Host " Q. Cancel"
+    Write-Host " 4. Cleanup Sender (Delete User/Share/Zip)" -ForegroundColor Red
+    Write-Host " Q. Back"
     
     Write-Host "`n Select Option:" -NoNewline
     $sel = Read-Host
     
-    # --- SENDER MODE ---
+    # --- SENDER ---
     if ($sel -eq '1') {
-        Write-Host "`n --- SENDER CONFIG ---" -ForegroundColor Yellow
-        
-        Write-Host " Source File Path [Required]:" -ForegroundColor Cyan
+        Write-Host "`n --- SENDER SETUP ---" -ForegroundColor Yellow
+        Write-Host " Source File or Folder to Compress [Required]:" -ForegroundColor Cyan
         $src = Read-Host
         if (-not $src) { return }
-
-        # --- 1. AUDIT SHARES & PERMISSIONS ---
-        Write-Host "`n [Existing Shares & Access]" -ForegroundColor Gray
-        try {
-            $shares = Get-SmbShare | Where-Object { $_.Special -eq $false } 
-            $shareReport = foreach ($s in $shares) {
-                # Get ACLs safely
-                try {
-                    $acl = Get-SmbShareAccess -Name $s.Name -ErrorAction Stop | Select-Object -ExpandProperty AccountName
-                    $permString = $acl -join ", "
-                } catch {
-                    $permString = "(Access Check Failed)"
-                }
-                [PSCustomObject]@{
-                    Name = $s.Name
-                    Path = $s.Path
-                    WhoCanAccess = $permString
-                }
-            }
-            $shareReport | Format-Table -AutoSize | Out-String | Write-Host
-        } catch {
-            Write-Host " (Could not audit shares)" -ForegroundColor DarkGray
-        }
-
-        Write-Host " Share Name [Type existing from above OR new name to Create]:" -ForegroundColor Cyan
-        Write-Host " (Default: Transfer)" -ForegroundColor Gray
-        $share = Read-Host
-        if (-not $share) { $share = "Transfer" }
-
-        # --- 2. AUDIT LOCAL USERS ---
-        Write-Host "`n [Valid Local Users]" -ForegroundColor Gray
-        try {
-            # List only enabled users who can actually login
-            Get-LocalUser | Where-Object { $_.Enabled -eq $true } | Select-Object Name, Description, LastLogon | Format-Table -AutoSize | Out-String | Write-Host
-        } catch {
-             Write-Host " (Could not list users)" -ForegroundColor DarkGray
-        }
-
-        Write-Host " Transfer User [Type existing from above OR new name to Create]:" -ForegroundColor Cyan
-        Write-Host " (Default: transfer)" -ForegroundColor Gray
-        $user = Read-Host
-        if (-not $user) { $user = "transfer" }
-
-        Write-Host " Local Folder Path [Default: C:\$share]:" -ForegroundColor Cyan
-        $dest = Read-Host
-        if (-not $dest) { $dest = "C:\$share" }
         
-        # Launch Tool
-        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Sender -SourcePath '$src' -DestPath '$dest' -ShareName '$share' -TransferUser '$user'"
+        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Sender -SourcePath '$src'"
     }
 
-    # --- RECEIVER MODE ---
+    # --- RECEIVER ---
     elseif ($sel -eq '2') {
-        Write-Host "`n --- RECEIVER CONFIG ---" -ForegroundColor Yellow
-        
+        Write-Host "`n --- RECEIVER SETUP ---" -ForegroundColor Yellow
         Write-Host " Remote Computer Name [Required]:" -ForegroundColor Cyan
         $rHost = Read-Host
         if (-not $rHost) { return }
 
-        Write-Host " Remote Share Name [Default: Transfer]:" -ForegroundColor Cyan
-        $rShare = Read-Host
-        if (-not $rShare) { $rShare = "Transfer" }
-
-        Write-Host " File Name to Pull [Required]:" -ForegroundColor Cyan
-        $rFile = Read-Host
-        if (-not $rFile) { return }
-
-        Write-Host " Remote User [Default: transfer]:" -ForegroundColor Cyan
-        $rUser = Read-Host
-        if (-not $rUser) { $rUser = "transfer" }
-        
-        Write-Host " Local Download Destination [Default: C:\Users\Public\Downloads]:" -ForegroundColor Cyan
-        $lDest = Read-Host
-        if (-not $lDest) { $lDest = "C:\Users\Public\Downloads" }
-        
         Write-Host " Remote Password [Required]:" -ForegroundColor Cyan
         $rPass = Read-Host 
         if (-not $rPass) { return }
 
-        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Receiver -RemoteHost '$rHost' -RemoteShare '$rShare' -RemoteFile '$rFile' -RemoteUser '$rUser' -RemotePass '$rPass' -LocalDestPath '$lDest'"
+        # Note: We don't ask for Share/User/File because we know them (Transfer/transfer/Transfer.zip)
+        Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Receiver -RemoteHost '$rHost' -RemotePass '$rPass'"
     }
 
-    # --- STATUS MODE ---
+    # --- STATUS ---
     elseif ($sel -eq '3') {
         Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Status"
+    }
+
+    # --- CLEANUP ---
+    elseif ($sel -eq '4') {
+        Write-Host "`n [!] WARNING: This will delete the 'transfer' user and 'C:\Aeros\Transfer' folder." -ForegroundColor Red
+        Write-Host " Are you sure? (Y/N):" -NoNewline
+        $confirm = Read-Host
+        if ($confirm -eq 'Y' -or $confirm -eq 'y') {
+            Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Cleanup"
+        }
     }
 }
 

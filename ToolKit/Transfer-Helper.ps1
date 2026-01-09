@@ -1,163 +1,168 @@
 <#
 .SYNOPSIS
-    Aeros Workgroup Transfer Wizard (v3.0)
-    - SENDER: Auto-creates Users/Shares/Permissions.
-    - RECEIVER: Explicit destination paths.
-    - STATUS: Interactive log viewing.
+    Aeros Transfer Wizard v4 (Zip-and-Ship Edition)
+    - Auto-Zips Source -> C:\Aeros\Transfer\Transfer.zip
+    - Standardizes Share (Transfer) and User (transfer)
+    - Includes Cleanup Mode
 #>
 
 param(
     [Parameter(Mandatory=$true)]
-    [ValidateSet("Sender","Receiver","Status")]
+    [ValidateSet("Sender","Receiver","Status","Cleanup")]
     [string]$Mode,
 
     # Sender Params
     [string]$SourcePath,
-    [string]$DestPath = "C:\Transfer",
-    [string]$ShareName = "Transfer",
-    [string]$TransferUser = "transfer",
-
+    
     # Receiver Params
     [string]$RemoteHost,
-    [string]$RemoteShare,
-    [string]$RemoteFile,
-    [string]$RemoteUser,
-    [string]$RemotePass,
-    [string]$LocalDestPath = "C:\Users\Public\Downloads"
+    [string]$RemotePass
 )
 
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 
+# --- CONSTANTS ---
+$BaseDir   = "C:\Aeros\Transfer"
+$ZipFile   = "$BaseDir\Transfer.zip"
+$ShareName = "Transfer"
+$TransUser = "transfer"
+
 function Show-Header {
     Write-Host "+-------------------------------------------------------+" -ForegroundColor Cyan
-    Write-Host "|         AEROS WORKGROUP FILE TRANSFER WIZARD          |" -ForegroundColor Cyan
+    Write-Host "|         AEROS ZIP-AND-SHIP WIZARD (v4.0)              |" -ForegroundColor Cyan
     Write-Host "+-------------------------------------------------------+" -ForegroundColor Cyan
 }
 
-# --- SENDER MODE LOGIC ---
+# --- SENDER MODE ---
 if ($Mode -eq "Sender") {
     Show-Header
     Write-Host " [MODE: SENDER]" -ForegroundColor Yellow
 
-    if (-not (Test-Path $SourcePath)) { Write-Host " [!] Source file not found." -ForegroundColor Red; return }
+    if (-not (Test-Path $SourcePath)) { Write-Host " [!] Source not found." -ForegroundColor Red; return }
 
-    # 1. Prepare Folder
-    if (-not (Test-Path $DestPath)) {
-        New-Item -Path $DestPath -ItemType Directory -Force | Out-Null
-        Write-Host " [+] Created folder: $DestPath" -ForegroundColor Green
+    # 1. Prepare Staging Area
+    if (Test-Path $BaseDir) { Remove-Item $BaseDir -Recurse -Force -ErrorAction SilentlyContinue }
+    New-Item -Path $BaseDir -ItemType Directory -Force | Out-Null
+
+    # 2. Compress Data (The "Zip" Step)
+    Write-Host " Compressing source to Transfer.zip..." -ForegroundColor Cyan
+    try {
+        Compress-Archive -Path $SourcePath -DestinationPath $ZipFile -Force -ErrorAction Stop
+    } catch {
+        Write-Host " [!] Zipping Failed: $($_.Exception.Message)" -ForegroundColor Red; return
     }
 
-    # 2. Check/Create User
-    $u = Get-LocalUser -Name $TransferUser -ErrorAction SilentlyContinue
-    if (-not $u) {
-        # Generate a complex password (required by default policies)
-        $genPass = "Aeros" + (Get-Random -Minimum 1000 -Maximum 9999) + "!"
-        $securePass = ConvertTo-SecureString $genPass -AsPlainText -Force
-        
-        New-LocalUser -Name $TransferUser -Password $securePass -Description "Aeros Transfer Account" | Out-Null
-        Add-LocalGroupMember -Group "Users" -Member $TransferUser
-        
-        Write-Host " [+] Created User: $TransferUser" -ForegroundColor Green
-        Write-Host "     PASSWORD: $genPass" -ForegroundColor Yellow  # <--- CRITICAL INFO
-        Write-Host "     (Save this password for the Receiver!)" -ForegroundColor Gray
+    # 3. Create/Reset User
+    $genPass = "Aeros" + (Get-Random -Minimum 1000 -Maximum 9999) + "!"
+    $securePass = ConvertTo-SecureString $genPass -AsPlainText -Force
+    
+    $u = Get-LocalUser -Name $TransUser -ErrorAction SilentlyContinue
+    if ($u) { 
+        Set-LocalUser -Name $TransUser -Password $securePass 
+        Write-Host " [=] Updated password for existing user '$TransUser'" -ForegroundColor Gray
     } else {
-        Write-Host " [=] User '$TransferUser' already exists." -ForegroundColor Gray
+        New-LocalUser -Name $TransUser -Password $securePass -Description "Aeros Transfer Temp" | Out-Null
+        Add-LocalGroupMember -Group "Users" -Member $TransUser
+        Write-Host " [+] Created User '$TransUser'" -ForegroundColor Green
     }
+    
+    Write-Host "     PASSWORD: $genPass" -ForegroundColor Yellow
 
-    # 3. Check/Create Share
+    # 4. Create Share
     $s = Get-SmbShare -Name $ShareName -ErrorAction SilentlyContinue
     if (-not $s) {
-        New-SmbShare -Name $ShareName -Path $DestPath -FullAccess "Everyone" | Out-Null
-        Write-Host " [+] Created Share: \\$env:COMPUTERNAME\$ShareName" -ForegroundColor Green
-    } else {
-        Write-Host " [=] Share '$ShareName' already exists." -ForegroundColor Gray
+        New-SmbShare -Name $ShareName -Path $BaseDir -FullAccess "Everyone" | Out-Null
+        Write-Host " [+] Created Share '$ShareName'" -ForegroundColor Green
     }
 
-    # 4. Move File & Fix Perms
-    $fileName = Split-Path $SourcePath -Leaf
-    $finalPath = Join-Path $DestPath $fileName
-    
-    Write-Host " Moving File..." -ForegroundColor Cyan
-    Move-Item -Path $SourcePath -Destination $DestPath -Force
-
-    Write-Host " Fixing NTFS Permissions..." -ForegroundColor Cyan
-    $expr = "icacls `"$DestPath`" /grant Everyone:F /T"
+    # 5. Perms
+    $expr = "icacls `"$BaseDir`" /grant Everyone:F /T"
     Invoke-Expression $expr | Out-Null
 
-    Write-Host "`n [SUCCESS] READY FOR TRANSFER" -ForegroundColor Green
-    Write-Host " Source: \\$env:COMPUTERNAME\$ShareName\$fileName"
+    Write-Host "`n [SUCCESS] READY TO SHIP" -ForegroundColor Green
+    Write-Host " Source: \\$env:COMPUTERNAME\$ShareName\Transfer.zip"
 }
 
-# --- RECEIVER MODE LOGIC ---
+# --- RECEIVER MODE ---
 if ($Mode -eq "Receiver") {
     Show-Header
     Write-Host " [MODE: RECEIVER]" -ForegroundColor Yellow
     
-    # Validation
-    if (-not $RemoteHost -or -not $RemoteFile) { Write-Host " [!] Missing RemoteHost or Filename." -ForegroundColor Red; return }
-    
-    # Credential Handling
-    try {
-        if ($RemotePass) {
-            $secPass = ConvertTo-SecureString $RemotePass -AsPlainText -Force
-            $cred = New-Object System.Management.Automation.PSCredential ("$RemoteHost\$RemoteUser", $secPass)
-        } else {
-            $cred = Get-Credential "$RemoteHost\$RemoteUser"
-        }
-    } catch {
-        Write-Host " [!] Credential Error." -ForegroundColor Red; return
-    }
+    if (-not $RemoteHost -or -not $RemotePass) { Write-Host " [!] Missing Info." -ForegroundColor Red; return }
 
-    # Ensure Local Dest Exists
-    if (-not (Test-Path $LocalDestPath)) { New-Item -Path $LocalDestPath -ItemType Directory -Force | Out-Null }
+    # Hardcoded Defaults for Zip-and-Ship
+    $RemoteShare = "Transfer"
+    $RemoteFile  = "Transfer.zip"
+    $RemoteUser  = "transfer"
+    $LocalDest   = "C:\Users\Public\Downloads"
 
-    Write-Host " Starting Background Job..." -ForegroundColor Cyan
-    Write-Host " Destination: $LocalDestPath" -ForegroundColor Gray
+    # Creds
+    $secPass = ConvertTo-SecureString $RemotePass -AsPlainText -Force
+    $cred = New-Object System.Management.Automation.PSCredential ("$RemoteHost\$RemoteUser", $secPass)
 
-    $jobName = "Transfer_$($RemoteFile.Substring(0, [math]::Min(10, $RemoteFile.Length)))"
+    Write-Host " Pulling \\$RemoteHost\$RemoteShare\$RemoteFile..." -ForegroundColor Cyan
 
+    $jobName = "Pull_Zip_$(Get-Random)"
     $job = Start-Job -Name $jobName -ScriptBlock {
         param($c, $rHost, $rShare, $fName, $lDest)
-        
-        # Map Drive
         if (Test-Path "Q:") { Remove-PSDrive "Q" -Force -ErrorAction SilentlyContinue }
         try {
             New-PSDrive -Name "Q" -PSProvider FileSystem -Root "\\$rHost\$rShare" -Credential $c -Persist -ErrorAction Stop | Out-Null
-        } catch {
-            return "ERROR: Could not map drive. Check Password or Share Name.`n$($_.Exception.Message)"
-        }
-
-        # Copy
-        $log = robocopy "Q:\" $lDest $fName /Z /NP /R:5 /W:5
+        } catch { return "ERROR: Map Failed. Check Password." }
         
-        # Cleanup
+        $log = robocopy "Q:\" $lDest $fName /Z /NP /R:5 /W:5
         Remove-PSDrive "Q"
         return $log
-    } -ArgumentList $cred, $RemoteHost, $RemoteShare, $RemoteFile, $LocalDestPath
+    } -ArgumentList $cred, $RemoteHost, $RemoteShare, $RemoteFile, $LocalDest
 
     Write-Host " [SUCCESS] Job Started: $($job.Name)" -ForegroundColor Green
+    Write-Host " (Go to Main Menu -> Option 3 to check progress)" -ForegroundColor Gray
 }
 
-# --- STATUS MODE LOGIC ---
+# --- CLEANUP MODE ---
+if ($Mode -eq "Cleanup") {
+    Show-Header
+    Write-Host " [MODE: CLEANUP]" -ForegroundColor Red
+    
+    # 1. Remove Share
+    if (Get-SmbShare -Name $ShareName -ErrorAction SilentlyContinue) {
+        Remove-SmbShare -Name $ShareName -Force -ErrorAction SilentlyContinue
+        Write-Host " [-] Removed Share '$ShareName'" -ForegroundColor Yellow
+    }
+
+    # 2. Remove User
+    if (Get-LocalUser -Name $TransUser -ErrorAction SilentlyContinue) {
+        Remove-LocalUser -Name $TransUser -ErrorAction SilentlyContinue
+        Write-Host " [-] Removed User '$TransUser'" -ForegroundColor Yellow
+    }
+
+    # 3. Remove Files
+    if (Test-Path $BaseDir) {
+        Remove-Item $BaseDir -Recurse -Force -ErrorAction SilentlyContinue
+        Write-Host " [-] Removed Folder '$BaseDir'" -ForegroundColor Yellow
+    }
+    
+    Write-Host "`n [CLEAN] System restored to normal." -ForegroundColor Green
+}
+
+# --- STATUS MODE ---
 if ($Mode -eq "Status") {
     Show-Header
-    $jobs = Get-Job | Where-Object { $_.Name -like "Transfer_*" }
+    $jobs = Get-Job | Where-Object { $_.Name -like "Pull_Zip_*" }
     
     if ($jobs) {
         $jobs | Select-Object Id, Name, State, Location | Format-Table -AutoSize
-        
-        # Interactive Log Viewer
         Write-Host " Enter Job ID to view logs (or Press Enter to exit):" -NoNewline
         $id = Read-Host
         if ($id) {
             $j = Get-Job -Id $id -ErrorAction SilentlyContinue
             if ($j) {
-                Write-Host "`n --- LOG OUTPUT START ---" -ForegroundColor Yellow
+                Write-Host "`n --- LOG OUTPUT ---" -ForegroundColor Yellow
                 Receive-Job -Id $j.Id -Keep
-                Write-Host " --- LOG OUTPUT END --- `n" -ForegroundColor Yellow
+                Write-Host " --- END LOG --- `n" -ForegroundColor Yellow
             }
         }
     } else {
-        Write-Host " No active transfer jobs." -ForegroundColor Yellow
+        Write-Host " No active Zip transfers." -ForegroundColor Yellow
     }
 }
