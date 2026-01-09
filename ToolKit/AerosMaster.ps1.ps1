@@ -61,7 +61,7 @@ function Audit-UserMap      {
     Invoke-AerosTool "Audit-UserDrives.ps1" "-TargetUser $u" 
 }
 function Invoke-UpsCheck    { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
-function Get-Users
+function Get-Users          { Invoke-AerosTool "users.ps1" }
 
 # Maintenance & Displays
 function New-Scanner        { Invoke-AerosScript "scanner.ps1" }
