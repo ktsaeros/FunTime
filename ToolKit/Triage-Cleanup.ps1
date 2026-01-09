@@ -1,8 +1,22 @@
 <#
 .SYNOPSIS
-    AEROS TRIAGE & CLEANUP WIZARD (v5.0)
-    Combines Storage Audit, Large File Discovery, and Mult-Level Cleanup.
+    AEROS TRIAGE & CLEANUP WIZARD (v5.1)
+    Fixed: Recycle Bin discovery now scans all user bins via NTFS.
 #>
+
+# --- HELPER: DIRECT RECYCLE BIN SCAN ---
+function Get-TotalRecycleBinBytes {
+    $total = 0
+    # Scans the root hidden folder directly to see all users' deleted files
+    $rbPath = "C:\`$Recycle.Bin"
+    if (Test-Path $rbPath) {
+        $files = Get-ChildItem -Path $rbPath -Force -Recurse -File -ErrorAction SilentlyContinue
+        if ($files) {
+            $total = ($files | Measure-Object -Property Length -Sum).Sum
+        }
+    }
+    return $total
+}
 
 # --- PRE-SCAN: DRIVE HEALTH ---
 Clear-Host
@@ -10,11 +24,14 @@ $TargetDrive = "C"
 $drive = Get-PSDrive $TargetDrive
 $freeGB = [math]::Round($drive.Free / 1GB, 2)
 $usedGB = [math]::Round(($drive.Used + $drive.Free) / 1GB, 2) - $freeGB
+$totalRBBytes = Get-TotalRecycleBinBytes
+$rbGB = [math]::Round($totalRBBytes / 1GB, 2)
 
 Write-Host "╔═══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
 Write-Host "║            AEROS TRIAGE & CLEANUP WIZARD              ║" -ForegroundColor Cyan
 Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
-Write-Host " Drive $TargetDrive | Used: $usedGB GB | Free: $freeGB GB" -ForegroundColor Yellow
+# NEW: Combined Header with Recycle Bin visibility
+Write-Host " Drive $TargetDrive | Used: $usedGB GB | Free: $freeGB GB | Recycle Bin: $rbGB GB" -ForegroundColor Yellow
 Write-Host "---------------------------------------------------------"
 
 # --- OPTION 1: FORENSIC SCAN ---
@@ -65,6 +82,7 @@ switch ($choice) {
     "3" { 
         Write-Host " !!! RUNNING MAX CLEAN !!!" -ForegroundColor Red
         Invoke-AerosTool "cclean.ps1" "-ClearTemp -ClearWUCache -DeepComponentCleanup -RemoveOptionalFeatures -DisableHibernate -EmptyRecycleBin -ShrinkShadowStorage"
+        Remove-Item -Path "C:\`$Recycle.Bin\*" -Recurse -Force -ErrorAction SilentlyContinue
     }
     Default { return }
 }
