@@ -43,7 +43,7 @@ function Invoke-AerosTool {
 }
 
 # --- Tool Mapping ---
-function Get-SystemHealth   { Invoke-AerosScript "forensic4.ps1" }
+function Get-SystemHealth   { Invoke-AerosTool "forensic4.ps1" }
 function Get-RAMReport      { Invoke-AerosScript "RAM.ps1" }
 function Get-OfficeAudit    { Invoke-AerosScript "oochk.ps1" }
 function Get-MonitorInfo    { Invoke-AerosTool "Get-MonitorInventory.ps1" "" }
@@ -61,6 +61,7 @@ function Audit-UserMap      {
     Invoke-AerosTool "Audit-UserDrives.ps1" "-TargetUser $u" 
 }
 function Invoke-UpsCheck    { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
+function Get-Users
 
 # Maintenance & Displays
 function New-Scanner        { Invoke-AerosScript "scanner.ps1" }
@@ -99,6 +100,7 @@ function Start-Aeros {
         Write-Host "  5.  Tail RMM Logs (Live)           13. Audit Offline Mapped Drives"
         Write-Host "  6.  Get Mapped Drives (Active)     14. Verify BelMonitor/GWN Post"
         Write-Host "  7.  Get Folder/File Sizes          15. ** MASTER FORENSIC REPORT **" -ForegroundColor Green
+        Write-Host "  8.  List Users"  -ForegroundColor Green
         
         Write-Host "`n [MAINTENANCE & INSTALL]" -ForegroundColor Yellow
         Write-Host "  20. Create Scanner User (SMB)      27. Power Policy Enforcer"
@@ -126,6 +128,7 @@ function Start-Aeros {
             '5'  { Get-RMMLog; pause }
             '6'  { Get-Drives; pause }
             '7'  { Get-Storage; pause }
+            '8'  { Get-Users;   pauser }
             '9'  { Invoke-SpeedTest; pause }
             '10' { Get-MonitorInfo; pause }
             '11' { Get-DiskInv; pause }
