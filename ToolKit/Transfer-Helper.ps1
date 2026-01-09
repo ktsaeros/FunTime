@@ -1,9 +1,9 @@
 <#
 .SYNOPSIS
-    Aeros Transfer Wizard v4 (Zip-and-Ship Edition)
-    - Auto-Zips Source -> C:\Aeros\Transfer\Transfer.zip
-    - Standardizes Share (Transfer) and User (transfer)
-    - Includes Cleanup Mode
+    Aeros Transfer Wizard v4.1 (Zip-and-Ship + Auto-Extract)
+    - SENDER: Zips Source -> C:\Aeros\Transfer\Transfer.zip
+    - RECEIVER: Pulls Zip -> C:\Aeros\Transfer -> Unzips -> Deletes Zip
+    - CLEANUP: Nukes temp assets.
 #>
 
 param(
@@ -29,7 +29,7 @@ $TransUser = "transfer"
 
 function Show-Header {
     Write-Host "+-------------------------------------------------------+" -ForegroundColor Cyan
-    Write-Host "|         AEROS ZIP-AND-SHIP WIZARD (v4.0)              |" -ForegroundColor Cyan
+    Write-Host "|         AEROS ZIP-AND-SHIP WIZARD (v4.1)              |" -ForegroundColor Cyan
     Write-Host "+-------------------------------------------------------+" -ForegroundColor Cyan
 }
 
@@ -44,7 +44,7 @@ if ($Mode -eq "Sender") {
     if (Test-Path $BaseDir) { Remove-Item $BaseDir -Recurse -Force -ErrorAction SilentlyContinue }
     New-Item -Path $BaseDir -ItemType Directory -Force | Out-Null
 
-    # 2. Compress Data (The "Zip" Step)
+    # 2. Compress Data
     Write-Host " Compressing source to Transfer.zip..." -ForegroundColor Cyan
     try {
         Compress-Archive -Path $SourcePath -DestinationPath $ZipFile -Force -ErrorAction Stop
@@ -90,28 +90,57 @@ if ($Mode -eq "Receiver") {
     
     if (-not $RemoteHost -or -not $RemotePass) { Write-Host " [!] Missing Info." -ForegroundColor Red; return }
 
-    # Hardcoded Defaults for Zip-and-Ship
+    # Hardcoded Defaults
     $RemoteShare = "Transfer"
     $RemoteFile  = "Transfer.zip"
     $RemoteUser  = "transfer"
-    $LocalDest   = "C:\Users\Public\Downloads"
+    
+    # NEW: Updated Destination
+    $LocalDest   = "C:\Aeros\Transfer" 
 
     # Creds
     $secPass = ConvertTo-SecureString $RemotePass -AsPlainText -Force
     $cred = New-Object System.Management.Automation.PSCredential ("$RemoteHost\$RemoteUser", $secPass)
 
-    Write-Host " Pulling \\$RemoteHost\$RemoteShare\$RemoteFile..." -ForegroundColor Cyan
+    Write-Host " Pulling content from \\$RemoteHost..." -ForegroundColor Cyan
+    Write-Host " Final Destination: $LocalDest" -ForegroundColor Gray
 
     $jobName = "Pull_Zip_$(Get-Random)"
+    
+    # Start the "Robocopy + Unzip + Cleanup" Pipeline
     $job = Start-Job -Name $jobName -ScriptBlock {
         param($c, $rHost, $rShare, $fName, $lDest)
+        
+        # 1. Ensure Local Dest Exists
+        if (-not (Test-Path $lDest)) { New-Item -Path $lDest -ItemType Directory -Force | Out-Null }
+
+        # 2. Map Drive
         if (Test-Path "Q:") { Remove-PSDrive "Q" -Force -ErrorAction SilentlyContinue }
         try {
             New-PSDrive -Name "Q" -PSProvider FileSystem -Root "\\$rHost\$rShare" -Credential $c -Persist -ErrorAction Stop | Out-Null
         } catch { return "ERROR: Map Failed. Check Password." }
         
+        # 3. Transfer Zip
         $log = robocopy "Q:\" $lDest $fName /Z /NP /R:5 /W:5
         Remove-PSDrive "Q"
+        
+        # 4. Unzip & Cleanup
+        $zipPath = Join-Path $lDest $fName
+        if (Test-Path $zipPath) {
+            $log += "`r`n`r`n [POST-PROCESS] Unzipping to $lDest..."
+            try {
+                Expand-Archive -Path $zipPath -DestinationPath $lDest -Force -ErrorAction Stop
+                $log += " Done."
+                
+                Remove-Item $zipPath -Force
+                $log += "`r`n [POST-PROCESS] Deleted $fName (Cleanup)."
+            } catch {
+                $log += "`r`n [!] Unzip Failed: $($_.Exception.Message)"
+            }
+        } else {
+            $log += "`r`n [!] Error: Zip file not found after transfer."
+        }
+        
         return $log
     } -ArgumentList $cred, $RemoteHost, $RemoteShare, $RemoteFile, $LocalDest
 
