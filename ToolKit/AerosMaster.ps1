@@ -1,7 +1,8 @@
 <#
 .SYNOPSIS
-    AEROS MASTER TOOLKIT (Hybrid v3.1.1.b)
-    Fixed: String termination errors and ampersand parsing issues.
+    AEROS MASTER TOOLKIT (Hybrid v3.2 - Flight Recorder Edition)
+    - Added: Flight Recorder Installer, Investigator (v2.9), and Remover.
+    - Fixed: String termination errors and ampersand parsing issues.
 #>
 
 # --- Loaders ---
@@ -43,7 +44,7 @@ function Invoke-AerosTool {
 }
 
 # --- Tool Mapping ---
-function Get-SystemHealth   { Invoke-AerosTool "forensic4.ps1" }
+function Get-SystemHealth   { Invoke-AerosTool "forensic4.ps1" "" }
 function Get-RAMReport      { Invoke-AerosScript "RAM.ps1" }
 function Get-OfficeAudit    { Invoke-AerosScript "oochk.ps1" }
 function Get-MonitorInfo    { Invoke-AerosTool "Get-MonitorInventory.ps1" "" }
@@ -55,10 +56,15 @@ function Invoke-SpeedTest   { Invoke-AerosTool "speedtest.ps1" "" }
 function Verify-BelMonitor  { Invoke-AerosTool "Verify-BelMonitor.ps1" "" }
 function Get-ForensicMaster { Invoke-AerosScript "Forensic-Master.ps1" }
 function Invoke-UpsCheck    { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
-function Clean-CDrive { Invoke-AerosScript "Triage-Cleanup.ps1" }
+function Clean-CDrive       { Invoke-AerosScript "Triage-Cleanup.ps1" }
 
 # Unified Storage & User Audit
 function Get-StorageAudit   { Invoke-AerosScript "storage-audit.ps1" }
+
+# FLIGHT RECORDER SUITE (NEW)
+function Install-Recorder   { Invoke-AerosTool "Install-FlightRecorder.ps1" "" } # Must be 'Tool' to persist file copy
+function Get-FlightCheck    { Invoke-AerosScript "Get-FlightAnalysis.ps1" }      # v2.9 Investigator
+function Remove-Recorder    { Invoke-AerosScript "Remove-FlightRecorder.ps1" }
 
 # Maintenance & Displays
 function New-Scanner        { Invoke-AerosScript "scanner.ps1" }
@@ -73,14 +79,13 @@ function Install-UpsLogger  { Invoke-AerosTool "upslog.ps1" "-Install -IntervalS
 function Start-ImageRepair  { Invoke-AerosTool "Repair-WindowsHealth.ps1" "" }
 function Remove-DellCmd     { Invoke-AerosTool "Remove-DellCommand.ps1" "" }
 function Clean-OfficeMRU    { Invoke-AerosTool "Clean-OfficeMRU.ps1" "" }
-function Invoke-VirtualDisp  { Invoke-AerosScript "usbmmidd.ps1" }
-function Invoke-XfrHelpr    { Invoke-}
+function Invoke-VirtualDisp { Invoke-AerosScript "usbmmidd.ps1" }
 
 # Security
 function Enable-BitLocker   { Invoke-AerosScript "btlon.ps1" }
 function Set-Policies       { Invoke-AerosScript "Set-SecurityPolicies.ps1" }
 function Gen-Password       { Invoke-AerosScript "Generate-Passwords.ps1" }
-function Get-Incidents { Invoke-AerosTool "get-incidents.ps1" "" }
+function Get-Incidents      { Invoke-AerosTool "get-incidents.ps1" "" }
 
 function Invoke-TransferWizard {
     Clear-Host
@@ -139,7 +144,7 @@ function Start-Aeros {
     while ($true) {
         Clear-Host
         Write-Host "╔═══════════════════════════════════════════════════════╗" -ForegroundColor Cyan
-        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v3.1.1)        ║" -ForegroundColor Cyan
+        Write-Host "║           AEROS MASTER TOOLKIT (Hybrid v3.2)          ║" -ForegroundColor Cyan
         Write-Host "╚═══════════════════════════════════════════════════════╝" -ForegroundColor Cyan
         
         Write-Host " [DIAGNOSTICS & AUDIT]" -ForegroundColor Yellow
@@ -147,8 +152,8 @@ function Start-Aeros {
         Write-Host "  2.  RAM Analysis                   11. OS Install Date Check"
         Write-Host "  3.  Outlook/Office Audit           12. Verify BelMonitor/GWN Post"
         Write-Host "  4.  Battery & UPS Check            13. ** MASTER FORENSIC REPORT **"
-        Write-Host "  5.  Tail RMM Logs (Live)           16. Transfer-Wizard"
-        Write-Host "  6.  Master Storage & User Audit    "
+        Write-Host "  5.  Tail RMM Logs (Live)           14. ** FLIGHT RECORDER ANALYSIS **"
+        Write-Host "  6.  Master Storage & User Audit    16. Transfer-Wizard"
         Write-Host "  7.  Disk/Storage Inventory         " -ForegroundColor Green
         Write-Host "  9.  Network SpeedTest (Ookla)"  -ForegroundColor Green
         
@@ -159,7 +164,9 @@ function Start-Aeros {
         Write-Host "  23. Install Apps (Basic/Power)     30. Clean up C:\ Drive"
         Write-Host "  24. Install ScreenConnect          31. Remove Dell Command Update"
         Write-Host "  25. Install PowerShell 7           32. Clean Office MRU"
-        Write-Host "  26. Kick RMM/EDR Agent             33. Virtual Display Manager" -ForegroundColor Green
+        Write-Host "  26. Kick RMM/EDR Agent             33. Virtual Display Manager" 
+        Write-Host "                                     34. Install Flight Recorder (Deploy)" -ForegroundColor Magenta
+        Write-Host "                                     35. Remove Flight Recorder" -ForegroundColor DarkGray
 
         # Using a safer string here to avoid & parsing issues
         Write-Host "`n [SECURITY AND LOGS]" -ForegroundColor Yellow
@@ -182,16 +189,15 @@ function Start-Aeros {
              '6'  { Get-StorageAudit; pause }
 
              # Shifted Items
-             '7'  { Get-DiskInv; pause }        # Physical Disk Inventory (Moved from 11)
-    
-             # (User skipped #8 in menu)
+             '7'  { Get-DiskInv; pause }        
     
              '9'  { Invoke-SpeedTest; pause }
              '10' { Get-MonitorInfo; pause }
-             '11' { Get-OSAge; pause }          # Moved from 12
-             '12' { Verify-BelMonitor; pause }  # Moved from 14
-             '13' { Get-ForensicMaster; pause } # Moved from 15
-             '16' { Invoke-TransferWizard; pause }  # <--- NEW ENTRY
+             '11' { Get-OSAge; pause }          
+             '12' { Verify-BelMonitor; pause }  
+             '13' { Get-ForensicMaster; pause } 
+             '14' { Get-FlightCheck; pause }    # <--- NEW INVESTIGATOR
+             '16' { Invoke-TransferWizard; pause } 
 
              # --- MAINTENANCE & INSTALL (Unchanged) ---
              '20' { New-Scanner; pause }
@@ -208,6 +214,8 @@ function Start-Aeros {
              '31' { Remove-DellCmd; pause }
              '32' { Clean-OfficeMRU; pause }
              '33' { Invoke-VirtualDisp; pause }
+             '34' { Install-Recorder; pause }   # <--- NEW INSTALLER
+             '35' { Remove-Recorder; pause }    # <--- NEW REMOVER
 
               # --- SECURITY (Unchanged) ---
               '40' { Enable-BitLocker; pause }
