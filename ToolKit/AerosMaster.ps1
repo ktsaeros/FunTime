@@ -44,6 +44,42 @@ function Invoke-AerosTool {
 }
 
 # --- Tool Mapping ---
+function Get-DomainAudit {
+    $ScriptName = "Get-DomainAudit.py"
+    $RepoRoot   = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
+    $TargetUrl  = "$RepoRoot/$ScriptName"
+    $TempPath   = "$env:TEMP\$ScriptName"
+    
+    # 1. Check for Python Environment
+    if (Get-Command "python3" -ErrorAction SilentlyContinue) {
+        $PyCmd = "python3"
+    } elseif (Get-Command "python" -ErrorAction SilentlyContinue) {
+        $PyCmd = "python"
+    } else {
+        Write-Error "Python is not installed or not in your PATH."
+        return
+    }
+
+    # 2. Download the Python Script (simulating Invoke-AerosTool logic)
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Write-Host "   [Tool] Downloading: $ScriptName..." -ForegroundColor Cyan
+    
+    try {
+        Invoke-WebRequest -Uri $TargetUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" }
+        
+        # 3. Execute (Interactive Mode)
+        Write-Host "   [Exec] Launching Python..." -ForegroundColor Green
+        & $PyCmd $TempPath
+        
+        # Cleanup
+        Remove-Item $TempPath -ErrorAction SilentlyContinue
+    }
+    catch {
+        Write-Error "Failed to download or run $ScriptName. Ensure the file exists in your GitHub repo."
+    }
+}
+
+
 function Get-SystemHealth   { Invoke-AerosTool "forensic4.ps1" "" }
 function Get-RAMReport      { Invoke-AerosScript "RAM.ps1" }
 function Get-OfficeAudit    { Invoke-AerosScript "oochk.ps1" }
@@ -167,6 +203,7 @@ function Start-Aeros {
         Write-Host "  26. Kick RMM/EDR Agent             33. Virtual Display Manager" 
         Write-Host "                                     34. Install Flight Recorder (Deploy)" -ForegroundColor Magenta
         Write-Host "                                     35. Remove Flight Recorder" -ForegroundColor DarkGray
+        Write-Host "                                     36. Domain Infrastructure Audit (Python)" -ForegroundColor Cyan 
 
         # Using a safer string here to avoid & parsing issues
         Write-Host "`n [SECURITY AND LOGS]" -ForegroundColor Yellow
@@ -216,6 +253,7 @@ function Start-Aeros {
              '33' { Invoke-VirtualDisp; pause }
              '34' { Install-Recorder; pause }   # <--- NEW INSTALLER
              '35' { Remove-Recorder; pause }    # <--- NEW REMOVER
+             '36' { Get-DomainAudit; pause }    # <--- NEW DOMAIN AUDIT
 
               # --- SECURITY (Unchanged) ---
               '40' { Enable-BitLocker; pause }
