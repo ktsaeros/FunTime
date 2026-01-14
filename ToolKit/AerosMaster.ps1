@@ -46,36 +46,28 @@ function Invoke-AerosTool {
 # --- Tool Mapping ---
 function Get-DomainAudit {
     $ScriptName = "Get-DomainAudit.py"
-    $RepoRoot   = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl  = "$RepoRoot/$ScriptName"
+    # Pointing to your server
+    $SourceUrl  = "https://crisps.fit/tools/$ScriptName" 
     $TempPath   = "$env:TEMP\$ScriptName"
     
-    # 1. Check for Python Environment
-    if (Get-Command "python3" -ErrorAction SilentlyContinue) {
-        $PyCmd = "python3"
-    } elseif (Get-Command "python" -ErrorAction SilentlyContinue) {
-        $PyCmd = "python"
-    } else {
-        Write-Error "Python is not installed or not in your PATH."
-        return
-    }
+    # 1. Check Python
+    if (Get-Command "python3" -ErrorAction SilentlyContinue) { $PyCmd = "python3" }
+    elseif (Get-Command "python" -ErrorAction SilentlyContinue) { $PyCmd = "python" }
+    else { Write-Error "Python is not installed."; return }
 
-    # 2. Download the Python Script (simulating Invoke-AerosTool logic)
-    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Write-Host "   [Tool] Downloading: $ScriptName..." -ForegroundColor Cyan
-    
+    # 2. Download from crisps.fit (Forces fresh download)
+    Write-Host "   [Tool] Fetching from crisps.fit..." -ForegroundColor Cyan
     try {
-        Invoke-WebRequest -Uri $TargetUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" }
+        Invoke-WebRequest -Uri $SourceUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" } -ErrorAction Stop
         
-        # 3. Execute (Interactive Mode)
-        Write-Host "   [Exec] Launching Python..." -ForegroundColor Green
+        # 3. Execute
+        Write-Host "   [Exec] Launching Audit..." -ForegroundColor Green
         & $PyCmd $TempPath
         
-        # Cleanup
         Remove-Item $TempPath -ErrorAction SilentlyContinue
     }
     catch {
-        Write-Error "Failed to download or run $ScriptName. Ensure the file exists in your GitHub repo."
+        Write-Error "Failed to download from $SourceUrl. Error: $($_.Exception.Message)"
     }
 }
 
