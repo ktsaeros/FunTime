@@ -45,29 +45,26 @@ function Invoke-AerosTool {
 
 # --- Tool Mapping ---
 function Get-DomainAudit {
-    $ScriptName = "Get-DomainAudit.py"
-    # Pointing to your server
-    $SourceUrl  = "https://crisps.fit/tools/$ScriptName" 
-    $TempPath   = "$env:TEMP\$ScriptName"
+    $ScriptName = "Get-DomainAudit.ps1"
+    $SourceUrl  = "https://crisps.fit/tools/$ScriptName"
     
-    # 1. Check Python
-    if (Get-Command "python3" -ErrorAction SilentlyContinue) { $PyCmd = "python3" }
-    elseif (Get-Command "python" -ErrorAction SilentlyContinue) { $PyCmd = "python" }
-    else { Write-Error "Python is not installed."; return }
-
-    # 2. Download from crisps.fit (Forces fresh download)
+    # FIX: Use Join-Path so it works on Mac (Forward Slash) AND Windows (Backslash)
+    $TempPath   = Join-Path $env:TEMP $ScriptName
+    
     Write-Host "   [Tool] Fetching from crisps.fit..." -ForegroundColor Cyan
     try {
+        # Download the PS1 file
         Invoke-WebRequest -Uri $SourceUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" } -ErrorAction Stop
         
-        # 3. Execute
-        Write-Host "   [Exec] Launching Audit..." -ForegroundColor Green
-        & $PyCmd $TempPath
+        # Execute it natively
+        Write-Host "   [Exec] Running Audit..." -ForegroundColor Green
+        & $TempPath
         
+        # Cleanup
         Remove-Item $TempPath -ErrorAction SilentlyContinue
     }
     catch {
-        Write-Error "Failed to download from $SourceUrl. Error: $($_.Exception.Message)"
+        Write-Error "Failed to run audit. Error: $($_.Exception.Message)"
     }
 }
 
