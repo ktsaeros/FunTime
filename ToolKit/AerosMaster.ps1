@@ -13,40 +13,65 @@ param(
 # --- Loaders ---
 function Invoke-AerosScript {
     param([string]$ScriptName)
-    # Generate a unique string based on the current second to bypass all web caches
+    
+    # 1. Universal Temp Path (Works on Mac/Windows/Linux)
+    $TempDir = [System.IO.Path]::GetTempPath()
+    $LocalPath = Join-Path $TempDir $ScriptName
+    
+    # 2. Build URL with Cache Buster
     $CacheBuster = Get-Date -Format "ssmmHH"
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName?v=$CacheBuster" # Adds ?v=123456 to the URL
-    
+    $TargetUrl = "$RepoRoot/$ScriptName?v=$CacheBuster"
+
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Write-Host "   [Launcher] Fetching (Live): $ScriptName" -ForegroundColor Cyan
     
     try {
-        $Code = Invoke-RestMethod -Uri $TargetUrl -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" }
-        & { Invoke-Expression $Code }
+        # 3. Download to File (More robust than Memory execution)
+        Invoke-WebRequest -Uri $TargetUrl -OutFile $LocalPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" } -ErrorAction Stop
+        
+        # 4. Run it (Dot-sourcing keeps variables alive)
+        . $LocalPath
+        
+        # 5. Cleanup
+        Remove-Item $LocalPath -ErrorAction SilentlyContinue
     }
     catch {
-        Write-Error "Failed to launch $ScriptName."
+        Write-Error "Failed to launch $ScriptName. Error: $($_.Exception.Message)"
     }
 }
 
 function Invoke-AerosTool {
     param([string]$ScriptName, [string]$Arguments)
+    
+    # 1. Universal Pathing
+    $TempDir = [System.IO.Path]::GetTempPath()
+    $LocalPath = Join-Path $TempDir $ScriptName
+    
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
     $TargetUrl = "$RepoRoot/$ScriptName"
-    $TempPath  = "$env:TEMP\$ScriptName"
     
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Write-Host "   [Tool] Downloading: $ScriptName..." -ForegroundColor Cyan
     
     try {
-        Invoke-WebRequest -Uri $TargetUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" }
-        $Cmd = "$TempPath $Arguments"
-        Invoke-Expression "& $Cmd"
-        Remove-Item $TempPath -ErrorAction SilentlyContinue
+        # 2. Download
+        Invoke-WebRequest -Uri $TargetUrl -OutFile $LocalPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" } -ErrorAction Stop
+        
+        # 3. Execute with Arguments
+        # We use Start-Process -Wait to ensure it finishes before we delete it
+        if ($IsWindows) {
+            Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$LocalPath`" $Arguments" -Wait -NoNewWindow
+        } else {
+            # Mac/Linux execution
+            & pwsh -File $LocalPath $Arguments
+        }
+        
+        # 4. Cleanup
+        Remove-Item $LocalPath -ErrorAction SilentlyContinue
     }
     catch {
-        Write-Error "Failed to run tool."
+        Write-Error "Failed to run tool. Error: $($_.Exception.Message)"
     }
 }
 
@@ -59,17 +84,16 @@ function Get-DomainAudit {
     if ([string]::IsNullOrWhiteSpace($TargetDomain)) {
         $TargetDomain = Read-Host "`n Enter Domain (e.g. aerosgroup.com)"
     }
-
-    # 2. Validation (If still empty, abort)
     if ([string]::IsNullOrWhiteSpace($TargetDomain)) { return }
 
+    # 2. Validation (If still empty, abort)
+    $CleanDomain = $TargetDomain -replace '[^a-zA-Z0-9.-]', ''
+
     # 3. Clean and Encode
-    $CleanDomain = $TargetDomain.Trim()
     $BaseUrl = "https://crisps.fit/tools/run_audit.php"
     $ApiKey  = "AerosFlight36"
-    $EncodedDomain = [Uri]::EscapeDataString($CleanDomain)
+    $FullUri = "$BaseUrl`?key=$ApiKey&domain=$CleanDomain"
     
-    $FullUri = "$BaseUrl`?key=$ApiKey&domain=$EncodedDomain"
 
     Write-Host "`n [Server] Auditing $CleanDomain via crisps.fit..." -ForegroundColor Cyan
 
@@ -79,8 +103,7 @@ function Get-DomainAudit {
         Write-Host $Result -ForegroundColor White
     }
     catch {
-        Write-Error "   [Error] Connection Failed!"
-        Write-Host "   System Message: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Error "   [Error] Connection Failed: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
