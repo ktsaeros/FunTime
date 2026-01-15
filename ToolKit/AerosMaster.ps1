@@ -5,6 +5,26 @@
     - Fixed: String termination errors and ampersand parsing issues.
 #>
 
+# --- RMM / AUTOMATION HEADER ---
+param(
+    [string]$AutoAudit  # RMM can pass a domain here to skip the menu
+)
+
+# If RMM passed a domain, run the audit immediately and EXIT.
+# This prevents the script from ever hitting the menu loop.
+if (-not [string]::IsNullOrWhiteSpace($AutoAudit)) {
+    # We must define the function first (or ensure it's loaded), 
+    # then call it. Ensure your functions are defined above the menu logic.
+    
+    # (Note: If your functions are defined further down, move this block 
+    #  to just ABOVE the "while ($true)" menu loop).
+    
+    Get-DomainAudit -TargetDomain $AutoAudit
+    exit  # <--- CRITICAL: Stops the script before the menu starts
+}
+# -------------------------------
+
+
 # --- Loaders ---
 function Invoke-AerosScript {
     param([string]$ScriptName)
@@ -47,21 +67,26 @@ function Invoke-AerosTool {
 
 # --- Tool Mapping ---
 function Get-DomainAudit {
-    # 1. Clean Input
-    $Domain = Read-Host "`n Enter Domain (e.g. aerosgroup.com)"
-    if ([string]::IsNullOrWhiteSpace($Domain)) { return }
-    $Domain = $Domain.Trim() # Removes accidental spaces
+    param([string]$TargetDomain)
 
-    # 2. Hardcoded Clean URL (Prevents variable corruption)
+    # 1. Check Input Source (RMM vs Interactive)
+    # If no parameter was passed, ask the user (Interactive Mode)
+    if ([string]::IsNullOrWhiteSpace($TargetDomain)) {
+        $TargetDomain = Read-Host "`n Enter Domain (e.g. aerosgroup.com)"
+    }
+
+    # 2. Validation (If still empty, abort)
+    if ([string]::IsNullOrWhiteSpace($TargetDomain)) { return }
+
+    # 3. Clean and Encode
+    $CleanDomain = $TargetDomain.Trim()
     $BaseUrl = "https://crisps.fit/tools/run_audit.php"
     $ApiKey  = "AerosFlight36"
+    $EncodedDomain = [Uri]::EscapeDataString($CleanDomain)
     
-    # 3. Construct URI Safely
-    # This handles special characters or spaces in the domain input
-    $EncodedDomain = [Uri]::EscapeDataString($Domain)
-    $FullUri = "$BaseUrl?key=$ApiKey&domain=$EncodedDomain"
+    $FullUri = "$BaseUrl`?key=$ApiKey&domain=$EncodedDomain"
 
-    Write-Host "`n [Server] Auditing $Domain via crisps.fit..." -ForegroundColor Cyan
+    Write-Host "`n [Server] Auditing $CleanDomain via crisps.fit..." -ForegroundColor Cyan
 
     try {
         # 4. Execute
@@ -69,9 +94,8 @@ function Get-DomainAudit {
         Write-Host $Result -ForegroundColor White
     }
     catch {
-        Write-Error "Connection Failed: $($_.Exception.Message)"
-        # Debugging line: Uncomment below if it still fails to see exactly what URL is being built
-        # Write-Host "Debug URL: $FullUri" -ForegroundColor DarkGray
+        Write-Error "   [Error] Connection Failed!"
+        Write-Host "   System Message: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
