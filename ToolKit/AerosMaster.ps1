@@ -83,6 +83,12 @@ function Get-ForensicMaster { Invoke-AerosScript "Forensic-Master.ps1" }
 function Invoke-UpsCheck    { Invoke-AerosTool "upslog.ps1" "-Snapshot" }
 function Clean-CDrive       { Invoke-AerosScript "Triage-Cleanup.ps1" }
 
+function Get-PrinterAudit {
+    param([bool]$PurgeMode = $false)
+    $args = if ($PurgeMode) { "-Purge" } else { "" }
+    Invoke-AerosTool "Get-PrinterAudit.ps1" $args
+}
+
 # Unified Storage & User Audit
 function Get-StorageAudit   { Invoke-AerosScript "storage-audit.ps1" }
 
@@ -176,11 +182,11 @@ function Start-Aeros {
         Write-Host "  1.  System Health (Forensic4)      10. Monitor Inventory (Serials)"
         Write-Host "  2.  RAM Analysis                   11. OS Install Date Check"
         Write-Host "  3.  Outlook/Office Audit           12. Verify BelMonitor/GWN Post"
-        Write-Host "  4.  Battery & UPS Check            13. ** MASTER FORENSIC REPORT **"
-        Write-Host "  5.  Tail RMM Logs (Live)           14. ** FLIGHT RECORDER ANALYSIS **"
+        Write-Host "  4.  Battery & UPS Check            13. MASTER FORENSIC REPORT"
+        Write-Host "  5.  Tail RMM Logs (Live)           14. FLIGHT RECORDER ANALYSIS"
         Write-Host "  6.  Master Storage & User Audit    16. Transfer-Wizard"
-        Write-Host "  7.  Disk/Storage Inventory         " -ForegroundColor Green
-        Write-Host "  9.  Network SpeedTest (Ookla)"  -ForegroundColor Green
+        Write-Host "  7.  Disk/Storage Inventory         17. Printer Audit                       " -ForegroundColor Green
+        Write-Host "  9.  Network SpeedTest (Ookla)"                             -ForegroundColor Green
         
         Write-Host "`n [MAINTENANCE & INSTALL]" -ForegroundColor Yellow
         Write-Host "  20. Create Scanner User (SMB)      27. Power Policy Enforcer"
@@ -224,6 +230,8 @@ function Start-Aeros {
              '13' { Get-ForensicMaster; pause } 
              '14' { Get-FlightCheck; pause }    # <--- NEW INVESTIGATOR
              '16' { Invoke-TransferWizard; pause } 
+             '17'  { Get-PrinterAudit; pause }
+             '177' { Get-PrinterAudit -PurgeMode $true; pause } # Hidden "Nuke" option
 
              # --- MAINTENANCE & INSTALL (Unchanged) ---
              '20' { New-Scanner; pause }
