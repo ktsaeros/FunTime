@@ -5,24 +5,9 @@
     - Fixed: String termination errors and ampersand parsing issues.
 #>
 
-# --- RMM / AUTOMATION HEADER ---
 param(
-    [string]$AutoAudit  # RMM can pass a domain here to skip the menu
+    [string]$AutoAudit
 )
-
-# If RMM passed a domain, run the audit immediately and EXIT.
-# This prevents the script from ever hitting the menu loop.
-if (-not [string]::IsNullOrWhiteSpace($AutoAudit)) {
-    # We must define the function first (or ensure it's loaded), 
-    # then call it. Ensure your functions are defined above the menu logic.
-    
-    # (Note: If your functions are defined further down, move this block 
-    #  to just ABOVE the "while ($true)" menu loop).
-    
-    Get-DomainAudit -TargetDomain $AutoAudit
-    exit  # <--- CRITICAL: Stops the script before the menu starts
-}
-# -------------------------------
 
 
 # --- Loaders ---
@@ -207,6 +192,11 @@ function Invoke-TransferWizard {
             Invoke-AerosTool "Transfer-Helper.ps1" "-Mode Cleanup"
         }
     }
+}
+if (-not [string]::IsNullOrWhiteSpace($AutoAudit)) {
+    # Now this works because the function above has been read into memory
+    Get-DomainAudit -TargetDomain $AutoAudit
+    exit 
 }
 
 function Start-Aeros {
