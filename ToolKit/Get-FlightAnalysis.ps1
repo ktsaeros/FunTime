@@ -119,4 +119,4 @@ if ($Diagnosis.Count -gt 0) {
     foreach ($D in ($Diagnosis | Select-Object -Unique)) { Write-Host "⚠️ $D" -ForegroundColor Yellow }
 } else {
     Write-Host "✅ [OK] No specific failure patterns detected." -ForegroundColor Green
-}
+}   
