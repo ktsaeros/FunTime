@@ -8,14 +8,16 @@
 # --- Loaders ---
 function Invoke-AerosScript {
     param([string]$ScriptName)
+    # Generate a unique string based on the current second to bypass all web caches
+    $CacheBuster = Get-Date -Format "ssmmHH"
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName"
+    $TargetUrl = "$RepoRoot/$ScriptName?v=$CacheBuster" # Adds ?v=123456 to the URL
     
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
+    Write-Host "   [Launcher] Fetching (Live): $ScriptName" -ForegroundColor Cyan
     
     try {
-        $Code = Invoke-RestMethod -Uri $TargetUrl -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache"; "User-Agent" = "Mozilla/5.0" }
+        $Code = Invoke-RestMethod -Uri $TargetUrl -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" }
         & { Invoke-Expression $Code }
     }
     catch {
@@ -45,26 +47,28 @@ function Invoke-AerosTool {
 
 # --- Tool Mapping ---
 function Get-DomainAudit {
-    $ScriptName = "Get-DomainAudit.ps1"
-    $SourceUrl  = "https://crisps.fit/tools/$ScriptName"
+    $Domain = Read-Host "`n Enter Domain (e.g. varietywire.com)"
+    if ([string]::IsNullOrWhiteSpace($Domain)) { return }
+
+    # Server API Details
+    $ApiUrl = "https://crisps.fit/tools/run_audit.php"
+    $ApiKey = "AerosFlight36"
     
-    # FIX: Use Join-Path so it works on Mac (Forward Slash) AND Windows (Backslash)
-    $TempPath   = Join-Path $env:TEMP $ScriptName
-    
-    Write-Host "   [Tool] Fetching from crisps.fit..." -ForegroundColor Cyan
+    Write-Host "`n [Server] Auditing $Domain via crisps.fit..." -ForegroundColor Cyan
+
     try {
-        # Download the PS1 file
-        Invoke-WebRequest -Uri $SourceUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" } -ErrorAction Stop
+        # Fetch text result from server
+        $Result = Invoke-RestMethod -Uri "$ApiUrl?key=$ApiKey&domain=$Domain" -UseBasicParsing
         
-        # Execute it natively
-        Write-Host "   [Exec] Running Audit..." -ForegroundColor Green
-        & $TempPath
-        
-        # Cleanup
-        Remove-Item $TempPath -ErrorAction SilentlyContinue
+        # Display
+        Write-Host $Result -ForegroundColor White
     }
     catch {
-        Write-Error "Failed to run audit. Error: $($_.Exception.Message)"
+        Write-Error "Connection Failed: $($_.Exception.Message)"
+        if ($_.Exception.Response) {
+             $Reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
+             Write-Host "Server Message: $($Reader.ReadToEnd())" -ForegroundColor Red
+        }
     }
 }
 
