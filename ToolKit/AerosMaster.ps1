@@ -47,28 +47,31 @@ function Invoke-AerosTool {
 
 # --- Tool Mapping ---
 function Get-DomainAudit {
-    $Domain = Read-Host "`n Enter Domain (e.g. varietywire.com)"
+    # 1. Clean Input
+    $Domain = Read-Host "`n Enter Domain (e.g. aerosgroup.com)"
     if ([string]::IsNullOrWhiteSpace($Domain)) { return }
+    $Domain = $Domain.Trim() # Removes accidental spaces
 
-    # Server API Details
-    $ApiUrl = "https://crisps.fit/tools/run_audit.php"
-    $ApiKey = "AerosFlight36"
+    # 2. Hardcoded Clean URL (Prevents variable corruption)
+    $BaseUrl = "https://crisps.fit/tools/run_audit.php"
+    $ApiKey  = "AerosFlight36"
     
+    # 3. Construct URI Safely
+    # This handles special characters or spaces in the domain input
+    $EncodedDomain = [Uri]::EscapeDataString($Domain)
+    $FullUri = "$BaseUrl?key=$ApiKey&domain=$EncodedDomain"
+
     Write-Host "`n [Server] Auditing $Domain via crisps.fit..." -ForegroundColor Cyan
 
     try {
-        # Fetch text result from server
-        $Result = Invoke-RestMethod -Uri "$ApiUrl?key=$ApiKey&domain=$Domain" -UseBasicParsing
-        
-        # Display
+        # 4. Execute
+        $Result = Invoke-RestMethod -Uri $FullUri -UseBasicParsing
         Write-Host $Result -ForegroundColor White
     }
     catch {
         Write-Error "Connection Failed: $($_.Exception.Message)"
-        if ($_.Exception.Response) {
-             $Reader = New-Object System.IO.StreamReader($_.Exception.Response.GetResponseStream())
-             Write-Host "Server Message: $($Reader.ReadToEnd())" -ForegroundColor Red
-        }
+        # Debugging line: Uncomment below if it still fails to see exactly what URL is being built
+        # Write-Host "Debug URL: $FullUri" -ForegroundColor DarkGray
     }
 }
 
