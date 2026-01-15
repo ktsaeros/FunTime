@@ -85,8 +85,15 @@ function Clean-CDrive       { Invoke-AerosScript "Triage-Cleanup.ps1" }
 
 function Get-PrinterAudit {
     param([bool]$PurgeMode = $false)
-    $args = if ($PurgeMode) { "-Purge" } else { "" }
-    Invoke-AerosTool "Get-PrinterAudit.ps1" $args
+    # Use a unique variable name and leave it null if not purging
+    $PurgeArg = if ($PurgeMode) { "-Purge" } else { $null }
+    
+    # Only pass the argument if it exists
+    if ($PurgeArg) {
+        Invoke-AerosTool "Get-PrinterAudit.ps1" $PurgeArg
+    } else {
+        Invoke-AerosTool "Get-PrinterAudit.ps1" ""
+    }
 }
 
 # Unified Storage & User Audit
