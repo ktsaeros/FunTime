@@ -1,40 +1,39 @@
 <#
 .SYNOPSIS
-    Aeros IT "FunTime" Loader (v3.0a)
-    Usage: irm https://raw.githubusercontent.com/ktsaeros/FunTime/main/Scripts/load-aeros.ps1 | iex
+    Aeros IT "FunTime" Loader (v4.0)
+    Production: irm https://crisps.fit/a | iex
+    Development: irm https://crisps.fit/d | iex
 #>
 
-# --- CONFIGURATION ---
-$Token = $null
-$TargetFile = "AerosMaster.ps1" 
-$BaseUrl = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit/$TargetFile"
+# --- 1. BRANCH DETECTION ---
+# We determine the branch by looking at how this script was invoked.
+# If the command contains "/d" or "/dev/", we pull from the dev branch.
+$Branch = "main"
+if ($MyInvocation.Line -match "/d" -or $MyInvocation.MyCommand.Definition -match "/dev/") {
+    $Branch = "dev"
+}
 
-# --- THE BULLETPROOF DOWNLOADER ---
+$TargetFile = "AerosMaster.ps1" 
+$RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/$Branch"
+$BaseUrl = "$RepoRoot/Scripts/$TargetFile"
+
+# --- 2. THE BULLETPROOF DOWNLOADER ---
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
-Write-Host "   [Aeros IT] Fetching $TargetFile..." -ForegroundColor Cyan
+Write-Host "   [Aeros IT] Fetching $TargetFile ($($Branch.ToUpper()))..." -ForegroundColor Cyan
 
 try {
-    $WebClient = New-Object System.Net.WebClient
+    # We use Invoke-RestMethod with a Cache-Control header to bypass ISP/GitHub caching
+    $Headers = @{ "Cache-Control" = "no-cache" }
+    $ToolboxCode = Invoke-RestMethod -Uri $BaseUrl -Headers $Headers -UseBasicParsing
     
-    # 1. FORCE UTF-8 ENCODING
-    $WebClient.Encoding = [System.Text.Encoding]::UTF8
-    
-    # 2. Add Auth Header (if token exists)
-    if (-not [string]::IsNullOrWhiteSpace($Token)) {
-        $WebClient.Headers.Add("Authorization", "Bearer $Token")
-    }
-    
-    # 3. Download the Toolbox Code
-    $ToolboxCode = $WebClient.DownloadString($BaseUrl)
-    
-    # 4. Load the functions into RAM
+    # 3. Load the functions into RAM
     Invoke-Expression $ToolboxCode
     
-    # 5. AUTO-START THE MENU
-    Start-Aeros
+    # 4. START THE MENU (Passing the branch context to the toolkit)
+    Start-Aeros -Branch $Branch
 }
 catch {
-    Write-Host "   [ERROR] Loader Failed." -ForegroundColor Red
+    Write-Host "   [ERROR] Loader Failed to reach $Branch branch." -ForegroundColor Red
     Write-Host "   Details: $($_.Exception.Message)" -ForegroundColor Gray
 }
