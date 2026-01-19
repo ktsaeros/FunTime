@@ -9,7 +9,11 @@
 # We determine the branch by looking at how this script was invoked.
 # If the command contains "/d" or "/dev/", we pull from the dev branch.
 $Branch = "main"
-if ($MyInvocation.Line -match "/d" -or $MyInvocation.MyCommand.Definition -match "/dev/") {
+if ($MyInvocation.Line -match "/d" -or $MyInvocation.MyCommand.Definition -match "/d") {
+    $Branch = "dev"
+}
+
+if ($PSItem -match "dev" -or $ExecutionContext.SessionState.Path.CurrentLocation -match "dev") {
     $Branch = "dev"
 }
 
