@@ -10,68 +10,47 @@ param(
 )
 
 
-# --- Loaders ---
+# --- Loaders (v3.6 Stable) ---
 function Invoke-AerosScript {
     param([string]$ScriptName)
-    
-    # 1. Universal Temp Path (Works on Mac/Windows/Linux)
-    $TempDir = [System.IO.Path]::GetTempPath()
-    $LocalPath = Join-Path $TempDir $ScriptName
-    
-    # 2. Build URL with Cache Buster
-    $CacheBuster = Get-Date -Format "ssmmHH"
+    # Reverting to the standard URL without the ?v= cache buster
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
-    $TargetUrl = "$RepoRoot/$ScriptName?v=$CacheBuster"
-
+    $TargetUrl = "$RepoRoot/$ScriptName"
+    
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-    Write-Host "   [Launcher] Fetching (Live): $ScriptName" -ForegroundColor Cyan
+    Write-Host "   [Launcher] Fetching: $ScriptName" -ForegroundColor Cyan
     
     try {
-        # 3. Download to File (More robust than Memory execution)
-        Invoke-WebRequest -Uri $TargetUrl -OutFile $LocalPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" } -ErrorAction Stop
-        
-        # 4. Run it (Dot-sourcing keeps variables alive)
-        . $LocalPath
-        
-        # 5. Cleanup
-        Remove-Item $LocalPath -ErrorAction SilentlyContinue
+        # Using Headers instead of URL query strings to avoid GitHub 404s
+        $Code = Invoke-RestMethod -Uri $TargetUrl -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache"; "User-Agent" = "Mozilla/5.0" }
+        & { Invoke-Expression $Code }
     }
     catch {
-        Write-Error "Failed to launch $ScriptName. Error: $($_.Exception.Message)"
+        Write-Error "Failed to launch $ScriptName. Check if file exists in /ToolKit/ on GitHub."
     }
 }
 
 function Invoke-AerosTool {
     param([string]$ScriptName, [string]$Arguments)
-    
-    # 1. Universal Pathing
-    $TempDir = [System.IO.Path]::GetTempPath()
-    $LocalPath = Join-Path $TempDir $ScriptName
-    
     $RepoRoot = "https://raw.githubusercontent.com/ktsaeros/FunTime/main/ToolKit"
     $TargetUrl = "$RepoRoot/$ScriptName"
+    $TempPath  = "$env:TEMP\$ScriptName"
     
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
     Write-Host "   [Tool] Downloading: $ScriptName..." -ForegroundColor Cyan
     
     try {
-        # 2. Download
-        Invoke-WebRequest -Uri $TargetUrl -OutFile $LocalPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" } -ErrorAction Stop
+        # Using Headers here as well for consistency
+        Invoke-WebRequest -Uri $TargetUrl -OutFile $TempPath -UseBasicParsing -Headers @{ "Cache-Control" = "no-cache" }
         
-        # 3. Execute with Arguments
-        # We use Start-Process -Wait to ensure it finishes before we delete it
-        if ($IsWindows) {
-            Start-Process -FilePath "powershell.exe" -ArgumentList "-ExecutionPolicy Bypass -File `"$LocalPath`" $Arguments" -Wait -NoNewWindow
-        } else {
-            # Mac/Linux execution
-            & pwsh -File $LocalPath $Arguments
-        }
+        # Robust execution for Windows
+        $Cmd = "powershell.exe -ExecutionPolicy Bypass -File `"$TempPath`" $Arguments"
+        Invoke-Expression $Cmd
         
-        # 4. Cleanup
-        Remove-Item $LocalPath -ErrorAction SilentlyContinue
+        Remove-Item $TempPath -ErrorAction SilentlyContinue
     }
     catch {
-        Write-Error "Failed to run tool. Error: $($_.Exception.Message)"
+        Write-Error "Failed to run tool $ScriptName."
     }
 }
 
