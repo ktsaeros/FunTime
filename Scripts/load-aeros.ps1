@@ -9,10 +9,12 @@
 # We determine the branch by looking at how this script was invoked.
 # If the command contains "/d" or "/dev/", we pull from the dev branch.
 $Branch = "main"
+
+# Check the invocation line OR the specific URL path
 if ($MyInvocation.Line -match "/d" -or $MyInvocation.MyCommand.Definition -match "/d") {
     $Branch = "dev"
 }
-
+# Hard-override for the dev branch file itself
 if ($PSItem -match "dev" -or $ExecutionContext.SessionState.Path.CurrentLocation -match "dev") {
     $Branch = "dev"
 }
