@@ -146,11 +146,22 @@ function Set-DesktopPolicy {
         Write-Log "Check: Modern Standby (S0) already disabled." "Gray"
     }
 
-    # WOL on Physical NICs
+# --- Aggressive NIC Keep-Alive ---
     $nics = Get-NetAdapter -Physical
     foreach ($nic in $nics) {
-        Write-Log "Configuring NIC: $($nic.Name) (WOL Enabled)" "Gray"
+        Write-Log "Configuring NIC: $($nic.Name)" "Gray"
+        
+        # 1. Enable WOL (Standard)
         Set-NetAdapterPowerManagement -Name $nic.Name -WakeOnMagicPacket Enabled -ErrorAction SilentlyContinue
+        
+        # 2. Force 'Do Not Sleep' -unchecks "Allow the computer to turn off this device to save power"
+        try {
+            Disable-NetAdapterPowerManagement -Name $nic.Name -ErrorAction Stop
+            Write-Log "   -> Power Saving DISABLED (Always On)" "Cyan"
+        }
+        catch {
+            Write-Log "   -> Failed to disable power saving: $_" "Red"
+        }
     }
 }
 
@@ -169,6 +180,8 @@ function Set-LaptopPolicy {
         $script:RebootRequired = $true
     }
 
+
+    
     # Timeouts
     # AC: Monitor 20m, Sleep NEVER (0) -- User Request
     powercfg /change monitor-timeout-ac 20
